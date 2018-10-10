@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IPermissionDao">
+	<resultMap id="permissionMapper" type="permission">
+		<!-- 编号 -->
+		<id property="id" column="pk_id" />
+		<!-- 权限名 -->
+		<result property="name" column="c_name" />
+		<result property="code" column="c_code" />
+		<result property="icon" column="c_icon" />
+		<result property="description" column="c_description" />
+		<result property="status" column="c_status" />
+		<result property="url" column="c_url" />
+		<result property="parentId" column="c_parentId" />
+		<result property="type" column="c_type" />
+		<result property="sort" column="c_sort" />
+		<result property="createDate" column="c_createDate" />
+		<result property="createBy" column="c_createBy" />
+		<!-- 权限 -->
+		<collection property="children" column="pk_id" select="com.thsword.netjob.dao.IPermissionDao.queryChilds"></collection>
+	</resultMap>
+	<!-- #######################CRUD begin####################### -->
+
+	<!-- 增加权限 -->
+	<insert id="addEntity" parameterType="permission" keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_permission (pk_id,c_name,c_code,c_icon,c_description,c_status,c_url,c_parentId,c_type,c_sort,c_createDate,c_createBy)
+			VALUES(#{id},#{name},#{code},#{icon},#{description},#{status},#{url},#{parentId},#{type},#{sort},#{createDate},#{createBy})
+		]]>
+	</insert>
+
+	<!-- 根据ID删除权限 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_permission WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 删除权限 -->
+	<delete id="deleteEntity" parameterType="permission">
+		<![CDATA[ DELETE FROM t_permission WHERE pk_id=#{id}]]>
+	</delete>
+	
+	<!-- 更新角色信息 -->
+	<update id="updateEntity" parameterType="permission">
+		UPDATE t_permission
+		<set>
+			<if test="null!=name">c_name=#{name},</if>
+			<if test="null!=code">c_code=#{code},</if>
+			<if test="null!=icon">c_icon=#{icon},</if>
+			<if test="null!=status">c_status=#{status},</if>
+			<if test="null!=description">c_description=#{description},</if>
+			<if test="null!=parentId">c_parentId=#{parentId},</if>
+			<if test="null!=type">c_type=#{type},</if>
+			<if test="null!=url">c_url=#{url},</if>
+			<if test="null!=sort">c_sort=#{sort}</if>
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找权限 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="permissionMapper">
+		<![CDATA[ SELECT * FROM t_permission WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!-- 查询所有权限信息 -->
+	<select id="queryAllEntity" resultMap="permissionMapper" parameterType="permission">
+		 <![CDATA[ SELECT * FROM t_permission t WHERE 1=1]]>
+		  <if test="null!=name">and t.c_name like "%"#{name}"%"</if>
+		 <if test="null!=code">and t.c_code=#{code}</if>
+		 <if test="null!=status">and t.c_status=#{status}</if>
+		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
+		 <if test="null!=type"> and t.c_type=#{type}</if>
+		  order by t.c_sort asc
+	</select>
+	
+	<!-- 查询所有权限信息 -->
+	<select id="queryEntity" resultMap="permissionMapper" parameterType="permission">
+		 <![CDATA[ SELECT * FROM t_permission t WHERE 1=1]]>
+		 <if test="null!=id">and pk_id = #{id}</if>
+		 <if test="null!=name">and t.c_name =#{name}</if>
+		 <if test="null!=code">and t.c_code=#{code}</if>
+		 <if test="null!=status">and t.c_status=#{status}</if>
+		 <if test="null!=sort">and t.c_sort=#{sort}</if>
+		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
+		 <if test="null!=type"> and t.c_type=#{type}</if>
+	</select>
+	
+	<!-- 查询所有权限信息 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="permission">
+		 <![CDATA[ SELECT count(*) FROM t_permission t WHERE 1=1]]>
+		  <if test="null!=name">and t.c_name like "%"#{name}"%"</if>
+		 <if test="null!=code">and t.c_code=#{code}</if>
+		 <if test="null!=status">and t.c_status=#{status}</if>
+		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
+		 <if test="null!=type"> and t.c_type=#{type}</if>
+	</select>
+	<!-- #######################CRUD end####################### -->
+
+	<!-- 查询所有权限(分页) -->
+	<select id="queryPageEntity" parameterType="java.util.Map" resultMap="permissionMapper">
+		 <![CDATA[ SELECT t.* FROM t_permission t WHERE 1=1]]>
+		 <if test="null!=name">and t.c_name like "%"#{name}"%"</if>
+		 <if test="null!=code">and t.c_code=#{code}</if>
+		 <if test="null!=status">and t.c_status=#{status}</if>
+		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
+		 <if test="null!=type"> and t.c_type=#{type}</if>
+		 order by t.pk_id desc
+	</select>
+	
+	<!-- 查询所有权限(分页) -->
+	<select id="queryRolePermissions" parameterType="java.lang.String" resultMap="permissionMapper">
+		 SELECT p.* FROM t_role_permission rp,t_permission p
+		 WHERE
+		 p.pk_id = rp.c_permissionId
+		 and rp.c_roleId=#{roleId}
+		 and p.c_status = 1
+	</select>
+	
+		<!-- 查询所有权限(分页) -->
+	<select id="queryPageRoots" resultMap="permissionMapper">
+		 SELECT p.* FROM t_permission p
+		 WHERE
+		 p.c_parentId='' or p.c_parentId is null
+	</select>
+	
+		<!-- 查询所有权限(分页) -->
+	<select id="queryRoots" resultMap="permissionMapper">
+		 SELECT p.* FROM t_permission p
+		 WHERE
+		 p.c_parentId='' or p.c_parentId is null
+		 order by p.c_sort asc
+	</select>
+	
+	<!-- 查询所有权限(分页) -->
+	<select id="queryChilds" parameterType="java.lang.String" resultMap="permissionMapper">
+		 SELECT p.* FROM t_permission p
+		 WHERE
+		 p.c_parentId=#{permissionId}
+		 order by p.c_sort asc
+	</select>
+	
+</mapper>

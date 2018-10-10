@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IUserDao">
+	<resultMap id="userMapper" type="user">
+		<!-- 编号 -->
+		<id property="id" column="pk_id" />
+		<!-- 用户名 -->
+		<result property="name" column="c_name" />
+		<!-- 邮箱 -->
+		<result property="email" column="c_email" />
+		<!-- 真实姓名 -->
+		<result property="realName" column="c_realName" />
+		<!-- 手机 -->
+		<result property="phone" column="c_phone" />
+		<!-- 图片 -->
+		<result property="image" column="c_image" />
+		<!-- 状态(0:正常,1:禁用) -->
+		<result property="status" column="c_status" />
+			<!-- 登录次数 -->
+		<result property="isAdmin" column="c_isAdmin" />
+		<!-- 登录次数 -->
+		<result property="logins" column="c_logins" />
+		<!-- 创建时间 -->
+		<result property="createDate" column="c_createDate" />
+		<!-- 创建时间 -->
+		<result property="createBy" column="c_createBy" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="user"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_user (
+						pk_id,
+						c_name,
+						c_password,
+						c_email,
+		 				c_realName,
+		 				c_phone,
+		 				c_image,
+						c_status,
+						c_isAdmin,
+		 				c_logins,
+						c_createDate,
+						c_createBy
+		 				)
+				VALUES(
+						#{id},
+						#{name},
+						#{password},
+						#{email},
+						#{realName},
+						#{phone},
+						#{image},
+						#{status},
+						#{isAdmin},
+				   		#{logins},
+						#{createDate},
+						#{createBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="user">
+		<![CDATA[ DELETE FROM t_user WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_user WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="user">
+		UPDATE t_user
+		<set>
+			<if test="null!=status">c_status=#{status},</if>
+			<if test="null!=createDate">c_createDate=#{createDate}, </if>
+			<if test="null!=name">c_name=#{name}, </if>
+			<if test="null!=password">c_password=#{password},</if>
+			<if test="null!=email">c_email=#{email}, </if>
+			<if test="null!=realName">c_realName=#{realName},</if>
+			<if test="null!=phone">c_phone=#{phone}, </if>
+			<if test="null!=logins">c_logins=#{logins},</if>
+			<if test="null!=image">c_image=#{image},</if>
+			<if test="null!=createBy">c_createBy=#{createBy},</if>
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="userMapper">
+		<![CDATA[ SELECT t.* FROM t_user t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="userMapper" parameterType="user">
+		 <![CDATA[ SELECT * FROM t_user WHERE 1=1]]>
+		 <if test="null!=name">and c_name like "%"#{name}"%"</if>
+		 <if test="null!=status">and c_status = #{status}</if>
+		 <if test="null!=email">and c_email like "%"#{email}"%"</if>
+		 <if test="null!=realName">and c_realName like "%"#{realName}"%"</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询 -->
+	<select id="queryEntity" resultMap="userMapper" parameterType="user">
+		 <![CDATA[ SELECT * FROM t_user WHERE 1=1]]>
+		 <if test="null!=id">and pk_id = #{id}</if>
+		 <if test="null!=password">and c_password = #{password}</if>
+		 <if test="null!=name">and c_name =#{name}</if>
+		 <if test="null!=status">and c_status = #{status}</if>
+		 <if test="null!=email">and c_email like "%"#{email}"%"</if>
+		 <if test="null!=realName">and c_realName like "%"#{realName}"%"</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="user">
+		 <![CDATA[ SELECT count(*) FROM t_user WHERE 1=1]]>
+		 <if test="null!=name">and c_name like "%"#{name}"%"</if>
+		 <if test="null!=status">and c_status = #{status}</if>
+		 <if test="null!=email">and c_email like "%"#{email}"%"</if>
+		 <if test="null!=realName">and c_realName like "%"#{realName}"%"</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="userMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_user WHERE 1=1]]>
+		  <if test="null!=name">and c_name like "%"#{name}"%"</if>
+		 <if test="null!=status">and c_status = #{status}</if>
+		 <if test="null!=email">and c_email like "%"#{email}"%"</if>
+		 <if test="null!=realName">and c_realName like "%"#{realName}"%"</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+		<!-- 根据ID删除 -->
+	<delete id="deleteUserRole" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_user_role WHERE c_userId=#{userId}]]>
+	</delete>
+	
+	<select id="queryUserRole" resultMap="com.thsword.netjob.dao.IRoleDao.roleMapper" parameterType="java.lang.String">
+		SELECT r.* FROM t_role r,t_user_role ur 
+		WHERE r.pk_id = ur.c_roleId
+		and ur.c_userId = #{userId}
+		and r.c_status=1
+	</select>
+	
+	<!-- 添加用户角色 -->
+	<insert id="addUserRole" parameterType="java.lang.String">
+		INSERT INTO t_user_role (
+						pk_id,
+						c_userId,
+						c_roleId
+		 				)
+				VALUES(
+						#{0},
+						#{1},
+						#{2}
+				 	  	)
+	</insert>
+	
+</mapper>

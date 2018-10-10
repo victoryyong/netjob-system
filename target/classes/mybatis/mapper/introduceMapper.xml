@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IIntroduceDao">
+	<resultMap id="introduceMapper" type="introduce">
+		<!-- 格言 -->
+		<result property="motto" column="c_motto" />
+		<!-- 优势 -->
+		<result property="advantage" column="c_advantage" />
+		<!-- 资历 -->
+		<result property="experience" column="c_experience" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="introduce"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_introduce (
+						pk_id,
+						c_memberId,
+						c_motto,
+						c_advantage,
+						c_experience,
+						c_createDate,
+						c_createBy,
+						c_updateDate,
+						c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{memberId},
+						#{motto},
+						#{advantage},
+						#{experience},
+						now(),
+						#{createBy},
+						now(),
+						#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="introduce">
+		<![CDATA[ DELETE FROM t_introduce WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_introduce WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="introduce">
+		UPDATE t_introduce
+		<set>
+			c_updateDate=now(),
+			<if test="null!=motto">c_motto=#{motto},</if>
+			<if test="null!=advantage">c_advantage=#{advantage},</if>
+			<if test="null!=experience">c_experience=#{experience}</if>
+		</set>
+		WHERE c_memberId = #{memberId}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="introduceMapper">
+		<![CDATA[ SELECT t.* FROM t_introduce t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="introduceMapper" parameterType="introduce">
+		 <![CDATA[ SELECT * FROM t_introduce WHERE 1=1]]>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="introduceMapper" parameterType="introduce">
+		 <![CDATA[ SELECT * FROM t_introduce WHERE 1=1]]>
+		  <if test="null!=memberId">and c_memberId =#{memberId}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="introduce">
+		 <![CDATA[ SELECT count(*) FROM t_introduce WHERE 1=1]]>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="introduceMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_introduce WHERE 1=1]]>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+</mapper>

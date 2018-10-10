@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IBannerDao">
+	<resultMap id="bannerMapper" type="banner">
+		<!-- 用户ID -->
+		<result property="id" column="pk_id" />
+		<!-- 名称 -->
+		<result property="name" column="c_name" />
+		<!-- 类型 -->
+		<result property="type" column="c_type" />
+		<!-- 链接 -->
+		<result property="link" column="c_link" />
+		<!-- 图片 -->
+		<result property="image" column="c_image" />
+		<!-- 图片 -->
+		<result property="provinceName" column="c_province_name" />
+		<!-- 图片 -->
+		<result property="cityName" column="c_city_name" />
+		<!-- 图片 -->
+		<result property="province" column="c_province" />
+		<!-- 图片 -->
+		<result property="citycode" column="c_citycode" />
+		<!-- 图片 -->
+		<result property="secondMenuId" column="c_second_menu_id" />
+		<!-- 图片 -->
+		<result property="firstMenuId" column="c_first_menu_id" />
+		<!-- 图片 -->
+		<result property="status" column="c_status" />
+		<!-- 排序号 -->
+		<result property="sort" column="c_sort" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="banner"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_banner (
+						pk_id,
+						c_name,
+						c_type,
+						c_link,
+						c_first_menu_id,
+						c_second_menu_id,
+						c_province,
+						c_province_name,
+						c_citycode,
+						c_city_name,
+						c_image,
+						c_sort,
+		 				c_status,
+						c_createDate,
+						c_createBy,
+						c_updateDate,
+						c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{name},
+						#{type},
+						#{link},
+						#{firstMenuId},
+						#{secondMenuId},
+						#{province},
+						#{provinceName},
+						#{citycode},
+						#{cityName},
+						#{image},
+						#{sort},
+						#{status},
+						now(),
+						#{createBy},
+						now(),
+						#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="banner">
+		<![CDATA[ DELETE FROM t_banner WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_banner WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="banner">
+		UPDATE t_banner
+		<set>
+			c_updateDate=now(),
+			<if test="null!=name">c_name=#{name},</if>
+			<if test="null!=type">c_type=#{type}, </if>
+			<if test="null!=link">c_link=#{link}, </if>
+			<if test="null!=firstMenuId">c_first_menu_id=#{firstMenuId}, </if>
+			<if test="null!=secondMenuId">c_second_menu_id=#{secondMenuId}, </if>
+			<if test="null!=province">c_province=#{province}, </if>
+			<if test="null!=citycode">c_citycode=#{citycode}, </if>
+			<if test="null!=provinceName">c_province_name=#{provinceName}, </if>
+			<if test="null!=cityName">c_city_name=#{cityName}, </if>
+			<if test="null!=image">c_image=#{image},</if>
+			<if test="null!=sort">c_sort=#{sort},</if>
+			<if test="null!=status">c_status=#{status}</if>
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="bannerMapper">
+		<![CDATA[ SELECT t.* FROM t_banner t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="bannerMapper" parameterType="banner">
+		 <![CDATA[ SELECT * FROM t_banner WHERE 1=1]]>
+		 <if test="null!=name">and c_name like "%"#{name}"%"</if>
+		 <if test="null!=status">and c_status = #{status}</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="bannerMapper" parameterType="banner">
+		 <![CDATA[ SELECT * FROM t_banner WHERE 1=1]]>
+		 <if test="null!=name">and c_name =#{name}</if>
+		 <if test="null!=status">and c_status = #{status}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="banner">
+		 <![CDATA[ SELECT count(*) FROM t_banner WHERE 1=1]]>
+		 <if test="null!=name">and c_name like "%"#{name}"%"</if>
+		 <if test="null!=status">and c_status = #{status}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="bannerMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_banner WHERE 1=1]]>
+		 <if test="null!=name and ''!=name">and c_name like "%"#{name}"%"</if>
+		 <if test="null!=status and ''!=status">and c_status = #{status}</if>
+		 <if test="null!=firstMenuId and ''!=firstMenuId">and c_first_menu_id = #{firstMenuId}</if>
+		 <if test="null!=secondMenuId and ''!=secondMenuId">and c_second_menu_id = #{secondMenuId}</if>
+		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
+		 <if test="null!=province and ''!=province">and c_province = #{province}</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+</mapper>

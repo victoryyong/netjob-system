@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IMemberDao">
+	<resultMap id="memberMapper" type="member">
+		<!-- 编号 -->
+		<id property="id" column="pk_id" />
+		<!-- 用户名 -->
+		<result property="name" column="c_name" />
+		<!-- 年龄 -->
+		<result property="age" column="c_age" />
+		<!-- 性别 -->
+		<result property="gender" column="c_gender" />
+		<!-- 访客数 -->
+		<result property="visitors" column="c_visitors" />
+		<!-- 点赞数 -->
+		<result property="fans" column="c_fans" />
+		<!-- 交易数 -->
+		<result property="trades" column="c_trades" />
+		<!-- 点赞数 -->
+		<result property="agrees" column="c_agrees" />
+		<!-- 是否显示认证信息 -->
+		<result property="showAuth" column="c_showAuth" />
+		<!-- 技能评分 -->
+		<result property="skillScore" column="c_skillScore" />
+		<!-- 诚信评分 -->
+		<result property="creditScore" column="c_creditScore" />
+		<!-- 邮箱 -->
+		<result property="email" column="c_email" />
+		<!-- 电话 -->
+		<result property="phone" column="c_phone" />
+		<!-- 缩略图 -->
+		<result property="image" column="c_image" />
+		<!-- 地址 -->
+		<result property="address" column="c_address" />
+		<!-- 类型 -->
+		<result property="type" column="c_type" />
+		<!-- 是否电话认证 -->
+		<result property="isPhoneAuth" column="c_isPhoneAuth" />
+		<!-- 是否实名认证 -->
+		<result property="isCardAuth" column="c_isCardAuth" />
+		<!-- 是否技能认证 -->
+		<result property="isSkillAuth" column="c_isSkillAuth" />
+	</resultMap>
+	
+	<resultMap id="visitorMapper" type="java.util.Map">
+		<!-- 编号 -->
+		<id property="id" column="mm_pk_id" />
+		<!-- 用户名 -->
+		<result property="name" column="c_name" />
+		<!-- 性别 -->
+		<result property="gender" column="c_gender" />
+		<!-- 缩略图 -->
+		<result property="image" column="c_image" />
+		<!-- 中间表ID -->
+		<result property="mv_id" column="mv_pk_id" />
+		<!-- 中间表ID -->
+		<result property="visitTime" column="c_visitTime" />
+	</resultMap>
+	
+	<resultMap id="agreeMapper" type="java.util.Map">
+		<!-- 编号 -->
+		<id property="id" column="mm_pk_id" />
+		<!-- 用户名 -->
+		<result property="name" column="c_name" />
+		<!-- 性别 -->
+		<result property="gender" column="c_gender" />
+		<!-- 缩略图 -->
+		<result property="image" column="c_image" />
+		<!-- 中间表ID -->
+		<result property="agreeTime" column="c_agreeTime" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="member"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_member (
+						pk_id,
+						c_name,
+						c_age,
+						c_gender,
+						c_password,
+		 				c_email,
+		 				c_phone,
+		 				c_wxId,
+						c_qqId,
+						c_image,
+						c_address,
+						c_citycode,
+						c_type,
+		 				c_isPhoneAuth,
+		 				c_createDate,
+		 				c_createBy,
+		 				c_updateDate,
+		 				c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{name},
+						#{age},
+						#{gender},
+						#{password},
+						#{email},
+						#{phone},
+						#{wxId},
+						#{qqId},
+						#{image},
+						#{address},
+						#{citycode},
+						#{type},
+						#{isPhoneAuth},
+		 				now(),
+		 				#{createBy},
+		 				now(),
+				   		#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="member">
+		<![CDATA[ DELETE FROM t_member WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_member WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="member">
+		UPDATE t_member
+		<set>
+			c_updateDate=now(),
+	   		<if test="null!=name">c_name=#{name},</if>
+			<if test="null!=password">c_password=#{password},</if>
+			<if test="null!=phone">c_phone=#{phone},</if>
+			<if test="null!=email">c_email=#{email}, </if>
+			<if test="null!=image">c_image=#{image}, </if>
+			<if test="null!=showAuth">c_showAuth=#{showAuth}, </if>
+			<if test="null!=creditScore">c_creditScore=#{creditScore}, </if>
+			<if test="null!=skillScore">c_skillScore=#{skillScore}, </if>
+			<if test="null!=visitors">c_visitors=#{visitors}, </if>
+			<if test="null!=agrees">c_agrees=#{agrees}, </if>
+			<if test="null!=trades">c_trades=#{trades}, </if>
+			<if test="null!=address">c_address=#{address},</if>
+			<if test="null!=status">c_status=#{status}, </if>
+			<if test="null!=citycode">c_citycode = #{citycode},</if>
+			<if test="null!=isPhoneAuth">c_isPhoneAuth=#{isPhoneAuth},</if>
+			<if test="null!=isCardAuth">c_isCardAuth=#{isCardAuth}, </if>
+			<if test="null!=isSkillAuth">c_isSkillAuth=#{isSkillAuth}</if>
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="memberMapper">
+		<![CDATA[ SELECT t.* FROM t_member t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="memberMapper" parameterType="member">
+		 <![CDATA[ SELECT * FROM t_member WHERE 1=1]]>
+		 <if test="''!=id and null!=id">and pk_id = #{id}</if>
+		 <if test="''!=wxId and null!=wxId">and c_wxId  = #{wxId}</if>
+		 <if test="''!=qqId and null!=qqId">and c_qqId  = #{qqId}</if>
+ 		 <if test="''!=name and null!=name">and c_name =#{name}</if>
+		 <if test="''!=status and null!=status">and c_status = #{status}</if>
+		 <if test="''!=type and null!=type">and c_type=#{type}</if>
+		 <if test="''!=phone and null!=phone">and c_phone  = #{phone}</if>
+		 <if test="''!=citycode and null!=citycode">and c_citycode  = #{citycode}</if>
+		 <if test="''!=password and null!=password">and c_password=#{password}</if>
+		 <if test="''!=gender and null!=gender">and c_gender = #{gender}</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询 -->
+	<select id="queryEntity" resultMap="memberMapper" parameterType="member">
+		 <![CDATA[ SELECT * FROM t_member WHERE 1=1]]>
+		 <if test="''!=id and null!=id">and pk_id = #{id}</if>
+		 <if test="''!=wxId and null!=wxId">and c_wxId  = #{wxId}</if>
+		 <if test="''!=qqId and null!=qqId">and c_qqId  = #{qqId}</if>
+ 		 <if test="''!=name and null!=name">and c_name =#{name}</if>
+		 <if test="''!=status and null!=status">and c_status = #{status}</if>
+		 <if test="''!=type and null!=type">and c_type=#{type}</if>
+		 <if test="''!=phone and null!=phone">and c_phone  = #{phone}</if>
+		 <if test="''!=citycode and null!=citycode">and c_citycode  = #{citycode}</if>
+		 <if test="''!=password and null!=password">and c_password=#{password}</if>
+		 <if test="''!=gender and null!=gender">and c_gender = #{gender}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="member">
+		 <![CDATA[ SELECT count(*) FROM t_member WHERE 1=1]]>
+		 <if test="''!=id and null!=id">and pk_id = #{id}</if>
+		 <if test="''!=wxId and null!=wxId">and c_wxId  = #{wxId}</if>
+		 <if test="''!=qqId and null!=qqId">and c_qqId  = #{qqId}</if>
+ 		 <if test="''!=name and null!=name">and c_name =#{name}</if>
+		 <if test="''!=status and null!=status">and c_status = #{status}</if>
+		 <if test="''!=type and null!=type">and c_type=#{type}</if>
+		 <if test="''!=phone and null!=phone">and c_phone  = #{phone}</if>
+		 <if test="''!=citycode and null!=citycode">and c_citycode  = #{citycode}</if>
+		 <if test="''!=password and null!=password">and c_password=#{password}</if>
+		 <if test="''!=gender and null!=gender">and c_gender = #{gender}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="memberMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_member WHERE 1=1]]>
+		 <if test="''!=name and null!=name">and c_name like "%"#{name}"%"</if>
+		 <if test="''!=email and null!=email">and c_email like "%"#{email}"%"</if>
+		 <if test="''!=address and null!=address">and c_address like "%"#{address}"%"</if>
+		 <if test="''!=type and null!=type">and c_type=#{type}</if>
+		 <if test="''!=citycode and null!=citycode">and c_citycode  = #{citycode}</if>
+		 <if test="''!=phone and null!=phone">and c_phone  like "%"#{phone}"%"</if>
+		 <if test="''!=password and null!=password">and c_password=#{password}</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+	
+	
+		<select id="queryPageFriends" resultMap="memberMapper" parameterType="java.util.Map">
+		  SELECT mm.* FROM t_member_friend mf,
+		  t_member mm
+		 WHERE 
+		 mf.c_friendId = mm.pk_id
+		 <if test="null!=memberId">and mf.c_memberId = #{memberId}</if>
+		 <if test="null!=friendId">and mf.c_friendId = #{friendId}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageFamous" resultMap="memberMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_member WHERE 1=1]]>
+		 <if test="null!=citycode and ''!=citycode">and  c_citycode = #{citycode}</if>
+		 order by c_fans,c_trades,c_creditScore desc
+	</select>
+	
+	<insert id="addFriend" parameterType="java.lang.String">
+		  INSERT INTO t_member_friend (pk_id,c_memberId,c_friendId,c_createDate) values(#{0},#{1},#{2},now())
+	</insert>
+	
+	<delete id="deleteFriend" parameterType="java.lang.String">
+		DELETE FROM t_member_friend WHERE 
+			c_memberId = #{0}
+			and c_friendId = #{1}
+	</delete>
+	
+		<!-- 更新 -->
+	<update id="addFriendCount" parameterType="java.lang.String">
+		UPDATE t_member
+		<set>
+			c_fans=c_fans+1
+		</set>
+		WHERE pk_id = #{memberId}
+	</update>
+	
+			<!-- 更新 -->
+	<update id="deleteFriendCount" parameterType="java.lang.String">
+		UPDATE t_member
+		<set>
+			c_fans=c_fans-1
+		</set>
+		WHERE pk_id = #{memberId}
+	</update>
+	
+	<select id="queryPageVisitors" resultMap="visitorMapper" parameterType="java.util.Map">
+		  SELECT 
+			  mm.pk_id as mm_pk_id,
+			  mm.c_name,mm.c_gender,
+			  mm.c_image,mv.pk_id as mv_pk_id,
+			  date_format(mv.c_createDate,'%Y-%m-%d %H:%i:%S') as c_visitTime
+		  FROM t_member_visitor mv,
+		  	  t_member mm
+	 	  WHERE 
+			 mv.c_visitorId = mm.pk_id
+			 <if test="null!=memberId">and mv.c_memberId = #{memberId}</if>
+			 <if test="null!=visitorId">and mv.c_visitorId = #{visitorId}</if>
+			 <if test="null!=startDate"><![CDATA[and mv.c_createDate > #{startDate}]]></if>
+			 <if test="null!=endDate"><![CDATA[and mv.c_createDate < #{endDate}]]></if>
+	</select>
+	
+	<insert id="addVisitor" parameterType="java.lang.String">
+		  INSERT INTO t_member_visitor (pk_id,c_memberId,c_visitorId,c_createDate) values(#{0},#{1},#{2},now())
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="addVisitorCount" parameterType="java.lang.String">
+		UPDATE t_member
+		<set>
+			c_visitors=c_visitors+1
+		</set>
+		WHERE pk_id = #{memberId}
+	</update>
+	
+	<update id="updateVisitor" parameterType="java.lang.String">
+		UPDATE t_member_visitor
+		<set>
+			c_createDate=now()
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+	
+	<select id="queryAgrees" resultMap="agreeMapper" parameterType="java.util.Map">
+		  SELECT 
+			  mm.pk_id as mm_pk_id,
+			  mm.c_name,mm.c_gender,
+			  date_format(ma.c_createDate,'%Y-%m-%d %H:%i:%S') as c_agreeTime
+		  FROM t_member_agree ma,
+		  	  t_member mm
+	 	  WHERE 
+			 ma.c_agreeId = mm.pk_id
+			 <if test="null!=memberId">and ma.c_memberId = #{memberId}</if>
+			 <if test="null!=agreeId">and ma.c_agreeId = #{agreeId}</if>
+	</select>
+	
+	<insert id="addAgree" parameterType="java.lang.String">
+		  INSERT INTO t_member_agree (pk_id,c_memberId,c_agreeId,c_createDate) values(#{0},#{1},#{2},now())
+	</insert>
+	
+		<!-- 更新 -->
+	<update id="addAgreeCount" parameterType="java.lang.String">
+		UPDATE t_member
+		<set>
+			c_agrees=c_agrees+1
+		</set>
+		WHERE pk_id = #{memberId}
+	</update>
+	
+			<!-- 更新 -->
+	<update id="deleteAgreeCount" parameterType="java.lang.String">
+		UPDATE t_member
+		<set>
+			c_agrees=c_agrees-1
+		</set>
+		WHERE pk_id = #{memberId}
+	</update>
+	
+	<delete id="unAgree" parameterType="java.lang.String">
+		DELETE FROM t_member_agree WHERE 
+			c_memberId = #{0}
+			and c_agreeId = #{1}
+	</delete>
+	
+</mapper>

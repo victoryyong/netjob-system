@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<properties>
+		<!-- SSQL方言 MSSQL, MySQL, Oracle -->
+		<property name="dialect" value="MySQL" />
+	</properties>
+	<settings>
+		<!-- useGeneratedKeys 允许 JDBC 支持生成的键。 -->
+		<setting name="useGeneratedKeys" value="true" />
+		<!-- autoMappingBehavior 指定 MyBatis 如何自动映射列到字段/ 属性。PARTIAL 只会自动映射简单, 没有嵌套的结果。FULL 
+			会自动映射任 意复杂的结果(嵌套的或其他情况) 。 NONE, PARTIAL, FULL PARTIAL -->
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<!-- defaultExecutorType 配置默认的执行器。SIMPLE 执行器没 有什么特别之处。 REUSE 执行器重用 预处理语句。BATCH 
+			执行器重用语句 和批量更新 SIMPLE REUSE BATCH SIMPLE -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<!-- defaultStatementTimeout 设置超时时间, 它决定驱动等待一个数 据库响应的时间。 -->
+		<setting name="defaultStatementTimeout" value="5000" />
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+	</settings>
+	<typeAliases>
+		<typeAlias alias="user" type="com.thsword.netjob.pojo.User" />
+		<typeAlias alias="role" type="com.thsword.netjob.pojo.Role" />
+		<typeAlias alias="permission" type="com.thsword.netjob.pojo.Permission" />
+		<typeAlias alias="token" type="com.thsword.netjob.pojo.Token" />
+		<typeAlias alias="dict" type="com.thsword.netjob.pojo.Dict" />
+		
+		<typeAlias alias="member" type="com.thsword.netjob.pojo.app.Member" />
+		<typeAlias alias="banner" type="com.thsword.netjob.pojo.app.Banner" />
+		<typeAlias alias="menu" type="com.thsword.netjob.pojo.app.Menu" />
+		<typeAlias alias="access" type="com.thsword.netjob.pojo.app.Access" />
+		<typeAlias alias="setting" type="com.thsword.netjob.pojo.Setting" />
+		<typeAlias alias="introduce" type="com.thsword.netjob.pojo.app.Introduce" />
+		<typeAlias alias="address" type="com.thsword.netjob.pojo.app.Address" />
+		<typeAlias alias="serve" type="com.thsword.netjob.pojo.app.Serve" />
+		<typeAlias alias="news" type="com.thsword.netjob.pojo.app.News" />
+		<typeAlias alias="media" type="com.thsword.netjob.pojo.app.Media" />
+		<typeAlias alias="brand" type="com.thsword.netjob.pojo.app.Brand" />
+		<typeAlias alias="authPerson" type="com.thsword.netjob.pojo.app.AuthPerson" />
+		<typeAlias alias="authCompany" type="com.thsword.netjob.pojo.app.AuthCompany" />
+		<typeAlias alias="comment" type="com.thsword.netjob.pojo.app.Comment" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="mybatis/mapper/userMapper.xml" />
+		<mapper resource="mybatis/mapper/roleMapper.xml" />
+		<mapper resource="mybatis/mapper/permissionMapper.xml" />
+		<mapper resource="mybatis/mapper/tokenMapper.xml" />
+		<mapper resource="mybatis/mapper/dictMapper.xml" />
+		
+		<mapper resource="mybatis/mapper/memberMapper.xml" />
+		<mapper resource="mybatis/mapper/bannerMapper.xml" />
+		<mapper resource="mybatis/mapper/menuMapper.xml" />
+		<mapper resource="mybatis/mapper/accessMapper.xml" />
+		<mapper resource="mybatis/mapper/settingMapper.xml" />
+		<mapper resource="mybatis/mapper/introduceMapper.xml" />
+		<mapper resource="mybatis/mapper/accessMapper.xml" />
+		<mapper resource="mybatis/mapper/addressMapper.xml" />
+		<mapper resource="mybatis/mapper/serveMapper.xml" />
+		<mapper resource="mybatis/mapper/newsMapper.xml" />
+		<mapper resource="mybatis/mapper/mediaMapper.xml" />
+		<mapper resource="mybatis/mapper/brandMapper.xml" />
+		<mapper resource="mybatis/mapper/authPersonMapper.xml" />
+		<mapper resource="mybatis/mapper/authCompanyMapper.xml" />
+		<mapper resource="mybatis/mapper/commentMapper.xml" />
+	</mappers>
+</configuration>

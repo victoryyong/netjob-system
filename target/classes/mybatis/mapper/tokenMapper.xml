@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.ITokenDao">
+	<resultMap id="tokenMapper" type="token">
+		<!-- 编号 -->
+		<id property="id" column="pk_id" />
+		<!-- 用户ID -->
+		<result property="userId" column="c_userId" />
+		<!-- 用户名 -->
+		<result property="username" column="c_username" />
+		<!-- 口令 -->
+		<result property="issuer" column="c_issuer" />
+		<!-- 邮箱 -->
+		<result property="subject" column="c_subject" />
+		<!-- secretKey -->
+		<result property="secretKey" column="c_secretKey" />
+		<!-- 真实姓名 -->
+		<result property="access_token" column="c_access_token" />
+		<!-- 手机 -->
+		<result property="old_token" column="c_old_token" />
+		<!-- 图片 -->
+		<result property="extendDate" column="c_extendDate" />
+		<!-- 状态(0:正常,1:禁用) -->
+		<result property="expires" column="c_expires" />
+		<!-- 登录次数 -->
+		<result property="sessionDate" column="c_sessionDate" />
+		<!-- 创建时间 -->
+		<result property="createDate" column="c_createDate" />
+		<!-- 创建时间 -->
+		<result property="createBy" column="c_createBy" />
+		
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="token"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_token (
+						pk_id,
+						c_userId,
+						c_username,
+						c_issuer,
+						c_subject,
+						c_secretKey,
+		 				c_access_token,
+		 				c_old_token,
+		 				c_extendDate,
+						c_expires,
+		 				c_sessionDate,
+						c_createDate,
+						c_createBy
+		 				)
+				VALUES(
+						#{id},
+						#{userId},
+						#{username},
+						#{issuer},
+						#{subject},
+						#{secretKey},
+						#{access_token},
+						#{old_token},
+						#{extendDate},
+						#{expires},
+				   		#{sessionDate},
+						#{createDate},
+						#{createBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="token">
+		<![CDATA[ DELETE FROM t_token WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_token WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="token">
+		UPDATE t_token
+		<set>
+			<if test="null!=access_token">c_access_token=#{access_token},</if>
+			<if test="null!=old_token">c_old_token=#{old_token}, </if>
+			<if test="null!=extendDate">c_extendDate=#{extendDate}, </if>
+			<if test="null!=sessionDate">c_sessionDate=#{sessionDate}</if>
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="tokenMapper">
+		<![CDATA[ SELECT t.* FROM t_token t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="tokenMapper" parameterType="token">
+		 <![CDATA[ SELECT * FROM t_token WHERE 1=1]]>
+		 <if test="null!=userId">and c_userId = #{userId}</if>
+		 <if test="null!=username">and c_username = #{username}</if>
+		 <if test="null!=issuer">and c_issuer = #{issuer}</if>
+		 <if test="null!=subject">and c_subject = #{subject}</if>
+		 <if test="null!=access_token">and c_access_token = #{access_token}</if>
+		 <if test="null!=old_token">and c_old_token = #{old_token}</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="tokenMapper" parameterType="token">
+		 <![CDATA[ SELECT * FROM t_token WHERE 1=1]]>
+		  <if test="null!=userId">and c_userId = #{userId}</if>
+		 <if test="null!=username">and c_username = #{username}</if>
+		 <if test="null!=issuer">and c_issuer = #{issuer}</if>
+		 <if test="null!=subject">and c_subject = #{subject}</if>
+		 <if test="null!=access_token">and c_access_token = #{access_token}</if>
+		 <if test="null!=old_token">and c_old_token = #{old_token}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="token">
+		 <![CDATA[ SELECT count(*) FROM t_token WHERE 1=1]]>
+		 <if test="null!=userId">and c_userId = #{userId}</if>
+		 <if test="null!=username">and c_username = #{username}</if>
+		 <if test="null!=issuer">and c_issuer = #{issuer}</if>
+		 <if test="null!=subject">and c_subject = #{subject}</if>
+		 <if test="null!=access_token">and c_access_token = #{access_token}</if>
+		 <if test="null!=old_token">and c_old_token = #{old_token}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="tokenMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_token WHERE 1=1]]>
+		  <if test="null!=userId">and c_userId = #{userId}</if>
+		 <if test="null!=username">and c_username = #{username}</if>
+		 <if test="null!=issuer">and c_issuer = #{issuer}</if>
+		 <if test="null!=subject">and c_subject = #{subject}</if>
+		 <if test="null!=access_token">and c_access_token = #{access_token}</if>
+		 <if test="null!=old_token">and c_old_token = #{old_token}</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+</mapper>
