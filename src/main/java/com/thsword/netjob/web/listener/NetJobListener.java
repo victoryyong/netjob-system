@@ -23,7 +23,7 @@ public class NetJobListener implements ApplicationListener<ContextRefreshedEvent
 		try {
 			settings = (List<Setting>) settingService.queryAllEntity(ISettingDao.class, null);
 			Global.initSetting(settings);
-			Global.initMaps();
+			//Global.initMaps();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

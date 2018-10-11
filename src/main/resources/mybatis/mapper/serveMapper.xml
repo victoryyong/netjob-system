@@ -225,6 +225,23 @@
 		 <if test="null!=menuId and ''!=menuId">and t.c_menu_id = #{menuId}</if>
 		 
 		 <if test="null!=citycode and ''!=citycode">and t.c_citycode = #{citycode}</if>
+		 
+		  <if test="null!=startTime and ''!=startTime and null!=endTime and ''!=endTime">
+		  	 <![CDATA[
+		  	and 
+		  	(
+				(str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{startTime}),"%Y-%m-%d %H:%i:%s") > str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",1)),'%Y-%m-%d %H:%i')
+				and 
+				str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{startTime}),"%Y-%m-%d %H:%i:%s") < str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",-1)),'%Y-%m-%d %H:%i')
+				)
+				or
+				(str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{endTime}),"%Y-%m-%d %H:%i:%s") > str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",1)),'%Y-%m-%d %H:%i')
+				and 
+				str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{endTime}),"%Y-%m-%d %H:%i:%s") < str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",-1)),'%Y-%m-%d %H:%i')
+				)
+			)
+		  	]]>
+		  </if>
 	</select>
 
 	<!-- #######################CRUD end####################### -->

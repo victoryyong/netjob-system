@@ -196,6 +196,8 @@ public class ServeApp {
 			String gender = request.getParameter("gender");
 			String menuId = request.getParameter("menuId");
 			String citycode = request.getParameter("citycode");
+			String endTime = request.getParameter("endTime");
+			String startTime = request.getParameter("startTime");
 			//查询参数
 			Map<String, Object> map = new HashMap<String, Object>();
 			
@@ -322,6 +324,8 @@ public class ServeApp {
 			map.put("menuId", menuId);
 			map.put("memberId", memberId);
 			map.put("citycode", citycode);
+			map.put("startTime", startTime);
+			map.put("endTime", endTime);
 			@SuppressWarnings("unchecked")
 			List<Serve> serves = (List<Serve>) serveService.queryPageEntity(IServeDao.class, map);
 			JSONObject result = new JSONObject();
