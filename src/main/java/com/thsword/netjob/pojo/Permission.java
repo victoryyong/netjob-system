@@ -49,6 +49,10 @@ public class Permission implements Serializable {
 	 */
 	private Integer type;
 	/**
+	 * 权限级别
+	 */
+	private Integer level;
+	/**
 	 * 排序号
 	 */
 	private Integer sort;
@@ -148,5 +152,11 @@ public class Permission implements Serializable {
 		return false; 
 		Permission p = (Permission)o; 
 		return p.getId().equals(this.getId());
+	}
+	public Integer getLevel() {
+		return level;
+	}
+	public void setLevel(Integer level) {
+		this.level = level;
 	} 
 }

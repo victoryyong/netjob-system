@@ -16,6 +16,14 @@
 		<result property="image" column="c_image" />
 		<!-- 状态(0:正常,1:禁用) -->
 		<result property="status" column="c_status" />
+		<!-- 市 -->
+		<result property="citycode" column="c_citycode" />
+			<!-- 市 -->
+		<result property="cityName" column="c_city_name" />
+		<!-- 省 -->
+		<result property="province" column="c_province" />
+		<!-- 类型 -->
+		<result property="level" column="c_level" />
 			<!-- 登录次数 -->
 		<result property="isAdmin" column="c_isAdmin" />
 		<!-- 登录次数 -->
@@ -40,6 +48,10 @@
 		 				c_phone,
 		 				c_image,
 						c_status,
+						c_level,
+						c_citycode,
+						c_city_name,
+						c_province,
 						c_isAdmin,
 		 				c_logins,
 						c_createDate,
@@ -54,6 +66,10 @@
 						#{phone},
 						#{image},
 						#{status},
+						#{level},
+						#{citycode},
+						#{cityName},
+						#{province},
 						#{isAdmin},
 				   		#{logins},
 						#{createDate},
@@ -83,6 +99,10 @@
 			<if test="null!=email">c_email=#{email}, </if>
 			<if test="null!=realName">c_realName=#{realName},</if>
 			<if test="null!=phone">c_phone=#{phone}, </if>
+			<if test="null!=level">c_level=#{level}, </if>
+			<if test="null!=citycode">c_citycode=#{citycode}, </if>
+			<if test="null!=cityName">c_city_name=#{cityName}, </if>
+			<if test="null!=province">c_province=#{province}, </if>
 			<if test="null!=logins">c_logins=#{logins},</if>
 			<if test="null!=image">c_image=#{image},</if>
 			<if test="null!=createBy">c_createBy=#{createBy},</if>

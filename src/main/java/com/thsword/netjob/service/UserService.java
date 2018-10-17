@@ -29,5 +29,5 @@ List<Permission> queryUserMenus(String userId, boolean isAdmin);
 
 	List<Permission> queryPageRoots(Map<String, Object> map);
 
-	List<Permission> queryRoots();
+	List<Permission> queryRoots(String level);
 }

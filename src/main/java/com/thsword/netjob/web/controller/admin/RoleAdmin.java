@@ -45,12 +45,42 @@ public class RoleAdmin {
 	@SuppressWarnings("unchecked")
 	public void list(HttpServletRequest request,HttpServletResponse response,Page pageUtil,Role role) throws Exception{
 		try {
+			String level = request.getParameter("level");
 			JSONObject result  = new JSONObject();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map = (Map<String, Object>) JSONObject.toJSON(role);
 			map.put("page", pageUtil);
+			map.put("level", level);
 			List<Role> roles = (List<Role>) userService.queryPageEntity(IRoleDao.class,map);
 			result.put("page", pageUtil);
+			result.put("param", role);
+			result.put("list", roles);
+			JsonResponseUtil.successBodyResponse(result, response, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	/**
+	 * @throws Exception 
+	 * 角色
+	* @Title:  
+	* @Description: 角色列表
+	* @param @param request
+	* @param @param response    设定文件 
+	* @return void    返回类型 
+	* @throws
+	 */
+	@AuthAnnotation(permissions="admin.role.list")
+	@RequestMapping("admin/role/listAll")
+	@SuppressWarnings("unchecked")
+	public void listAll(HttpServletRequest request,HttpServletResponse response,Role role) throws Exception{
+		try {
+			JSONObject result  = new JSONObject();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map = (Map<String, Object>) JSONObject.toJSON(role);
+			List<Role> roles = (List<Role>) userService.queryAllEntity(IRoleDao.class,map);
 			result.put("param", role);
 			result.put("list", roles);
 			JsonResponseUtil.successBodyResponse(result, response, request);

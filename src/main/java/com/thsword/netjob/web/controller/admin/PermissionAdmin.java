@@ -75,8 +75,9 @@ public class PermissionAdmin {
 	@RequestMapping("admin/permission/listAll")
 	public void listAll(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		try {
+			String level = request.getParameter("level");
 			JSONObject result  = new JSONObject();
-			List<Permission> permissions = userService.queryRoots();
+			List<Permission> permissions = userService.queryRoots(level);
 			result.put("list", permissions);
 			JsonResponseUtil.successBodyResponse(result, response, request);
 		} catch (Exception e) {

@@ -26,9 +26,25 @@ public class User implements Serializable {
 	 */
 	private String password;
 	/**
+	 * 省
+	 */
+	private String province;
+	/**
+	 * 市
+	 */
+	private String citycode;
+	/**
+	 * 市名
+	 */
+	private String cityName;
+	/**
 	 * 邮箱
 	 */
 	private String email;
+	/**
+	 * 用户级别
+	 */
+	private Integer level;
 	/**
 	 * 真实姓名
 	 */
@@ -143,5 +159,28 @@ public class User implements Serializable {
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
-	
+	public String getCitycode() {
+		return citycode;
+	}
+	public void setCitycode(String citycode) {
+		this.citycode = citycode;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public Integer getLevel() {
+		return level;
+	}
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
 }

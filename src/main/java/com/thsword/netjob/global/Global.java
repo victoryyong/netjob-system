@@ -51,6 +51,12 @@ public class Global{
     //后台域名
     public static final String SYSTEM_ADMIN_DOMAIN="SYSTEM.ADMIN.DOMAIN";
     
+    //角色、权限类型
+    /** 系统级别*/
+    public static final int SYS_ADMIN_ROLE_PERM_TYPE_1=1;
+    /** 代理人级别*/
+    public static final int SYS_ADMIN_ROLE_PERM_TYPE_2=1;
+    
     //七牛常量
     /** 七牛accessKey */
     public static final String QINIU_UPLOAD_ACCESS_KEY="QINIU.ACCESS.KEY";
@@ -221,7 +227,6 @@ public class Global{
 	public static final String SYS_DICT_ACCOUNT_PAY_WAY = "dict.account.pay.way";
 	/** 收支类型*/
 	public static final String SYS_DICT_ACCOUNT_BUSS_TYPE = "dict.account.buss.type";
-	
 	
 	public static void initSetting(List<Setting> dbSettings) {
 		if(!CollectionUtils.isEmpty(dbSettings)){

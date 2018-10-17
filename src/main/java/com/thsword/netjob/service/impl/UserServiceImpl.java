@@ -243,7 +243,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService{
 		return permissionDao.queryPageRoots(map);
 	}
 	@Override
-	public List<Permission> queryRoots() {
-		return permissionDao.queryRoots();
+	public List<Permission> queryRoots(String level) {
+		return permissionDao.queryRoots(level);
 	}
 }

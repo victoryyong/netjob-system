@@ -13,6 +13,7 @@
 		<result property="url" column="c_url" />
 		<result property="parentId" column="c_parentId" />
 		<result property="type" column="c_type" />
+		<result property="level" column="c_level" />
 		<result property="sort" column="c_sort" />
 		<result property="createDate" column="c_createDate" />
 		<result property="createBy" column="c_createBy" />
@@ -24,8 +25,8 @@
 	<!-- 增加权限 -->
 	<insert id="addEntity" parameterType="permission" keyProperty="id">
 		<![CDATA[
-			INSERT INTO t_permission (pk_id,c_name,c_code,c_icon,c_description,c_status,c_url,c_parentId,c_type,c_sort,c_createDate,c_createBy)
-			VALUES(#{id},#{name},#{code},#{icon},#{description},#{status},#{url},#{parentId},#{type},#{sort},#{createDate},#{createBy})
+			INSERT INTO t_permission (pk_id,c_name,c_code,c_icon,c_level,c_description,c_status,c_url,c_parentId,c_type,c_sort,c_createDate,c_createBy)
+			VALUES(#{id},#{name},#{code},#{icon},#{level},#{description},#{status},#{url},#{parentId},#{type},#{sort},#{createDate},#{createBy})
 		]]>
 	</insert>
 
@@ -46,6 +47,7 @@
 			<if test="null!=name">c_name=#{name},</if>
 			<if test="null!=code">c_code=#{code},</if>
 			<if test="null!=icon">c_icon=#{icon},</if>
+			<if test="null!=level">c_level=#{level},</if>
 			<if test="null!=status">c_status=#{status},</if>
 			<if test="null!=description">c_description=#{description},</if>
 			<if test="null!=parentId">c_parentId=#{parentId},</if>
@@ -58,7 +60,9 @@
 
 	<!-- 根据ID查找权限 -->
 	<select id="queryEntityById" parameterType="java.lang.String" resultMap="permissionMapper">
-		<![CDATA[ SELECT * FROM t_permission WHERE pk_id = #{entityId} ]]>
+		<![CDATA[ SELECT * FROM t_permission WHERE pk_id = #{entityId} 
+			
+		]]>
 	</select>
 
 	<!-- 查询所有权限信息 -->
@@ -66,6 +70,7 @@
 		 <![CDATA[ SELECT * FROM t_permission t WHERE 1=1]]>
 		  <if test="null!=name">and t.c_name like "%"#{name}"%"</if>
 		 <if test="null!=code">and t.c_code=#{code}</if>
+		 <if test="null!=level">and t.c_level=#{level}</if>
 		 <if test="null!=status">and t.c_status=#{status}</if>
 		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
 		 <if test="null!=type"> and t.c_type=#{type}</if>
@@ -79,6 +84,7 @@
 		 <if test="null!=name">and t.c_name =#{name}</if>
 		 <if test="null!=code">and t.c_code=#{code}</if>
 		 <if test="null!=status">and t.c_status=#{status}</if>
+		 <if test="null!=level">and t.c_level=#{level}</if>
 		 <if test="null!=sort">and t.c_sort=#{sort}</if>
 		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
 		 <if test="null!=type"> and t.c_type=#{type}</if>
@@ -89,6 +95,7 @@
 		 <![CDATA[ SELECT count(*) FROM t_permission t WHERE 1=1]]>
 		  <if test="null!=name">and t.c_name like "%"#{name}"%"</if>
 		 <if test="null!=code">and t.c_code=#{code}</if>
+		 <if test="null!=level">and t.c_level=#{level}</if>
 		 <if test="null!=status">and t.c_status=#{status}</if>
 		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
 		 <if test="null!=type"> and t.c_type=#{type}</if>
@@ -101,6 +108,7 @@
 		 <if test="null!=name">and t.c_name like "%"#{name}"%"</if>
 		 <if test="null!=code">and t.c_code=#{code}</if>
 		 <if test="null!=status">and t.c_status=#{status}</if>
+		 <if test="null!=level">and t.c_level=#{level}</if>
 		 <if test="null!=parentId"> and t.c_parentId=#{parentId}</if>
 		 <if test="null!=type"> and t.c_type=#{type}</if>
 		 order by t.pk_id desc
@@ -126,7 +134,8 @@
 	<select id="queryRoots" resultMap="permissionMapper">
 		 SELECT p.* FROM t_permission p
 		 WHERE
-		 p.c_parentId='' or p.c_parentId is null
+		 (p.c_parentId='' or p.c_parentId is null)
+		 <if test="null!=level and ''!=level"> and p.c_level=cast(#{level} as unsigned int)</if>
 		 order by p.c_sort asc
 	</select>
 	

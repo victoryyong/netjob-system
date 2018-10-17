@@ -3,6 +3,8 @@ package com.thsword.netjob.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.thsword.netjob.pojo.Permission;
 import com.thsword.netjob.pojo.Role;
 
@@ -65,5 +67,5 @@ public interface IPermissionDao extends IBaseDao{
 	* @return List<Permission>    返回类型 
 	* @throws
 	 */
-	List<Permission> queryRoots();
+	List<Permission> queryRoots(@Param("level")String level);
 }

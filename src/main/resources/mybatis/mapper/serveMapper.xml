@@ -227,19 +227,37 @@
 		 <if test="null!=citycode and ''!=citycode">and t.c_citycode = #{citycode}</if>
 		 
 		  <if test="null!=startTime and ''!=startTime and null!=endTime and ''!=endTime">
-		  	 <![CDATA[
-		  	and 
-		  	(
-				(str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{startTime}),"%Y-%m-%d %H:%i:%s") > str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",1)),'%Y-%m-%d %H:%i')
-				and 
-				str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{startTime}),"%Y-%m-%d %H:%i:%s") < str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",-1)),'%Y-%m-%d %H:%i')
-				)
-				or
-				(str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{endTime}),"%Y-%m-%d %H:%i:%s") > str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",1)),'%Y-%m-%d %H:%i')
-				and 
-				str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{endTime}),"%Y-%m-%d %H:%i:%s") < str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",-1)),'%Y-%m-%d %H:%i')
-				)
-			)
+		   	<![CDATA[	and 
+		   		IF(SUBSTRING_INDEX(t.c_serve_time, "-", 1) > SUBSTRING_INDEX(t.c_serve_time, "-" ,- 1),
+		   		 (
+					str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{startTime}),"%Y-%m-%d %H:%i") < str_to_date(concat(DATE_FORMAT(DATE_ADD(now(),INTERVAL 1 DAY),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",-1)),'%Y-%m-%d %H:%i')
+					and 
+					str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{endTime}),"%Y-%m-%d %H:%i") > str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",1)),'%Y-%m-%d %H:%i')
+				), 
+		   		 (
+					str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{startTime}),"%Y-%m-%d %H:%i") < str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",-1)),'%Y-%m-%d %H:%i')
+					and 
+					str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",#{endTime}),"%Y-%m-%d %H:%i") > str_to_date(concat(DATE_FORMAT(now(),'%Y-%m-%d')," ",SUBSTRING_INDEX(t.c_serve_time,"-",1)),'%Y-%m-%d %H:%i')
+					)
+		   		 )
+		   		 ]]>
+		  </if>
+		  
+		  <if test="null!=startDate and ''!=startDate and null!=endDate and ''!=endDate ">
+		  	<![CDATA[
+		  	and (
+			  		(
+				  		str_to_date(#{startDate},'%Y-%m-%d') <= DATE_SUB(DATE_FORMAT(t.c_createDate,'%Y-%m-%d'),INTERVAL -t.c_validity DAY)
+			  			and
+			  			str_to_date(#{startDate},'%Y-%m-%d') >= DATE_FORMAT(t.c_createDate,'%Y-%m-%d')
+			  		)
+			  		or
+			  		(
+				  		str_to_date(#{endDate},'%Y-%m-%d') <=   DATE_SUB(DATE_FORMAT(t.c_createDate,'%Y-%m-%d'),INTERVAL -t.c_validity DAY)
+			  			and
+			  			str_to_date(#{endDate},'%Y-%m-%d') >= DATE_FORMAT(t.c_createDate,'%Y-%m-%d')
+			  		)
+		  		)
 		  	]]>
 		  </if>
 	</select>

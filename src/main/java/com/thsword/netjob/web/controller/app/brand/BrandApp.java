@@ -102,10 +102,14 @@ public class BrandApp {
 	 * @author: yong
 	 * @time:2018年5月8日 上午12:07:45
 	 */
-	@RequestMapping("app/member/brand/list")
+	@RequestMapping("app/visitor/brand/list")
 	public void list(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
 		try {
-			String memberId = request.getAttribute("memberId")+"";
+			String memberId = request.getParameter("memberId");
+			if(StringUtils.isEmpty(memberId)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "用户ID不能为空", response, request);
+				return;
+			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("memberId", memberId);
 			map.put("page", page);

@@ -18,6 +18,8 @@
 		<result property="author" column="c_author" />
 		<!-- content -->
 		<result property="content" column="c_content" />
+		<!-- content -->
+		<result property="createDate" column="c_createdDate" />
 	</resultMap>
 
 	<!-- #######################CRUD begin####################### -->  

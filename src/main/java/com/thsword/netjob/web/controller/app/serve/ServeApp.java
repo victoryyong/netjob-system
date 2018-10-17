@@ -196,8 +196,9 @@ public class ServeApp {
 			String gender = request.getParameter("gender");
 			String menuId = request.getParameter("menuId");
 			String citycode = request.getParameter("citycode");
-			String endTime = request.getParameter("endTime");
-			String startTime = request.getParameter("startTime");
+			String endDate = request.getParameter("endDate");
+			String startDate = request.getParameter("startDate");
+			String timeRange = request.getParameter("timeRange");
 			//查询参数
 			Map<String, Object> map = new HashMap<String, Object>();
 			
@@ -318,14 +319,19 @@ public class ServeApp {
 				page.setSort(page.getSort()+" "+page.getDir()+",t.c_createDate");
 				page.setDir(Page.DIR_TYPE_DESC);
 			}
+			
+			if(!StringUtils.isEmpty(timeRange)) {
+				map.put("startTime", timeRange.split("-")[0]);
+				map.put("endTime", timeRange.split("-")[1]);
+			}
 			map.put("page", page);
 			map.put("type", type);
 			map.put("gender", gender);
 			map.put("menuId", menuId);
 			map.put("memberId", memberId);
 			map.put("citycode", citycode);
-			map.put("startTime", startTime);
-			map.put("endTime", endTime);
+			map.put("startDate", startDate);
+			map.put("endDate", endDate);
 			@SuppressWarnings("unchecked")
 			List<Serve> serves = (List<Serve>) serveService.queryPageEntity(IServeDao.class, map);
 			JSONObject result = new JSONObject();

@@ -35,7 +35,7 @@ public class Role implements Serializable {
 	/**
 	 * 角色等级
 	 */
-	private String level;
+	private Integer level;
 	/**
 	 * 创建时间
 	 */
@@ -78,10 +78,10 @@ public class Role implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getLevel() {
+	public Integer getLevel() {
 		return level;
 	}
-	public void setLevel(String level) {
+	public void setLevel(Integer level) {
 		this.level = level;
 	}
 	public Date getCreateDate() {
