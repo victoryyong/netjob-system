@@ -79,10 +79,11 @@ public class UserAdmin {
 			user.setLogins(user.getLogins()+1);
 			userService.updateEntity(IUserDao.class, user);
 			List<Permission> menus = userService.queryUserMenus(user.getId(),user.isAdmin());
+			List<String> perms = userService.queryUserPermissions(user.getId());
 			//用户角色
 			List<Role> roles = userService.queryUserRole(user.getId());
 			//缓存用户权限
-			redisService.set("admin:userPermission:"+user.getId(),menus);
+			redisService.set("admin:userPermission:"+user.getId(),perms);
 			redisService.expire("admin:userPermission:"+user.getId(),Global.USER_INFO_REDIS_TIMEOUT);
 			//缓存用户角色
 			redisService.set("admin:userRole:"+user.getId(),roles);

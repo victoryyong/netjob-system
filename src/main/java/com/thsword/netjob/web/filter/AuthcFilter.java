@@ -107,25 +107,21 @@ public class AuthcFilter extends HttpServlet implements HandlerInterceptor {
 				boolean permFlag = false;
 				if (!StringUtils.isEmpty(permission)) {
 					PERMREL permRel = authAtn.permRel();
-					List<Permission> userPerms = null;
-					userPerms = (List<Permission>) redisService
+					List<String> userPerms = new ArrayList<String>();
+					userPerms = (List<String>) redisService
 							.getObject(subject + ":userPermission:" + userId);
-					List<String> userPermsString = new ArrayList<String>();
-					for (Permission perm : userPerms) {
-						userPermsString.add(perm.getCode());
-					}
 					String[] permissions = permission.split(":");
 					for (String pms : permissions) {
 						// 满足一个权限即可
 						if (permRel == PERMREL.OR) {
-							if (contains(userPermsString, pms)) {
+							if (contains(userPerms, pms)) {
 								permFlag = true;
 								break;
 							}
 							// 满足全部权限
 						} else {
 							boolean tempFlag = false;
-							tempFlag = contains(userPermsString, pms);
+							tempFlag = contains(userPerms, pms);
 							if (!tempFlag) {
 								permFlag = false;
 								break;
