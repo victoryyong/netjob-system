@@ -88,7 +88,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService{
 						if(!StringUtils.isEmpty(permission.getParentId())){
 							temp = (Permission) permissionDao.queryEntityById(permission.getParentId());
 							if(null!=temp){
-								if (!menu2.contains(temp)) {
+								if (!menu2.contains(temp)&&temp.getType().equals(Global.SYS_PERMISSION_TYPE_MENU2)) {
 									menu2.add(temp);
 									temp = (Permission) permissionDao.queryEntityById(temp.getParentId());
 									if(null!=temp){
@@ -96,6 +96,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService{
 											menu1.add(temp);
 										}
 									}
+								}else if(!menu1.contains(temp)&&temp.getType().equals(Global.SYS_PERMISSION_TYPE_MENU1)){
+									menu1.add(temp);
 								};
 							}
 						}

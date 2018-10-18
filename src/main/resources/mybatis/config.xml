@@ -28,12 +28,13 @@
 		<typeAlias alias="permission" type="com.thsword.netjob.pojo.Permission" />
 		<typeAlias alias="token" type="com.thsword.netjob.pojo.Token" />
 		<typeAlias alias="dict" type="com.thsword.netjob.pojo.Dict" />
+		<typeAlias alias="setting" type="com.thsword.netjob.pojo.Setting" />
+		<typeAlias alias="auth" type="com.thsword.netjob.pojo.Auth" />
 		
 		<typeAlias alias="member" type="com.thsword.netjob.pojo.app.Member" />
 		<typeAlias alias="banner" type="com.thsword.netjob.pojo.app.Banner" />
 		<typeAlias alias="menu" type="com.thsword.netjob.pojo.app.Menu" />
 		<typeAlias alias="access" type="com.thsword.netjob.pojo.app.Access" />
-		<typeAlias alias="setting" type="com.thsword.netjob.pojo.Setting" />
 		<typeAlias alias="introduce" type="com.thsword.netjob.pojo.app.Introduce" />
 		<typeAlias alias="address" type="com.thsword.netjob.pojo.app.Address" />
 		<typeAlias alias="serve" type="com.thsword.netjob.pojo.app.Serve" />
@@ -50,12 +51,13 @@
 		<mapper resource="mybatis/mapper/permissionMapper.xml" />
 		<mapper resource="mybatis/mapper/tokenMapper.xml" />
 		<mapper resource="mybatis/mapper/dictMapper.xml" />
+		<mapper resource="mybatis/mapper/settingMapper.xml" />
+		<mapper resource="mybatis/mapper/authMapper.xml" />
 		
 		<mapper resource="mybatis/mapper/memberMapper.xml" />
 		<mapper resource="mybatis/mapper/bannerMapper.xml" />
 		<mapper resource="mybatis/mapper/menuMapper.xml" />
 		<mapper resource="mybatis/mapper/accessMapper.xml" />
-		<mapper resource="mybatis/mapper/settingMapper.xml" />
 		<mapper resource="mybatis/mapper/introduceMapper.xml" />
 		<mapper resource="mybatis/mapper/accessMapper.xml" />
 		<mapper resource="mybatis/mapper/addressMapper.xml" />

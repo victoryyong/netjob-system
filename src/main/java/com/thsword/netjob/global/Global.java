@@ -189,6 +189,20 @@ public class Global{
 	
 	public static final int SYS_MEMBER_ADDRESS_IS_DEFAULT_NO=0;
 	
+	//审核类型
+	public static final int SYS_AUTH_TYPE_1=1;//需求
+	public static final int SYS_AUTH_TYPE_2=2;//服务
+	public static final int SYS_AUTH_TYPE_3=3;//品牌秀
+	
+	//审核状态
+	public static final int SYS_AUTH_STATUS_1=1;//未审核
+	public static final int SYS_AUTH_STATUS_2=2;//审核通过
+	public static final int SYS_AUTH_STATUS_3=3;//审核未通
+	
+	//用户级别
+	public static final int SYS_USER_LEVEL_1=1;//系统级别
+	public static final int SYS_USER_LEVEL_2=2;//代理级别
+	
 	//数据字典
 	
 	/** 年龄范围*/

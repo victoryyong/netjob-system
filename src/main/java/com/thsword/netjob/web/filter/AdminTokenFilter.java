@@ -133,6 +133,12 @@ public class AdminTokenFilter extends HttpServlet implements HandlerInterceptor 
 										request.setAttribute("username", tokenDto.getUsername());
 										user = (User) userService.queryEntityById(IUserDao.class, userId);
 										if(user!=null){
+											if(!StringUtils.isEmpty(user.getLevel())&&user.getLevel()==Global.SYS_USER_LEVEL_1){
+												request.setAttribute("userLevel",Global.SYS_USER_LEVEL_1);
+											}else{
+												request.setAttribute("userLevel",Global.SYS_USER_LEVEL_2);
+												request.setAttribute("citycode", user.getCitycode());
+											}
 											request.setAttribute("isAdmin", user.isAdmin());
 											request.setAttribute("subject", subject);
 										}

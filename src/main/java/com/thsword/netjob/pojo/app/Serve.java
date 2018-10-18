@@ -84,6 +84,10 @@ public class Serve {
 	private Date publishDate;
 	private String memberId;
 	private String memberName;
+	/**
+	 * 审核状态
+	 */
+	private Integer status;
 	/** 经度*/
 	private String longitude;
 	/** 纬度*/
@@ -298,5 +302,11 @@ public class Serve {
 	}
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

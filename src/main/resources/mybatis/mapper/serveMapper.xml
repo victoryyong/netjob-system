@@ -56,6 +56,8 @@
 		<result property="latitude" column="c_latitude" />
 		<!-- 纬度 -->
 		<result property="distance" column="c_distance" />
+		<!-- 纬度 -->
+		<result property="createDate" column="c_createDate" />
 	</resultMap>
 	
 
@@ -156,6 +158,7 @@
 			<if test="null!=latitude">c_latitude=#{latitude},</if>
 			<if test="null!=cityName">c_city_name=#{cityName},</if>
 			<if test="null!=area">c_area=#{area},</if>
+			<if test="null!=status">c_status=#{status},</if>
 			<if test="null!=detailAddress">c_detail_address=#{detailAddress},</if>
 			<if test="null!=keywords">c_keywords=#{keywords},</if>
 			<if test="null!=published">c_published=#{published}</if>
@@ -165,7 +168,7 @@
 
 	<!-- 根据ID查找 -->
 	<select id="queryEntityById" parameterType="java.lang.String" resultMap="serveMapper">
-		<![CDATA[ SELECT t.*,m.c_name FROM t_serve t,t_menu m WHERE m.pk_id = t.c_menu_id and pk_id = #{entityId} ]]>
+		<![CDATA[ SELECT t.*,m.c_name FROM t_serve t left join t_menu m on m.pk_id = t.c_menu_id WHERE t.pk_id = #{entityId} ]]>
 	</select>
 
 	<!--  条件查询查询所有 -->
@@ -270,5 +273,15 @@
 		</set>
 		WHERE pk_id = #{id}
 	</update>
+	
+	<select id="queryPageServe" resultMap="serveMapper" parameterType="java.util.Map">
+		select t.* from t_serve t where 1=1
+		<if test="null!=type and ''!=type">and t.c_type = #{type}</if>
+		<if test="null!=provinceName and ''!=provinceName">and t.c_province_name = #{provinceName}</if>
+		<if test="null!=cityName and ''!=cityName">and t.c_city_name = #{cityName}</if>
+		<if test="null!=name and ''!=name">and t.c_name like "%"#{name}"%"</if>
+		<if test="null!=status and ''!=status">and t.c_status =#{status}</if>
+		<if test="null!=citycode and ''!=citycode">and t.c_citycode =#{citycode}</if>
+	</select>
 	
 </mapper>

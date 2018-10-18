@@ -46,6 +46,10 @@ public class Brand {
 	 */
 	private String content;
 	/**
+	 * 审核状态
+	 */
+	private Integer status;
+	/**
 	 * 创建时间
 	 */
 	private Date createDate;
@@ -138,5 +142,11 @@ public class Brand {
 	}
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }
