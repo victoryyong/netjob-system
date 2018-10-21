@@ -120,6 +120,7 @@ public class AppTokenFilter extends HttpServlet implements HandlerInterceptor {
 								request.setAttribute("memberId", userId);
 								user = (Member) memberService.queryEntityById(IMemberDao.class, userId);
 								if(user!=null){
+									request.setAttribute("memberName", user.getName());
 									request.setAttribute("subject", subject);
 								}
 								flag = true;

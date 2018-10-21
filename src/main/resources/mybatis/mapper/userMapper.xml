@@ -22,6 +22,7 @@
 		<result property="cityName" column="c_city_name" />
 		<!-- 省 -->
 		<result property="province" column="c_province" />
+		<result property="provinceName" column="c_province_name" />
 		<!-- 类型 -->
 		<result property="level" column="c_level" />
 			<!-- 登录次数 -->
@@ -52,6 +53,7 @@
 						c_citycode,
 						c_city_name,
 						c_province,
+						c_province_name,
 						c_isAdmin,
 		 				c_logins,
 						c_createDate,
@@ -70,6 +72,7 @@
 						#{citycode},
 						#{cityName},
 						#{province},
+						#{provinceName},
 						#{isAdmin},
 				   		#{logins},
 						#{createDate},

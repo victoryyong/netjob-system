@@ -29,6 +29,7 @@ public class User implements Serializable {
 	 * 省
 	 */
 	private String province;
+	private String provinceName;
 	/**
 	 * 市
 	 */
@@ -182,5 +183,11 @@ public class User implements Serializable {
 	}
 	public void setLevel(Integer level) {
 		this.level = level;
+	}
+	public String getProvinceName() {
+		return provinceName;
+	}
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
 	}
 }

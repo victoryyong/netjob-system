@@ -201,8 +201,12 @@ public class LoginApp {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "城市编号不能为空", response, request);
 				return;
 			}
-			if (StringUtils.isEmpty(member.getCitycode())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "城市编号不能为空", response, request);
+			if (StringUtils.isEmpty(member.getCityName())) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "城市名不能为空", response, request);
+				return;
+			}
+			if (StringUtils.isEmpty(member.getProvinceName())) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "省名不能为空", response, request);
 				return;
 			}
 			if (StringUtils.isEmpty(member.getPhone())) {

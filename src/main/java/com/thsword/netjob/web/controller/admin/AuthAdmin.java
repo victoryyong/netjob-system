@@ -197,9 +197,10 @@ public class AuthAdmin {
 			}
 			JSONObject result  = new JSONObject();
 			Map<String, Object> map = new HashMap<String, Object>();
+			page.setSort("t.c_createDate");
 			map.put("page", page);
 			map.put("citycode", citycode);
-			List<Serve> serves = serveService.queryPageServe(map);
+			List<Brand> serves = (List<Brand>) serveService.queryPageEntity(IBrandDao.class,map);
 			result.put("page", page);
 			result.put("list", serves);
 			JsonResponseUtil.successBodyResponse(result, response, request);

@@ -116,6 +116,16 @@ public class Member {
 	private String citycode;
 	
 	/**
+	 * 
+	 */
+	private String provinceName;
+	
+	/**
+	 * 
+	 */
+	private String cityName;
+	
+	/**
 	 * 创建时间
 	 */
 	private Date createDate;
@@ -356,5 +366,21 @@ public class Member {
 
 	public void setTrades(Integer trades) {
 		this.trades = trades;
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
 	}
 }

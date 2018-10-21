@@ -19,7 +19,15 @@
 		<!-- content -->
 		<result property="content" column="c_content" />
 		<!-- content -->
-		<result property="createDate" column="c_createdDate" />
+		<result property="citycode" column="c_citycode" />
+		<!-- content -->
+		<result property="cityName" column="c_city_Name" />
+		<!-- content -->
+		<result property="provinceName" column="c_province_name" />
+		<!-- content -->
+		<result property="createDate" column="c_createDate" />
+		<!-- content -->
+		<result property="memberName" column="c_name" />
 	</resultMap>
 
 	<!-- #######################CRUD begin####################### -->  
@@ -35,6 +43,9 @@
 						c_links,
 						c_author,
 						c_content,
+						c_citycode,
+						c_province_name,
+						c_city_name,
 						c_createDate,
 						c_createBy,
 						c_updateDate,
@@ -48,6 +59,9 @@
 						#{links},
 						#{author},
 						#{content},
+						#{citycode},
+						#{provinceName},
+						#{cityName},
 						now(),
 						#{memberId},
 						now(),
@@ -103,8 +117,12 @@
 	
 	<!-- 查询分页列表(分页) -->
 	<select id="queryPageEntity" resultMap="brandMapper" parameterType="java.util.Map">
-		 <![CDATA[ SELECT * FROM t_brand WHERE 1=1]]>
-		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <![CDATA[ SELECT t.*,m.c_name FROM t_brand t left join t_member m on m.pk_id = t.c_memberId WHERE 1=1]]>
+		 <if test="null!=type and ''!=type">and t.c_type = #{type}</if>
+		<if test="null!=provinceName and ''!=provinceName">and t.c_province_name = #{provinceName}</if>
+		<if test="null!=cityName and ''!=cityName">and t.c_city_name = #{cityName}</if>
+		<if test="null!=title and ''!=title">and t.c_title like "%"#{title}"%"</if>
+		<if test="null!=citycode and ''!=citycode">and t.c_citycode =#{citycode}</if>
 	</select>
 
 	<!-- #######################CRUD end####################### -->

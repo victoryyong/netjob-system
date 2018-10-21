@@ -17,6 +17,11 @@ public class Brand {
 	 * 用户ID
 	 */
 	private String memberId;
+	private String memberName;
+	/**
+	 * 
+	 */
+	private String brandId;
 	/**
 	 * 标题
 	 */
@@ -24,7 +29,7 @@ public class Brand {
 	/**
 	 * 类型（1原创 2转载）
 	 */
-	private String type;
+	private Integer type;
 	/**
 	 *点赞数
 	 */
@@ -37,6 +42,18 @@ public class Brand {
 	 * 作者
 	 */
 	private String author;
+	/**
+	 * 作者
+	 */
+	private String citycode;
+	/**
+	 * 作者
+	 */
+	private String cityName;
+	/**
+	 * 作者
+	 */
+	private String provinceName;
 	/**
 	 * 图文视频连接
 	 * */
@@ -77,10 +94,10 @@ public class Brand {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 	public String getAuthor() {
@@ -94,6 +111,12 @@ public class Brand {
 	}
 	public void setLinks(String links) {
 		this.links = links;
+	}
+	public String getBrandId() {
+		return brandId;
+	}
+	public void setBrandId(String brandId) {
+		this.brandId = brandId;
 	}
 	public String getContent() {
 		return content;
@@ -148,5 +171,29 @@ public class Brand {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public String getCitycode() {
+		return citycode;
+	}
+	public void setCitycode(String citycode) {
+		this.citycode = citycode;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	public String getProvinceName() {
+		return provinceName;
+	}
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 }

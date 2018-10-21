@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IBannerDao;
+import com.thsword.netjob.dao.IUserDao;
+import com.thsword.netjob.global.Global;
+import com.thsword.netjob.pojo.User;
 import com.thsword.netjob.pojo.app.Banner;
 import com.thsword.netjob.service.BannerService;
 import com.thsword.netjob.util.ErrorUtil;
@@ -57,10 +60,20 @@ public class BannerAdmin {
 	@RequestMapping("admin/banner/list")
 	public void list(HttpServletRequest request,HttpServletResponse response,Banner banner,Page page) throws Exception{
 		try {
+			Integer level = (Integer) request.getAttribute("userLevel");
+			String citycode = "";
+			if(level==Global.SYS_USER_LEVEL_2){
+				citycode = request.getAttribute("citycode")+"";
+				if(StringUtils.isEmpty(citycode)){
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "无代理权限",response,request);
+					return;
+				}
+			}
 			String name = request.getParameter("name");
 			Map<String, Object> map = new HashMap<String, Object>();
 			if(!StringUtils.isEmpty(name))map.put("name", name);
 			map.put("page", page);
+			map.put("citycode", citycode);
 			List<Banner> banners = (List<Banner>) bannerService.queryPageEntity(IBannerDao.class, map);
 			JSONObject result = new JSONObject();
 			result.put("list", banners);
@@ -94,6 +107,21 @@ public class BannerAdmin {
 	@RequestMapping("admin/banner/add")
 	public void add(HttpServletRequest request,HttpServletResponse response,Banner banner) throws Exception{
 		try {
+			String userId = request.getAttribute("userId")+"";
+			Integer level = (Integer) request.getAttribute("userLevel");
+			String citycode = "";
+			if(level==Global.SYS_USER_LEVEL_2){
+				citycode = request.getAttribute("citycode")+"";
+				if(StringUtils.isEmpty(citycode)){
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "无代理权限",response,request);
+					return;
+				}
+				User user = (User) bannerService.queryEntityById(IUserDao.class, userId);
+				banner.setProvince(user.getProvince());
+				banner.setCitycode(citycode);
+				banner.setProvinceName(user.getProvinceName());
+				banner.setCityName(user.getCityName());
+			}
 			if(StringUtils.isEmpty(banner.getName())){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "名称不能为空",response,request);
 				return;
@@ -114,7 +142,6 @@ public class BannerAdmin {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "广告图不能为空",response,request);
 				return;
 			}
-			String userId = request.getAttribute("userId")+"";
 			banner.setId(UUIDUtil.get32UUID());
 			banner.setCreateBy(userId);
 			banner.setUpdateBy(userId);
@@ -148,6 +175,18 @@ public class BannerAdmin {
 	@RequestMapping("admin/banner/edit")
 	public void edit(HttpServletRequest request,HttpServletResponse response,Banner banner)throws Exception{
 		try {
+			Integer level = (Integer) request.getAttribute("userLevel");
+			String citycode = "";
+			if(level==Global.SYS_USER_LEVEL_2){
+				citycode = request.getAttribute("citycode")+"";
+				if(StringUtils.isEmpty(citycode)){
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "无代理权限",response,request);
+					return;
+				}
+				if(!StringUtils.isEmpty(banner.getCitycode())){
+					banner.setCitycode(citycode);
+				}
+			}
 			if(StringUtils.isEmpty(banner.getId())){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "ID不能为空",response,request);
 				return;
