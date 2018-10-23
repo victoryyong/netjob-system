@@ -63,6 +63,14 @@ public class Serve {
 	 * 视频+图片集合["aaa","bbb","ccc"]
 	 */
 	private String links;
+	/*
+	 *一级菜单ID 
+	 */
+	private String firstMenuId;
+	/*
+	 * 一级菜单名称
+	 */
+	private String firstMenuName;
 	/**
 	 * 类型id
 	 */
@@ -308,5 +316,17 @@ public class Serve {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public String getFirstMenuId() {
+		return firstMenuId;
+	}
+	public void setFirstMenuId(String firstMenuId) {
+		this.firstMenuId = firstMenuId;
+	}
+	public String getFirstMenuName() {
+		return firstMenuName;
+	}
+	public void setFirstMenuName(String firstMenuName) {
+		this.firstMenuName = firstMenuName;
 	}
 }

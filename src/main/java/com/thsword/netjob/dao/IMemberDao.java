@@ -54,10 +54,10 @@ public interface IMemberDao extends IBaseDao{
 	void updateVisitor(String id);
 	void addVisitor(String id, String memberId, String visitorId);
 	void addVisitorCount(String memberId);
-	List<Map<String, Object>> queryAgrees(Map<String, Object> map);
-	void addAgree(String id, String memberId, String agreeId);
-	void addAgreeCount(String memberId);
-	void unAgree(String memberId, String agreeId);
-	void deleteAgreeCount(String memberId);
+	//List<Map<String, Object>> queryAgrees(Map<String, Object> map);
+	//void addAgree(String id, String memberId, String agreeId);
+	//void addAgreeCount(String memberId);
+	//void unAgree(String memberId, String agreeId);
+	//void deleteAgreeCount(String memberId);
 	List<Member> queryPageFamous(Map<String, Object> map);
 }

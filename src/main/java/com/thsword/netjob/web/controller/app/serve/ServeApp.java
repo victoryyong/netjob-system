@@ -119,7 +119,11 @@ public class ServeApp {
 				return;
 			}
 			if (StringUtils.isEmpty(serve.getMenuId())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "类型ID不能为空", response, request);
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "一级菜单ID不能为空", response, request);
+				return;
+			}
+			if (StringUtils.isEmpty(serve.getFirstMenuId())) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "二级菜单ID不能为空", response, request);
 				return;
 			}
 			if (StringUtils.isEmpty(serve.getLinks())) {
@@ -160,6 +164,7 @@ public class ServeApp {
 					media.setCreateBy(memberId);
 					media.setMemberId(memberId);
 					media.setUpdateBy(memberId);
+					media.setCitycode(serve.getCitycode());
 					media.setLink(object.toString());
 					media.setResource(Global.SYS_MEMBER_ACTIVE_RESOURCE_3);
 					if(Global.isImage(object.toString())){

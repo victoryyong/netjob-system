@@ -22,6 +22,10 @@ public class Media {
 	 */
 	private Integer resource;
 	/**
+	 * 城市列表
+	 */
+	private String citycode;
+	/**
 	 * 文件链接
 	 * */
 	private String link;
@@ -140,5 +144,11 @@ public class Media {
 	}
 	public void setClicks(Integer clicks) {
 		this.clicks = clicks;
+	}
+	public String getCitycode() {
+		return citycode;
+	}
+	public void setCitycode(String citycode) {
+		this.citycode = citycode;
 	}
 }

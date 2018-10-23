@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
@@ -46,9 +47,15 @@ public class MediaApp {
 	public void list(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
 		try {
 			Map<String, Object> map = new HashMap<>();
+			String citycode = request.getParameter("citycode");
 			map.put("page", page);
+			map.put("citycode", citycode);
 			map.put("type", Global.SYS_MEMBER_ACTIVE_FILE_TYPE_2);
 			List<Media> medias = (List<Media>) memberService.queryPageEntity(IMediaDao.class, map);
+			if(StringUtils.isEmpty(medias)){
+				map.remove("citycode");
+				medias = (List<Media>) memberService.queryPageEntity(IMediaDao.class, map);
+			}
 			JSONObject obj = new JSONObject();
 			obj.put("list", medias);
 			obj.put("page", page);

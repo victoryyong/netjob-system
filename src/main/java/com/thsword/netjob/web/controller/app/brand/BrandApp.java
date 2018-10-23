@@ -104,6 +104,7 @@ public class BrandApp {
 	public void query(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			String memberId = request.getAttribute("memberId")+"";
+			String citycode = request.getAttribute("citycode")+"";
 			String brandId = request.getParameter("brandId");
 			if(StringUtils.isEmpty(brandId)){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "转载ID不能为空", response, request);
@@ -143,6 +144,7 @@ public class BrandApp {
 					media.setCreateBy(memberId);
 					media.setMemberId(memberId);
 					media.setUpdateBy(memberId);
+					media.setCitycode(citycode);
 					media.setLink(object.toString());
 					media.setResource(Global.SYS_MEMBER_ACTIVE_RESOURCE_2);
 					if(Global.isImage(object.toString())){

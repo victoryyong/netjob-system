@@ -203,6 +203,12 @@ public class Global{
 	public static final int SYS_USER_LEVEL_1=1;//系统级别
 	public static final int SYS_USER_LEVEL_2=2;//代理级别
 	
+	public static final int SYS_AGREE_TYPE_1=1;//会员点赞
+	public static final int SYS_AGREE_TYPE_2=2;//品牌秀
+	public static final int SYS_AGREE_TYPE_3=3;//需求
+	public static final int SYS_AGREE_TYPE_4=4;//服务
+	public static final int SYS_AGREE_TYPE_5=5;//动态
+	public static final int SYS_AGREE_TYPE_6=6;//媒体（视频、图片）
 	//数据字典
 	
 	/** 年龄范围*/

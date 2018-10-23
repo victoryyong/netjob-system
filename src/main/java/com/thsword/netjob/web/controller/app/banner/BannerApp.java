@@ -64,8 +64,16 @@ public class BannerApp {
 			map.put("page", page);
 			List<Banner> banners = (List<Banner>) bannerService.queryPageEntity(IBannerDao.class, map);
 			JSONObject obj = new JSONObject();
-			obj.put("list", banners);
 			obj.put("page", page);
+			if(!StringUtils.isEmpty(city)&&banners.size()<8){
+				page.setPageSize(8-banners.size());
+				map.clear();
+				map.put("page", page);
+				map.put("province", "1");
+				List<Banner>  countryBanners= (List<Banner>) bannerService.queryPageEntity(IBannerDao.class, map);
+				banners.addAll(countryBanners);
+			}
+			obj.put("list", banners);
 			JsonResponseUtil.successBodyResponse(obj, response, request);
 		} catch (Exception e) {
 			e.printStackTrace();

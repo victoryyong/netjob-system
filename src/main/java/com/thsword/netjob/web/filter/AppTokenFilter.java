@@ -122,6 +122,7 @@ public class AppTokenFilter extends HttpServlet implements HandlerInterceptor {
 								if(user!=null){
 									request.setAttribute("memberName", user.getName());
 									request.setAttribute("subject", subject);
+									request.setAttribute("citycode", user.getCitycode());
 								}
 								flag = true;
 							}

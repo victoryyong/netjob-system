@@ -20,6 +20,7 @@
 						c_resource,
 						c_biz_id,
 						c_link,
+						c_citycode,
 						c_createDate,
 						c_createBy,
 						c_updateDate,
@@ -32,6 +33,7 @@
 						#{resource},
 						#{bizId},
 						#{link},
+						#{citycode},
 						now(),
 						#{createBy},
 						now(),
@@ -93,6 +95,7 @@
 		 <if test="null!=bizId and ''!=bizId">and c_biz_id =#{bizId}</if>
 		 <if test="null!=type and ''!=type">and c_type =#{type}</if>
 		 <if test="null!=resource and ''!=resource">and c_resource =#{resource}</if>
+		  <if test="null!=citycode and ''!=citycode">and c_citycode =#{citycode}</if>
 		 order by c_clicks,c_agrees,c_tips
 	</select>
 

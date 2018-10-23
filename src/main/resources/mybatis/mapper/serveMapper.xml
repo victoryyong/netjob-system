@@ -24,7 +24,9 @@
 		<!-- 描述 -->
 		<result property="description" column="c_description" />
 		<!-- 类型id -->
+		<result property="firstMenuId" column="c_menu_id" />
 		<result property="menuId" column="c_menu_id" />
+		<result property="firstMenuName" column="firstMenuName" />
 		<result property="menuName" column="menuName" />
 		<!-- 视频+图片集合["aaa","bbb","ccc"] -->
 		<result property="links" column="c_links" />
@@ -77,6 +79,7 @@
 						c_price_type,
 						c_validity,
 						c_serve_time,
+						c_first_menu_id,
 						c_menu_id,
 						c_links,
 						c_province_name,
@@ -106,6 +109,7 @@
 						#{priceType},
 						#{validity},
 						#{serveTime},
+						#{firstMenuId},
 						#{menuId},
 						#{links},
 						#{provinceName},
@@ -149,6 +153,7 @@
 			<if test="null!=priceType">c_price_type=#{priceType},</if>
 			<if test="null!=validity">c_validity=#{validity},</if>
 			<if test="null!=serveTime">c_serve_time=#{serveTime},</if>
+			<if test="null!=firstMenuId">c_first_menu_id=#{firstMenuId},</if>
 			<if test="null!=menuId">c_menu_id=#{menuId},</if>
 			<if test="null!=links">c_links=#{links},</if>
 			<if test="null!=provinceName">c_province_name=#{provinceName},</if>
@@ -168,17 +173,23 @@
 
 	<!-- 根据ID查找 -->
 	<select id="queryEntityById" parameterType="java.lang.String" resultMap="serveMapper">
-		<![CDATA[ SELECT t.*,m.c_name FROM t_serve t left join t_menu m on m.pk_id = t.c_menu_id WHERE t.pk_id = #{entityId} ]]>
+		<![CDATA[ SELECT t.*,m.c_name FROM t_serve t left join t_menu m on m.pk_id = t.c_menu_id
+		left join t_menu fm on fm.pk_id = t.c_first_menu_id
+		 WHERE t.pk_id = #{entityId} ]]>
 	</select>
 
 	<!--  条件查询查询所有 -->
 	<select id="queryAllEntity" resultMap="serveMapper" parameterType="serve">
-		 <![CDATA[ SELECT t.*,m.c_name FROM t_serve t,t_menu m WHERE m.pk_id = t.c_menu_id]]>
+		 <![CDATA[ SELECT t.*,m.c_name FROM t_serve t,t_menu m 
+		 left join t_menu fm on fm.pk_id = t.c_first_menu_id
+		 WHERE m.pk_id = t.c_menu_id]]>
 	</select>
 	
 	<!--  条件查询查询所有 -->
 	<select id="queryEntity" resultMap="serveMapper" parameterType="serve">
-		 <![CDATA[ SELECT t.*,m.c_name FROM t_serve t,t_menu m WHERE m.pk_id = t.c_menu_id]]>
+		 <![CDATA[ SELECT t.*,m.c_name FROM t_serve t,t_menu m 
+		 left join t_menu fm on fm.pk_id = t.c_first_menu_id
+		 WHERE m.pk_id = t.c_menu_id]]>
 	</select>
 	
 	<!--  条件查询查询所有 -->
@@ -190,6 +201,7 @@
 	<select id="queryPageEntity" resultMap="serveMapper" parameterType="java.util.Map">
 		 SELECT t.*,
 		 m.c_name as menuName,
+		 fm.c_name as firstMenuName,
 		 me.c_name as memberName
 		 <if test="null!=dis_sort and 'c_distance'==dis_sort and null!=latitude and ''!=latitude
 		 and null!=longitude and ''!=longitude">
@@ -199,12 +211,12 @@
 		 AS
  		 c_distance
 		 </if>
-		 FROM t_serve t,
-		 t_menu m,
-		 t_member me 
+		 FROM t_serve t
+		 left join t_menu m on m.pk_id = t.c_menu_id 
+		 left join t_member me on me.pk_id = t.c_member_id
+		 left join t_menu fm on fm.pk_id = t.c_first_menu_id 
 		 WHERE 
-		 m.pk_id = t.c_menu_id 
-		 and me.pk_id = t.c_member_id
+		 1=1
 		 <if test="null!=type and ''!=type">and t.c_type = #{type}</if>
 		 
 		 <if test="null!=maxAge and ''!=maxAge"><![CDATA[and me.c_age <= #{maxAge}]]></if>
@@ -226,6 +238,8 @@
 		 <if test="null!=gender and ''!=gender">and me.c_gender = #{gender}</if>
 		 
 		 <if test="null!=menuId and ''!=menuId">and t.c_menu_id = #{menuId}</if>
+		 
+		 <if test="null!=firstMenuId and ''!=firstMenuId">and t.c_first_menu_id = #{firstMenuId}</if>
 		 
 		 <if test="null!=citycode and ''!=citycode">and t.c_citycode = #{citycode}</if>
 		 

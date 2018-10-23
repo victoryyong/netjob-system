@@ -23,8 +23,8 @@ import com.thsword.utils.object.UUIDUtil;
 
 @Controller
 public class AgreeApp {
-	@Resource(name = "memberService")
-	MemberService memberService;
+	@Resource(name = "agreeService")
+	AgreeService agreeService;
 
 	/**
 	 * 点赞
