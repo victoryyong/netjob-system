@@ -24,6 +24,7 @@ import com.thsword.netjob.pojo.app.Serve;
 import com.thsword.netjob.service.IBaseService;
 import com.thsword.netjob.service.ServeService;
 import com.thsword.netjob.util.ErrorUtil;
+import com.thsword.netjob.util.JpushUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.annotation.AuthAnnotation;
 import com.thsword.netjob.web.annotation.AuthAnnotation.REL;

@@ -47,7 +47,7 @@ public class QiNiuApp {
 	
 	 * @time:2018年5月8日 上午12:07:45
 	 */
-	@RequestMapping("app/member/getUpToken")
+	@RequestMapping("app/visitor/getUpToken")
 	public void list(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			Access access = new Access();

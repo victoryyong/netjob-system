@@ -44,6 +44,7 @@
 		<typeAlias alias="authPerson" type="com.thsword.netjob.pojo.app.AuthPerson" />
 		<typeAlias alias="authCompany" type="com.thsword.netjob.pojo.app.AuthCompany" />
 		<typeAlias alias="comment" type="com.thsword.netjob.pojo.app.Comment" />
+		<typeAlias alias="agree" type="com.thsword.netjob.pojo.app.Agree" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mapper/userMapper.xml" />
@@ -68,5 +69,6 @@
 		<mapper resource="mybatis/mapper/authPersonMapper.xml" />
 		<mapper resource="mybatis/mapper/authCompanyMapper.xml" />
 		<mapper resource="mybatis/mapper/commentMapper.xml" />
+		<mapper resource="mybatis/mapper/agreeMapper.xml" />
 	</mappers>
 </configuration>

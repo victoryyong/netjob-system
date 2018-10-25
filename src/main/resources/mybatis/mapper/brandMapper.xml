@@ -28,6 +28,8 @@
 		<result property="createDate" column="c_createDate" />
 		<!-- content -->
 		<result property="memberName" column="c_name" />
+		<!-- content -->
+		<result property="memberId" column="c_memberId" />
 	</resultMap>
 
 	<!-- #######################CRUD begin####################### -->  

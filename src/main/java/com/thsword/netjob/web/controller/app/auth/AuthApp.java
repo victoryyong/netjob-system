@@ -100,15 +100,11 @@ public class AuthApp {
 	@RequestMapping("app/member/auth/person/edit")
 	public void edit(HttpServletRequest request, HttpServletResponse response,AuthPerson auth) throws Exception {
 		try {
-			String memberId = (String) request.getAttribute("memberId");
-			if(StringUtils.isEmpty(auth.getType())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "type不能为空", response, request);
+			if(StringUtils.isEmpty(auth.getId())){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "Id不能为空", response, request);
 				return;
 			}
-			AuthPerson temp = new AuthPerson();
-			temp.setMemberId(memberId);
-			temp.setType(auth.getType());
-			temp = (AuthPerson) authService.queryEntity(IAuthPersonDao.class, auth);
+			AuthPerson temp = (AuthPerson) authService.queryEntityById(IAuthPersonDao.class, auth.getId());
 			if(null!=temp){
 				temp.setLinks(auth.getLinks());
 				temp.setIsPublic(auth.getIsPublic());

@@ -27,7 +27,7 @@ public class Agree implements Serializable {
 	/**
 	 * 对象类型 
 	 */
-	private String type;
+	private Integer type;
 	/**
 	 * 创建时间
 	 */
@@ -62,10 +62,10 @@ public class Agree implements Serializable {
 	public void setAgreeId(String agreeId) {
 		this.agreeId = agreeId;
 	}
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 	public Date getCreateDate() {

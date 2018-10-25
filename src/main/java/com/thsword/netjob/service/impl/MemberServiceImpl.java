@@ -46,23 +46,6 @@ public class MemberServiceImpl extends BaseServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Map<String, Object>> queryAgrees(Map<String, Object> map) {
-		return memberDao.queryAgrees(map);
-	}
-
-	@Override
-	public void addAgree(String id, String memberId, String agreeId) {
-		memberDao.addAgree(id,memberId,agreeId);
-		memberDao.addAgreeCount(agreeId);
-	}
-
-	@Override
-	public void unAgree(String memberId, String agreeId) {
-		memberDao.unAgree(memberId,agreeId);
-		memberDao.deleteAgreeCount(agreeId);
-	}
-
-	@Override
 	public List<Member> queryPageFamous(Class<IMemberDao> class1, Map<String, Object> map) {
 		return memberDao.queryPageFamous(map);
 	}

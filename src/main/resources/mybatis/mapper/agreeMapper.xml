@@ -65,6 +65,9 @@
 	<!--  条件查询查询所有 -->
 	<select id="queryAllEntity" resultMap="agreeMapper" parameterType="agree">
 		 <![CDATA[ SELECT * FROM t_agree WHERE 1=1]]>
+		 <if test="null!=agreeId and ''!=agreeId">and c_agreeId = #{agreeId}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=type and ''!=type">and c_type = #{type}</if>
 		 order by c_createDate desc
 	</select>
 	

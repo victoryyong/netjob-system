@@ -63,6 +63,10 @@ public class Serve {
 	 * 视频+图片集合["aaa","bbb","ccc"]
 	 */
 	private String links;
+	/**
+	 * 点赞数
+	 */
+	private Integer agrees;
 	/*
 	 *一级菜单ID 
 	 */
@@ -328,5 +332,11 @@ public class Serve {
 	}
 	public void setFirstMenuName(String firstMenuName) {
 		this.firstMenuName = firstMenuName;
+	}
+	public Integer getAgrees() {
+		return agrees;
+	}
+	public void setAgrees(Integer agrees) {
+		this.agrees = agrees;
 	}
 }

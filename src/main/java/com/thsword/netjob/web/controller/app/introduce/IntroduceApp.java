@@ -95,6 +95,7 @@ public class IntroduceApp {
 			}else{
 				
 				introduce.setId(UUIDUtil.get32UUID());
+				introduce.setMemberId(memberId);
 				introduce.setCreateBy(memberId);
 				introduce.setUpdateBy(memberId);
 				introduceService.addEntity(IIntroduceDao.class, introduce);

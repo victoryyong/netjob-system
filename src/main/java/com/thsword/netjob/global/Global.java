@@ -68,6 +68,12 @@ public class Global{
     public static final String AMAP_COUNTRY_NAME="中国";
     public static final String AMAP_HTTP_URL="http://restapi.amap.com/v3/config/district";
     
+    //极光IM
+    /** 极光Key */
+    public static final String JPUSH_ACCESS_KEY="JPUSH.ACCESS.KEY";
+    /** 极光SECRET */
+    public static final String JPUSH_ACCESS_SECRET="JPUSH.ACCESS.SECRET";
+    
     //权限类型常量 
     /** 权限类型 一级菜单 */
     public static final Integer SYS_PERMISSION_TYPE_MENU1=1;
@@ -206,9 +212,8 @@ public class Global{
 	public static final int SYS_AGREE_TYPE_1=1;//会员点赞
 	public static final int SYS_AGREE_TYPE_2=2;//品牌秀
 	public static final int SYS_AGREE_TYPE_3=3;//需求
-	public static final int SYS_AGREE_TYPE_4=4;//服务
-	public static final int SYS_AGREE_TYPE_5=5;//动态
-	public static final int SYS_AGREE_TYPE_6=6;//媒体（视频、图片）
+	public static final int SYS_AGREE_TYPE_4=4;//动态
+	public static final int SYS_AGREE_TYPE_5=5;//媒体（视频、图片）
 	//数据字典
 	
 	/** 年龄范围*/

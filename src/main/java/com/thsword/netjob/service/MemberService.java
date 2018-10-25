@@ -113,59 +113,6 @@ public interface MemberService extends IBaseService{
 	void addVisitor(String id, String memberId, String visitorId);
 	
 	/**
-	 * 查询点赞信息
-	
-	 * @Description:TODO
-	
-	 * @param map
-	 * @return
-	
-	 * List<Map<String,Object>>
-	
-	 * @exception:
-	
-	 * @author: yong
-	
-	 * @time:2018年5月16日 下午2:28:55
-	 */
-	List<Map<String, Object>> queryAgrees(Map<String, Object> map);
-	/**
-	 * 添加点赞信息
-	
-	 * @Description:TODO
-	
-	 * @param get32uuid
-	 * @param memberId
-	 * @param agreeId
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
-	 * @time:2018年5月16日 下午2:29:45
-	 */
-	void addAgree(String id, String memberId, String agreeId);
-	/**
-	 * 取消点赞
-	
-	 * @Description:TODO
-	
-	 * @param memberId
-	 * @param agreeId
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
-	 * @time:2018年5月16日 下午2:32:46
-	 */
-	void unAgree(String memberId, String agreeId);
-	
-	/**
 	 * 同城大牌
 	
 	 * @Description:TODO

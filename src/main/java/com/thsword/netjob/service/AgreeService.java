@@ -1,5 +1,6 @@
 package com.thsword.netjob.service;
 
-public interface AgreeService extends IBaseService{
+import com.thsword.netjob.pojo.app.Agree;
 
+public interface AgreeService extends IBaseService{
 }

@@ -76,6 +76,7 @@ public class BrandApp {
 					media.setCreateBy(memberId);
 					media.setMemberId(memberId);
 					media.setUpdateBy(memberId);
+					media.setCitycode(member.getCitycode());
 					media.setLink(object.toString());
 					media.setResource(Global.SYS_MEMBER_ACTIVE_RESOURCE_2);
 					if(Global.isImage(object.toString())){
@@ -118,7 +119,7 @@ public class BrandApp {
 			brand.setId(UUIDUtil.get32UUID());
 			brand.setBrandId(brandId);
 			brand.setType(Global.SYS_MEMBER_BRANDSHOW_RESOURCE_2);
-			String reproduceId = brand.getCreateBy();
+			String reproduceId = brand.getMemberId();
 			if(!StringUtils.isEmpty(reproduceId)){
 				Member member = (Member) brandService.queryEntityById(IMemberDao.class, reproduceId);
 				if(null!=member){
