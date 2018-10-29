@@ -5,11 +5,15 @@
 		<!-- ID -->
 		<result property="id" column="pk_id" />
 		<!-- 服务ID -->
-		<result property="serveId" column="c_serveId" />
+		<result property="bizId" column="c_bizId" />
+		<!-- 服务ID -->
+		<result property="image" column="c_image" />
 		<!-- 用户ID -->
 		<result property="memberId" column="c_memberId" />
 		<!-- 用户ID -->
 		<result property="memberName" column="memberName" />
+		<!-- 用户ID -->
+		<result property="memberImage" column="memberImage" />
 		<!-- 内容 -->
 		<result property="content" column="c_content" />
 		<!-- 时间 -->
@@ -21,11 +25,13 @@
 	<insert id="addEntity" parameterType="comment"
 		keyProperty="id">
 		<![CDATA[
-			INSERT INTO t_serve_comment (
+			INSERT INTO t_comment (
 						pk_id,
-						c_serveId,
+						c_bizId,
 						c_memberId,
+						c_image,
 						c_content,
+						c_parentId,
 						c_createDate,
 						c_createBy,
 						c_updateDate,
@@ -33,9 +39,11 @@
 		 				)
 				VALUES(
 						#{id},
-						#{serveId},
+						#{bizId},
 						#{memberId},
+						#{image},
 						#{content},
+						#{parentId},
 						now(),
 						#{createBy},
 						now(),
@@ -46,17 +54,17 @@
 
 	<!-- 删除 -->
 	<delete id="deleteEntity" parameterType="comment">
-		<![CDATA[ DELETE FROM t_serve_comment WHERE pk_id=#{id}]]>
+		<![CDATA[ DELETE FROM t_comment WHERE pk_id=#{id}]]>
 	</delete>
 
 	<!-- 根据ID删除 -->
 	<delete id="deleteEntityById" parameterType="java.lang.String">
-		<![CDATA[ DELETE FROM t_serve_comment WHERE pk_id=#{entityId}]]>
+		<![CDATA[ DELETE FROM t_comment WHERE pk_id=#{entityId}]]>
 	</delete>
 
 	<!-- 更新 -->
 	<update id="updateEntity" parameterType="comment">
-		UPDATE t_serve_comment
+		UPDATE t_comment
 		<set>
 			c_updateDate=now()
 		</set>
@@ -65,33 +73,36 @@
 
 	<!-- 根据ID查找 -->
 	<select id="queryEntityById" parameterType="java.lang.String" resultMap="commentMapper">
-		<![CDATA[ SELECT t.* FROM t_serve_comment t WHERE pk_id = #{entityId} ]]>
+		<![CDATA[ SELECT t.* FROM t_comment t WHERE pk_id = #{entityId} ]]>
 	</select>
 
 	<!--  条件查询查询所有 -->
 	<select id="queryAllEntity" resultMap="commentMapper" parameterType="comment">
-		 <![CDATA[ SELECT * FROM t_serve_comment WHERE 1=1]]>
-		 <if test="null!=serveId and ''!=serveId">and c_serveId  = #{serveId }</if>
-		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <![CDATA[ SELECT * FROM t_comment WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c_bizId  = #{bizId }</if>
 		 order by c_createDate desc
 	</select>
 	
 	<!--  条件查询查询所有 -->
 	<select id="queryEntity" resultMap="commentMapper" parameterType="comment">
-		 <![CDATA[ SELECT * FROM t_serve_comment WHERE 1=1]]>
+		 <![CDATA[ SELECT * FROM t_comment WHERE 1=1]]>
 		 and pk_id = #{id}
 	</select>
 	
 	<!--  条件查询查询所有 -->
 	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="comment">
-		 <![CDATA[ SELECT count(*) FROM t_serve_comment WHERE 1=1]]>
+		 <![CDATA[ SELECT count(*) FROM t_comment WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c_bizId  = #{bizId }</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=parentId and ''!=parentId">and c_parentId = #{parentId}</if>
 	</select>
 	
 	<!-- 查询分页列表(分页) -->
 	<select id="queryPageEntity" resultMap="commentMapper" parameterType="java.util.Map">
-		 <![CDATA[ SELECT t.*,m.c_name as memberName FROM t_serve_comment t,t_member m WHERE 1=1 and t.c_memberId = m.pk_id]]>
-		 <if test="null!=serveId and ''!=serveId">and c_serveId  = #{serveId }</if>
+		 <![CDATA[ SELECT t.*,m.c_name as memberName,m.c_image as memberImage FROM t_comment t left join t_member m on t.c_memberId = m.pk_id WHERE 1=1 ]]>
+		 <if test="null!=bizId and ''!=bizId">and c_bizId  = #{bizId }</if>
 		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=parentId and ''!=parentId">and c_parentId = #{parentId}</if>
 	</select>
 
 	<!-- #######################CRUD end####################### -->

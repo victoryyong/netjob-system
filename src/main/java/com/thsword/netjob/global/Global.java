@@ -142,6 +142,15 @@ public class Global{
 	/** 视频*/
 	public static final int SYS_MEMBER_ACTIVE_FILE_TYPE_2=2;
 	
+	/** 身份认证*/
+	public static final int SYS_MEMBER_PERSON_AUTH_1=1;
+	/** 其他*/
+	public static final int SYS_MEMBER_PERSON_AUTH_2=2;
+	
+	/** 授权书认证*/
+	public static final int SYS_MEMBER_COMPANY_AUTH_1=1;
+	/** 其他*/
+	public static final int SYS_MEMBER_COMPANY_AUTH_2=2;
 	
 	//热播视频来源
 	/** 个人动态*/
@@ -199,6 +208,8 @@ public class Global{
 	public static final int SYS_AUTH_TYPE_1=1;//需求
 	public static final int SYS_AUTH_TYPE_2=2;//服务
 	public static final int SYS_AUTH_TYPE_3=3;//品牌秀
+	public static final int SYS_AUTH_TYPE_4=4;//个人审核
+	public static final int SYS_AUTH_TYPE_5=5;//企业审核
 	
 	//审核状态
 	public static final int SYS_AUTH_STATUS_1=1;//未审核

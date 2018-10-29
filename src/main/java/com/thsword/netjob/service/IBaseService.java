@@ -81,5 +81,13 @@ public interface IBaseService {
 	 * @return
 	 */
 	public List<?> queryPageEntity(Class<?> clazz, Object object) throws Exception;
+	
+	/**
+	 * 查询计数
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public Integer queryCountEntity(Class<?> clazz, Object object) throws Exception;
 
 }

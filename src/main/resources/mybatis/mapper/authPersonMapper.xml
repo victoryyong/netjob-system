@@ -8,10 +8,17 @@
 		<result property="type" column="c_type" />
 		<!-- code -->
 		<result property="code" column="c_code" />
+			<!-- code -->
+		<result property="memberId" column="c_memberId" />
+		<!-- code -->
+		<result property="name" column="c_name" />
+		<!-- code -->
+		<result property="status" column="c_status" />
 		<!-- code -->
 		<result property="isPublic" column="c_isPublic" />
 		<!-- "links" -->
 		<result property="links" column="c_links" />
+		<result property="createDate" column="c_createDate" />
 	</resultMap>
 
 	<!-- #######################CRUD begin####################### -->  
@@ -24,7 +31,9 @@
 						c_memberId,
 						c_type,
 						c_code,
+						c_name,
 						c_isPublic,
+						c_citycode,
 						c_links,
 						c_createDate,
 						c_createBy,
@@ -36,7 +45,9 @@
 						#{memberId},
 						#{type},
 						#{code},
+						#{name},
 						#{isPublic},
+						#{citycode},
 						#{links},
 						now(),
 						#{createBy},
@@ -62,6 +73,8 @@
 		<set>
 			c_updateDate=now(),
 			<if test="null!=code">c_code=#{code},</if>
+			<if test="null!=name">c_name=#{name},</if>
+			<if test="null!=status">c_status=#{status},</if>
 			<if test="null!=isPublic">c_isPublic=#{isPublic}, </if>
 			<if test="null!=links">c_links=#{links}</if>
 		</set>
@@ -77,6 +90,8 @@
 	<select id="queryAllEntity" resultMap="authPersonMapper" parameterType="authPerson">
 		 <![CDATA[ SELECT * FROM t_auth_person WHERE 1=1]]>
 		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
+		 <if test="null!=status and ''!=status">and c_status = #{status}</if>
 		 order by c_createDate desc
 	</select>
 	
@@ -86,16 +101,22 @@
 		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
 		  <if test="null!=type and ''!=type">and c_type = #{type}</if>
 		 <if test="null!=id and ''!=id">and pk_id = #{id}</if>
+		  <if test="null!=status and ''!=status">and c_status = #{status}</if>
+		  <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
 	</select>
 	
 	<!--  条件查询查询所有 -->
 	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="authPerson">
 		 <![CDATA[ SELECT count(*) FROM t_auth_person WHERE 1=1]]>
+		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
+		  <if test="null!=status and ''!=status">and c_status = #{status}</if>
 	</select>
 	
 	<!-- 查询分页列表(分页) -->
 	<select id="queryPageEntity" resultMap="authPersonMapper" parameterType="java.util.Map">
 		 <![CDATA[ SELECT * FROM t_auth_person WHERE 1=1]]>
+		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
+		  <if test="null!=status and ''!=status">and c_status = #{status}</if>
 	</select>
 
 	<!-- #######################CRUD end####################### -->

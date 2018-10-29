@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IBannerDao;
+import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Banner;
 import com.thsword.netjob.service.BannerService;
 import com.thsword.netjob.util.JsonResponseUtil;
@@ -62,6 +63,7 @@ public class BannerApp {
 			map.put("secondMenuId", menuId);
 			map.put("citycode", city);
 			map.put("page", page);
+			map.put("status", Global.SYS_AUTH_STATUS_2);
 			List<Banner> banners = (List<Banner>) bannerService.queryPageEntity(IBannerDao.class, map);
 			JSONObject obj = new JSONObject();
 			obj.put("page", page);

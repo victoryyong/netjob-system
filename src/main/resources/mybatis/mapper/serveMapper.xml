@@ -239,6 +239,8 @@
 		 
 		 <if test="null!=menuId and ''!=menuId">and t.c_menu_id = #{menuId}</if>
 		 
+		  <if test="null!=status and ''!=status">and t.c_status = #{status}</if>
+		 
 		 <if test="null!=firstMenuId and ''!=firstMenuId">and t.c_first_menu_id = #{firstMenuId}</if>
 		 
 		 <if test="null!=citycode and ''!=citycode">and t.c_citycode = #{citycode}</if>

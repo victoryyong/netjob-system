@@ -200,14 +200,14 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param clazz
      * @return
      */
-    public List<?> queryCountEntity(Class<?> clazz,Object object) throws Exception{
+    public Integer queryCountEntity(Class<?> clazz,Object object) throws Exception{
         try {
             context = this.getApplicationContext();
             if (null != context) {
                 Object dao = context.getBean(clazz);
                 if (null != dao) {
                     Method method = dao.getClass().getMethod("queryCountEntity",Object.class);
-                    return (List<?>) method.invoke(dao,object);
+                    return (Integer) method.invoke(dao,object);
                 }
             }
         } catch (Exception e) {

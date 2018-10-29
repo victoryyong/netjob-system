@@ -18,6 +18,14 @@ public class Member {
 	 */
 	private String name;
 	/**
+	 * 真实姓名
+	 */
+	private String realName;
+	/**
+	 * 背景
+	 */
+	private String background;
+	/**
 	 * 年龄
 	 */
 	private Integer age;
@@ -83,6 +91,18 @@ public class Member {
 	 */
 	private Integer skillScore;
 	/**
+	 * 手机认证
+	 */
+	private boolean phoneAuth;
+	/**
+	 * 个人认证
+	 */
+	private boolean personAuth;
+	/**
+	 * 企业认证
+	 */
+	private boolean companyAuth;
+	/**
 	 * 是否显示认证信息
 	 */
 	private Boolean showAuth;
@@ -95,21 +115,6 @@ public class Member {
 	 * 状态
 	 */
 	private Integer status;
-	
-	/**
-	 * 是否通过手机认证
-	 */
-	private Boolean isPhoneAuth;
-	
-	/**
-	 * 是否通过实名认证
-	 */
-	private Boolean isCardAuth;
-	
-	/**
-	 * 是否通过技能认证 
-	 */
-	private Boolean isSkillAuth;
 	/**
 	 * 城市编号
 	 */
@@ -257,30 +262,6 @@ public class Member {
 		this.status = status;
 	}
 
-	public Boolean getIsPhoneAuth() {
-		return isPhoneAuth;
-	}
-
-	public void setIsPhoneAuth(Boolean isPhoneAuth) {
-		this.isPhoneAuth = isPhoneAuth;
-	}
-
-	public Boolean getIsCardAuth() {
-		return isCardAuth;
-	}
-
-	public void setIsCardAuth(Boolean isCardAuth) {
-		this.isCardAuth = isCardAuth;
-	}
-
-	public Boolean getIsSkillAuth() {
-		return isSkillAuth;
-	}
-
-	public void setIsSkillAuth(Boolean isSkillAuth) {
-		this.isSkillAuth = isSkillAuth;
-	}
-
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -382,5 +363,45 @@ public class Member {
 
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
+	}
+
+	public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+
+	public boolean isPhoneAuth() {
+		return phoneAuth;
+	}
+
+	public void setPhoneAuth(boolean phoneAuth) {
+		this.phoneAuth = phoneAuth;
+	}
+
+	public boolean isPersonAuth() {
+		return personAuth;
+	}
+
+	public void setPersonAuth(boolean personAuth) {
+		this.personAuth = personAuth;
+	}
+
+	public boolean isCompanyAuth() {
+		return companyAuth;
+	}
+
+	public void setCompanyAuth(boolean companyAuth) {
+		this.companyAuth = companyAuth;
 	}
 }

@@ -79,7 +79,7 @@ public interface IBaseDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<?> queryCountEntity(Object object) throws Exception;
+	public Integer queryCountEntity(Object object) throws Exception;
 	
 	/**
 	 * 查询对象

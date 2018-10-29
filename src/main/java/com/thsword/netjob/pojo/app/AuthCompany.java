@@ -18,21 +18,29 @@ public class AuthCompany implements Serializable {
 	private String id;
 	private String memberId;
 	/**
-	 * 委托书
+	 * 名称
 	 */
-	private String deputes;
+	private String name;
 	/**
-	 * 印业执照号
+	 * 号码
 	 */
-	private String tradeCode;
-	
-	private String tradeLinks;
+	private String code;
 	/**
-	 * 许可证书号
+	 * 1 授权书 2其他
 	 */
-	private String allowCode;
-	
-	private String allowLinks;
+	private Integer type;
+	/**
+	 * 城市
+	 */
+	private String citycode;
+	/**
+	 * 文件
+	 */
+	private String links;
+	/**
+	 * 
+	 */
+	private Integer status;
 	/**
 	 * 创建时间
 	 */
@@ -79,40 +87,46 @@ public class AuthCompany implements Serializable {
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
 	}
-	public String getDeputes() {
-		return deputes;
-	}
-	public void setDeputes(String deputes) {
-		this.deputes = deputes;
-	}
-	public String getTradeCode() {
-		return tradeCode;
-	}
-	public void setTradeCode(String tradeCode) {
-		this.tradeCode = tradeCode;
-	}
-	public String getTradeLinks() {
-		return tradeLinks;
-	}
-	public void setTradeLinks(String tradeLinks) {
-		this.tradeLinks = tradeLinks;
-	}
-	public String getAllowCode() {
-		return allowCode;
-	}
-	public void setAllowCode(String allowCode) {
-		this.allowCode = allowCode;
-	}
-	public String getAllowLinks() {
-		return allowLinks;
-	}
-	public void setAllowLinks(String allowLinks) {
-		this.allowLinks = allowLinks;
-	}
 	public String getMemberId() {
 		return memberId;
 	}
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
+	}
+	public String getLinks() {
+		return links;
+	}
+	public void setLinks(String links) {
+		this.links = links;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public String getCitycode() {
+		return citycode;
+	}
+	public void setCitycode(String citycode) {
+		this.citycode = citycode;
 	}
 }

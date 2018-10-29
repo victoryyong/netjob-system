@@ -206,7 +206,7 @@ public class ServeApp {
 			String timeRange = request.getParameter("timeRange");
 			//查询参数
 			Map<String, Object> map = new HashMap<String, Object>();
-			
+			map.put("status", Global.SYS_AUTH_STATUS_2);
 			String ageId = request.getParameter("ageId");
 			if(!StringUtils.isEmpty(ageId)){
 				//最大年级

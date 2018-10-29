@@ -7,15 +7,14 @@
 		<!-- memberId -->
 		<result property="memberId" column="c_memberId" />
 		<!-- type -->
-		<result property="deputes" column="c_deputes" />
+		<result property="type" column="c_type" />
 		<!-- tradeCode -->
-		<result property="tradeCode" column="c_tradeCode" />
+		<result property="name" column="c_name" />
 		<!-- tradeLinks -->
-		<result property="tradeLinks" column="c_tradeLinks" />
-		<!-- allowCode -->
-		<result property="allowCode" column="c_allowCode" />
-		<!-- allowLinks -->
-		<result property="allowLinks" column="c_allowLinks" />
+		<result property="code" column="c_code" />
+		<!-- tradeLinks -->
+		<result property="links" column="c_links" />
+		<result property="createDate" column="c_createDate" />
 	</resultMap>
 
 	<!-- #######################CRUD begin####################### -->  
@@ -26,11 +25,11 @@
 			INSERT INTO t_auth_company (
 						pk_id,
 						c_memberId,
-						c_deputes,
-						c_tradeCode,
-						c_tradeLinks,
-						c_allowCode,
-						c_allowLinks,
+						c_type,
+						c_name,
+						c_code,
+						c_links,
+						c_citycode,
 						c_createDate,
 						c_createBy,
 						c_updateDate,
@@ -39,11 +38,11 @@
 				VALUES(
 						#{id},
 						#{memberId},
-						#{deputes},
-						#{tradeCode},
-						#{tradeLinks},
-						#{allowCode},
-						#{allowLinks},
+						#{type},
+						#{name},
+						#{code},
+						#{links},
+						#{citycode},
 						now(),
 						#{createBy},
 						now(),
@@ -67,25 +66,29 @@
 		UPDATE t_auth_company
 		<set>
 			c_updateDate=now(),
-			<if test="null!=deputes">c_deputes=#{deputes},</if>
-			<if test="null!=tradeCode">c_tradeCode=#{tradeCode}, </if>
-			<if test="null!=tradeLinks">c_tradeLinks=#{tradeLinks}, </if>
-			<if test="null!=allowCode">c_allowCode=#{allowCode}</if>
-			<if test="null!=allowLinks">c_allowLinks=#{allowLinks}</if>
+			<if test="null!=memberId">c_memberId=#{memberId},</if>
+			<if test="null!=type">c_type=#{type}, </if>
+			<if test="null!=name">c_name=#{name}, </if>
+			<if test="null!=code">c_code=#{code},</if>
+			<if test="null!=links">c_links=#{links}</if>
 		</set>
 		WHERE 1=1
 		<if test="null!=id and ''!=id">and pk_id = #{id}</if>
 		<if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		<if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
 	</update>
 
 	<!-- 根据ID查找 -->
 	<select id="queryEntityById" parameterType="java.lang.String" resultMap="authCompanyMapper">
 		<![CDATA[ SELECT t.* FROM t_auth_company t WHERE pk_id = #{entityId} ]]>
+		<if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
 	</select>
 
 	<!--  条件查询查询所有 -->
 	<select id="queryAllEntity" resultMap="authCompanyMapper" parameterType="authCompany">
 		 <![CDATA[ SELECT * FROM t_auth_company WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
 		 order by c_createDate desc
 	</select>
 	
@@ -94,6 +97,8 @@
 		 <![CDATA[ SELECT * FROM t_auth_company WHERE 1=1]]>
 		<if test="null!=id and ''!=id">and pk_id = #{id}</if>
 		<if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		<if test="null!=type and ''!=type">and c_type = #{type}</if>
+		<if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
 	</select>
 	
 	<!--  条件查询查询所有 -->

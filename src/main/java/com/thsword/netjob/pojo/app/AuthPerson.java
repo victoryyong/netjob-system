@@ -17,13 +17,25 @@ public class AuthPerson implements Serializable {
 	private static final long serialVersionUID = -6756090072891967330L;
 	private String id;
 	/**
-	 * 应用type
+	 * type(1-身份证 2-其他)
 	 */
 	private Integer type;
+	/**
+	 * 真实名称
+	 */
+	private String realName;
+	/**
+	 * 名称
+	 */
+	private String name;
 	/**
 	 * 认证号码
 	 */
 	private String code;
+	/**
+	 * 
+	 */
+	private String citycode;
 	/**
 	 * 用户ID
 	 */
@@ -33,9 +45,13 @@ public class AuthPerson implements Serializable {
 	 */
 	private String links;
 	/**
-	 * 是否公开
+	 * 
 	 */
-	private Integer isPublic;
+	private String isPublic;
+	/**
+	 * 状态（0-未通过 1-审核通过）
+	 */
+	private Integer status;
 	/**
 	 * 创建时间
 	 */
@@ -100,16 +116,40 @@ public class AuthPerson implements Serializable {
 	public void setLinks(String links) {
 		this.links = links;
 	}
-	public Integer getIsPublic() {
-		return isPublic;
-	}
-	public void setIsPublic(Integer isPublic) {
-		this.isPublic = isPublic;
-	}
 	public String getMemberId() {
 		return memberId;
 	}
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
+	}
+	public String getRealName() {
+		return realName;
+	}
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getIsPublic() {
+		return isPublic;
+	}
+	public void setIsPublic(String isPublic) {
+		this.isPublic = isPublic;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public String getCitycode() {
+		return citycode;
+	}
+	public void setCitycode(String citycode) {
+		this.citycode = citycode;
 	}
 }

@@ -89,10 +89,10 @@ public class LoginApp {
 				temp.setQqId(member.getQqId());
 				temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
 				if(null==temp){
-					member.setIsPhoneAuth(false);
 					member.setId(UUIDUtil.get32UUID());
 					member.setCreateBy(member.getId());
 					member.setUpdateBy(member.getId());
+					member.setPhoneAuth(false);
 					memberService.addEntity(IMemberDao.class, member);
 					temp = new Member();
 					temp.setWxId(member.getWxId());
@@ -116,10 +116,10 @@ public class LoginApp {
 				temp.setWxId(member.getWxId());
 				temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
 				if(null==temp){
-					member.setIsPhoneAuth(false);
 					member.setId(UUIDUtil.get32UUID());
 					member.setCreateBy(member.getId());
 					member.setUpdateBy(member.getId());
+					member.setPhoneAuth(false);
 					memberService.addEntity(IMemberDao.class, member);
 					temp = new Member();
 					temp.setWxId(member.getWxId());
@@ -225,9 +225,9 @@ public class LoginApp {
 				return;
 			}
 			member.setId(UUIDUtil.get32UUID());
-			member.setIsPhoneAuth(true);
 			member.setCreateBy(member.getId());
 			member.setUpdateBy(member.getId());
+			member.setPhoneAuth(true);
 			member.setType(Global.SYS_MEMBER_TYPE_PHONE);
 			News news = new News();
 			news.setId(UUIDUtil.get32UUID());

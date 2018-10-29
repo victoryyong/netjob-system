@@ -5,9 +5,13 @@ import java.util.Date;
 public class Comment {
 	private String id;
 	/**
-	 * 服务或需求ID
+	 * 业务ID
 	 */
-	private String serveId;
+	private String bizId;
+	/**
+	 * 回复数
+	 */
+	private Integer replys;
 	/**
 	 * 评论人ID
 	 */
@@ -17,9 +21,21 @@ public class Comment {
 	 */
 	private String memberName;
 	/**
+	 * 
+	 */
+	private String memberImage;
+	/**
 	 * 评论内容
 	 */
 	private String content;
+	/**
+	 * 评论图片
+	 */
+	private String image;
+	/**
+	 * 父节点
+	 */
+	private String parentId;
 	/**
 	 * 创建时间
 	 */
@@ -42,11 +58,12 @@ public class Comment {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getServeId() {
-		return serveId;
+	
+	public String getBizId() {
+		return bizId;
 	}
-	public void setServeId(String serveId) {
-		this.serveId = serveId;
+	public void setBizId(String bizId) {
+		this.bizId = bizId;
 	}
 	public String getMemberId() {
 		return memberId;
@@ -89,5 +106,29 @@ public class Comment {
 	}
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+	public String getMemberImage() {
+		return memberImage;
+	}
+	public void setMemberImage(String memberImage) {
+		this.memberImage = memberImage;
+	}
+	public Integer getReplys() {
+		return replys;
+	}
+	public void setReplys(Integer replys) {
+		this.replys = replys;
 	}
 }

@@ -9,12 +9,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
+import com.thsword.netjob.dao.IActiveDao;
 import com.thsword.netjob.dao.IAgreeDao;
 import com.thsword.netjob.dao.IBrandDao;
 import com.thsword.netjob.dao.IMediaDao;
 import com.thsword.netjob.dao.IMemberDao;
 import com.thsword.netjob.dao.IServeDao;
 import com.thsword.netjob.global.Global;
+import com.thsword.netjob.pojo.app.Active;
 import com.thsword.netjob.pojo.app.Agree;
 import com.thsword.netjob.pojo.app.Brand;
 import com.thsword.netjob.pojo.app.Media;
@@ -128,11 +130,11 @@ public class AgreeApp {
 						agreeService.updateEntity(IServeDao.class, serve);
 					}
 				}else if(history.getType()==Global.SYS_AGREE_TYPE_4){
-					/*Brand brand = (Brand) agreeService.queryEntityById(IBrandDao.class, agree.getAgreeId());
-				if(brand==null){
-					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "点赞对象不存在", response, request);
-					return;
-				}*/
+					Active active = (Active) agreeService.queryEntityById(IActiveDao.class, agree.getAgreeId());
+					if(active==null){
+						JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "点赞对象不存在", response, request);
+						return;
+					}
 				}else if(history.getType()==Global.SYS_AGREE_TYPE_5){
 					Media media = (Media) agreeService.queryEntityById(IMediaDao.class, agree.getAgreeId());
 					if(media!=null){
