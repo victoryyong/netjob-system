@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IActiveDao">
+	<resultMap id="activeMapper" type="active">
+		<!-- ID -->
+		<result property="id" column="pk_id" />
+		<!-- title -->
+		<result property="title" column="c_title" />
+		<!-- links -->
+		<result property="links" column="c_links" />
+		<!-- agrees -->
+		<result property="agrees" column="c_agrees" />
+		<!-- comments -->
+		<result property="comments" column="c_comments" />
+		<!-- createDate -->
+		<result property="createDate" column="c_createDate" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="active"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_active (
+						pk_id,
+						c_title,
+						c_links,
+						c_memberId,
+						c_createDate,
+						c_createBy,
+						c_updateDate,
+						c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{title},
+						#{links},
+						#{memberId},
+						now(),
+						#{createBy},
+						now(),
+						#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="active">
+		<![CDATA[ DELETE FROM t_active WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_active WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="active">
+		UPDATE t_active
+		<set>
+			c_updateDate=now()
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="activeMapper">
+		<![CDATA[ SELECT t.* FROM t_active t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="activeMapper" parameterType="active">
+		 <![CDATA[ SELECT * FROM t_active WHERE 1=1]]>
+		<if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="activeMapper" parameterType="active">
+		 <![CDATA[ SELECT * FROM t_active WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="active">
+		 <![CDATA[ SELECT count(*) FROM t_active WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="activeMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_active WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+</mapper>
