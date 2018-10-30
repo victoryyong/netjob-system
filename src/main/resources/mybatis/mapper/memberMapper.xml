@@ -54,6 +54,15 @@
 		<result property="type" column="c_type" />
 	</resultMap>
 	
+	<resultMap id="friendMapper" type="member">
+		<!-- 编号 -->
+		<id property="id" column="pk_id" />
+		<!-- 用户名 -->
+		<result property="name" column="c_name" />
+		<!-- 缩略图 -->
+		<result property="image" column="c_image" />
+	</resultMap>
+	
 	<resultMap id="visitorMapper" type="java.util.Map">
 		<!-- 编号 -->
 		<id property="id" column="mm_pk_id" />
@@ -170,6 +179,7 @@
 			<if test="null!=companyAuth">c_companyAuth=#{companyAuth}, </if>
 			<if test="null!=visitors">c_visitors=#{visitors}, </if>
 			<if test="null!=agrees">c_agrees=#{agrees}, </if>
+			<if test="null!=fans">c_fans=#{fans}, </if>
 			<if test="null!=trades">c_trades=#{trades}, </if>
 			<if test="null!=address">c_address=#{address},</if>
 			<if test="null!=status">c_status=#{status}, </if>
@@ -245,13 +255,13 @@
 	<!-- #######################CRUD end####################### -->
 	
 	
-		<select id="queryPageFriends" resultMap="memberMapper" parameterType="java.util.Map">
-		  SELECT mm.* FROM t_member_friend mf,
+	<select id="queryPageFriends" resultMap="friendMapper" parameterType="java.util.Map">
+		  SELECT m.c_name,m.c_image,m.pk_id FROM t_friend f,
 		  t_member mm
 		 WHERE 
-		 mf.c_friendId = mm.pk_id
-		 <if test="null!=memberId">and mf.c_memberId = #{memberId}</if>
-		 <if test="null!=friendId">and mf.c_friendId = #{friendId}</if>
+		 f.c_friendId = m.pk_id
+		 <if test="null!=memberId">and f.c_memberId = #{memberId}</if>
+		 <if test="null!=friendId">and f.c_friendId = #{friendId}</if>
 	</select>
 	
 	<!-- 查询分页列表(分页) -->
@@ -262,32 +272,14 @@
 	</select>
 	
 	<insert id="addFriend" parameterType="java.lang.String">
-		  INSERT INTO t_member_friend (pk_id,c_memberId,c_friendId,c_createDate) values(#{0},#{1},#{2},now())
+		  INSERT INTO t_friend (pk_id,c_memberId,c_friendId,c_createDate) values(#{0},#{1},#{2},now())
 	</insert>
 	
 	<delete id="deleteFriend" parameterType="java.lang.String">
-		DELETE FROM t_member_friend WHERE 
+		DELETE FROM t_friend WHERE 
 			c_memberId = #{0}
 			and c_friendId = #{1}
 	</delete>
-	
-		<!-- 更新 -->
-	<update id="addFriendCount" parameterType="java.lang.String">
-		UPDATE t_member
-		<set>
-			c_fans=c_fans+1
-		</set>
-		WHERE pk_id = #{memberId}
-	</update>
-	
-			<!-- 更新 -->
-	<update id="deleteFriendCount" parameterType="java.lang.String">
-		UPDATE t_member
-		<set>
-			c_fans=c_fans-1
-		</set>
-		WHERE pk_id = #{memberId}
-	</update>
 	
 	<select id="queryPageVisitors" resultMap="visitorMapper" parameterType="java.util.Map">
 		  SELECT 

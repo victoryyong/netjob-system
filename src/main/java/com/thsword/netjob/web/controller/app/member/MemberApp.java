@@ -90,89 +90,31 @@ public class MemberApp {
 	
 	/**
 	 * 
-	 * @Description:修改手机
+	 * @Description:修改用户信息
 	 * @author: yong
 	 * @time:2018年5月8日 上午12:07:45
 	 */
-	@RequestMapping("app/member/changePhone")
-	public void changePhone(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String phone=request.getParameter("phone");
-			Member member = (Member) memberService.queryEntityById(IMemberDao.class, memberId);
-			if(null==member){
-				JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_ERROR_USER, response, request);
-				return;
-			}
-			if(StringUtils.isEmpty(phone)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"phone不能为空", response, request);
-				return;
-			}
-			Member temp = new Member();
-			temp.setId(memberId);
-			temp.setPhone(phone);
-			memberService.updateEntity(IMemberDao.class, temp);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
-	/**
-	 * 
-	 * @Description:修改昵称
-	 * @author: yong
-	 * @time:2018年5月8日 上午12:07:45
-	 */
-	@RequestMapping("app/member/changeName")
-	public void changeName(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String name=request.getParameter("name");
-			Member member = (Member) memberService.queryEntityById(IMemberDao.class, memberId);
-			if(null==member){
-				JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_ERROR_USER, response, request);
-				return;
-			}
-			if(StringUtils.isEmpty(name)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"name不能为空", response, request);
-				return;
-			}
-			Member temp = new Member();
-			temp.setId(memberId);
-			temp.setName(name);
-			memberService.updateEntity(IMemberDao.class, temp);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
-	/**
-	 * 
-	 * @Description:修改图像
-	 * @author: yong
-	 * @time:2018年5月8日 上午12:07:45
-	 */
-	@RequestMapping("app/member/changeImage")
-	public void changeImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("app/member/changeInfo")
+	public void changeInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			String memberId = request.getAttribute("memberId")+"";
 			String image=request.getParameter("image");
+			String name=request.getParameter("name");
+			String background=request.getParameter("background");
 			Member member = (Member) memberService.queryEntityById(IMemberDao.class, memberId);
 			if(null==member){
 				JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_ERROR_USER, response, request);
 				return;
 			}
-			if(StringUtils.isEmpty(image)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"image不能为空", response, request);
+			if(StringUtils.isEmpty(image)&&StringUtils.isEmpty(name)&&StringUtils.isEmpty(background)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"参数不能都为空", response, request);
 				return;
 			}
 			Member temp = new Member();
 			temp.setId(memberId);
 			temp.setImage(image);
+			temp.setName(name);
+			temp.setBackground(background);
 			memberService.updateEntity(IMemberDao.class, temp);
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {

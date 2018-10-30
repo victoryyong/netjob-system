@@ -1,4 +1,4 @@
-package com.thsword.netjob.web.controller.app.member;
+package com.thsword.netjob.web.controller.app.login;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

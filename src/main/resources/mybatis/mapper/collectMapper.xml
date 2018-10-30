@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.ICollectDao">
+	<resultMap id="collectMapper" type="collect">
+		<!-- ID -->
+		<result property="id" column="pk_id" />
+		<!-- 名称 -->
+		<result property="bizId" column="c_bizId" />
+		<!-- 名称 -->
+		<result property="memberId" column="c_memberId" />
+		<!-- 类型 -->
+		<result property="type" column="c_type" />
+		<!-- appId -->
+		<result property="createDate" column="c_createDate" />
+	</resultMap>
+	
+	<resultMap id="collectMemberMapper" type="member">
+		<!-- 名称 -->
+		<result property="name" column="c_name" />
+		<!-- 类型 -->
+		<result property="image" column="c_image" />
+	</resultMap>
+	
+	<resultMap id="collectServeMapper" type="serve">
+		<!-- 名称 -->
+		<result property="title" column="c_title" />
+		<!-- 类型 -->
+		<result property="image" column="c_image" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="collect"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_collect (
+						pk_id,
+						c_bizId,
+						c_type,
+						c_memberId,
+						c_createDate,
+						c_createBy,
+						c_updateDate,
+						c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{bizId},
+						#{type},
+						#{memberId},
+						now(),
+						#{createBy},
+						now(),
+						#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="collect">
+		<![CDATA[ DELETE FROM t_collect WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_collect WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="collect">
+		UPDATE t_collect
+		<set>
+			c_updateDate=now()
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="collectMapper">
+		<![CDATA[ SELECT t.* FROM t_collect t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="collectMapper" parameterType="collect">
+		 <![CDATA[ SELECT * FROM t_collect WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c_bizId = #{bizId}</if>
+		 <if test="null!=type and ''!=type">and c_type = #{type}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="collectMapper" parameterType="collect">
+		 <![CDATA[ SELECT * FROM t_collect WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c_bizId = #{bizId}</if>
+		 <if test="null!=type and ''!=type">and c_type = #{type}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="collect">
+		 <![CDATA[ SELECT count(*) FROM t_collect WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c_bizId = #{bizId}</if>
+		 <if test="null!=type and ''!=type">and c_type = #{type}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="collectMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_collect WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c_bizId = #{bizId}</if>
+		 <if test="null!=type and ''!=type">and c_type = #{type}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageMembers" resultMap="collectMemberMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT m.c_name,m.c_image FROM t_collect c left join t_member m on c.c_bizId = m.pk_id WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c.c_bizId = #{bizId}</if>
+		 <if test="null!=type and ''!=type">and c.c_type = #{type}</if>
+		 <if test="null!=memberId and ''!=memberId">and c.c_memberId = #{memberId}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageServes" resultMap="collectServeMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT s.c_name,s.c_image FROM t_collect c left join t_serve s on c.c_bizId = s.pk_id WHERE 1=1]]>
+		 <if test="null!=bizId and ''!=bizId">and c.c_bizId = #{bizId}</if>
+		 <if test="null!=type and ''!=type">and c.c_type = #{type}</if>
+		 <if test="null!=memberId and ''!=memberId">and c.c_memberId = #{memberId}</if>
+	</select>
+</mapper>

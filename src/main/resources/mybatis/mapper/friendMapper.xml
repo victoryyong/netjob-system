@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IFriendDao">
+	
+	<resultMap id="friendMapper" type="friend">
+		<!-- 名称 -->
+		<result property="name" column="c_name" />
+		<!-- 名称 -->
+		<result property="friendId" column="c_friendId" />
+		<!-- 名称 -->
+		<result property="memberId" column="c_memberId" />
+		<!-- 类型 -->
+		<result property="image" column="c_image" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="friend"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_friend (
+						pk_id,
+						c_memberId,
+						c_friendId,
+						c_createDate
+		 				)
+				VALUES(
+						#{id},
+						#{memberId},
+						#{friendId},
+						now()
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="friend">
+		<![CDATA[ DELETE FROM t_friend WHERE 1=1]]>
+		 <if test="null!=id and ''!=id">and pk_id=#{id}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=friendId and ''!=friendId">and c_friendId = #{friendId}</if>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_friend WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="friend">
+		UPDATE t_friend
+		<set>
+			c_updateDate=now()
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="friendMapper">
+		<![CDATA[ SELECT t.* FROM t_friend t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="friendMapper" parameterType="friend">
+		 <![CDATA[ SELECT * FROM t_friend WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=friendId and ''!=friendId">and c_friendId = #{friendId}</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="friendMapper" parameterType="friend">
+		 <![CDATA[ SELECT * FROM t_friend WHERE 1=1]]>
+		<if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=friendId and ''!=friendId">and c_friendId = #{friendId}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="friend">
+		 <![CDATA[ SELECT count(*) FROM t_friend WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=friendId and ''!=friendId">and c_friendId = #{friendId}</if>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="friendMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT m.c_name,m.c_image,f.* FROM t_friend f,t_member m WHERE m.pk_id = f.c_friendId]]>
+		<if test="null!=memberId and ''!=memberId">and f.c_memberId = #{memberId}</if>
+		 <if test="null!=friendId and ''!=friendId">and f.c_friendId = #{friendId}</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+</mapper>

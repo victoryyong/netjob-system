@@ -46,6 +46,8 @@
 		<typeAlias alias="comment" type="com.thsword.netjob.pojo.app.Comment" />
 		<typeAlias alias="agree" type="com.thsword.netjob.pojo.app.Agree" />
 		<typeAlias alias="active" type="com.thsword.netjob.pojo.app.Active" />
+		<typeAlias alias="collect" type="com.thsword.netjob.pojo.app.Collect" />
+		<typeAlias alias="friend" type="com.thsword.netjob.pojo.app.Friend" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mapper/userMapper.xml" />
@@ -72,5 +74,7 @@
 		<mapper resource="mybatis/mapper/commentMapper.xml" />
 		<mapper resource="mybatis/mapper/agreeMapper.xml" />
 		<mapper resource="mybatis/mapper/activeMapper.xml" />
+		<mapper resource="mybatis/mapper/collectMapper.xml" />
+		<mapper resource="mybatis/mapper/friendMapper.xml" />
 	</mappers>
 </configuration>

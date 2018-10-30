@@ -5,19 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonArray;
 import com.thsword.netjob.pojo.Setting;
 import com.thsword.netjob.util.AmapUtil;
-import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.utils.file.FileUtil;
 public class Global{
 	private static Map<String, Object> settings=new HashMap<String, Object>();
@@ -220,13 +214,19 @@ public class Global{
 	public static final int SYS_USER_LEVEL_1=1;//系统级别
 	public static final int SYS_USER_LEVEL_2=2;//代理级别
 	
+	//点赞类型
 	public static final int SYS_AGREE_TYPE_1=1;//会员点赞
 	public static final int SYS_AGREE_TYPE_2=2;//品牌秀
 	public static final int SYS_AGREE_TYPE_3=3;//需求
 	public static final int SYS_AGREE_TYPE_4=4;//动态
 	public static final int SYS_AGREE_TYPE_5=5;//媒体（视频、图片）
-	//数据字典
 	
+	//收藏类型
+	public static final int SYS_COLLECT_TYPE_1=1;//会员收藏
+	public static final int SYS_COLLECT_TYPE_2=2;//需求收藏
+	public static final int SYS_COLLECT_TYPE_3=3;//服务收藏
+	
+	//数据字典
 	/** 年龄范围*/
 	public static final String SYS_DICT_AGE_TYPE="dict.age.range";
 	/** 服务类型*/

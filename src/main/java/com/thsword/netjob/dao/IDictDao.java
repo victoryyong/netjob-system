@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.thsword.netjob.pojo.Dict;
-import com.thsword.netjob.pojo.Permission;
 
 public interface IDictDao extends IBaseDao{
 	/**
