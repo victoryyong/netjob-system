@@ -62,4 +62,8 @@ version="3.1">
 		<servlet-name>springmvc</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>/netjob/index.html</welcome-file>
+	</welcome-file-list>
 </web-app>

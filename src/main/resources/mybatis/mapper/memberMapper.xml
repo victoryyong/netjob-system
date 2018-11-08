@@ -40,11 +40,15 @@
 		<result property="email" column="c_email" />
 		<!-- 电话 -->
 		<result property="phone" column="c_phone" />
-		<!-- 电话 -->
+		<!-- 城市吗 -->
 		<result property="citycode" column="c_citycode" />
-		<!-- 电话 -->
+		<!-- 微信 -->
+		<result property="wxId" column="c_wxId" />
+		<!-- QQ -->
+		<result property="qqId" column="c_qqId" />
+		<!-- 省名 -->
 		<result property="provinceName" column="c_province_name" />
-		<!-- 电话 -->
+		<!-- 市名 -->
 		<result property="cityName" column="c_city_name" />
 		<!-- 缩略图 -->
 		<result property="image" column="c_image" />
@@ -52,6 +56,10 @@
 		<result property="address" column="c_address" />
 		<!-- 类型 -->
 		<result property="type" column="c_type" />
+		<!-- 状态 -->
+		<result property="status" column="c_status" />
+		<!-- 状态 -->
+		<result property="createDate" column="c_createDate" />
 	</resultMap>
 	
 	<resultMap id="friendMapper" type="member">
@@ -112,10 +120,10 @@
 						c_image,
 						c_address,
 						c_citycode,
+						c_province,
 						c_city_name,
 						c_province_name,
 						c_type,
-		 				c_isPhoneAuth,
 		 				c_createDate,
 		 				c_createBy,
 		 				c_updateDate,
@@ -137,10 +145,10 @@
 						#{image},
 						#{address},
 						#{citycode},
+						#{province},
 						#{cityName},
 						#{provinceName},
 						#{type},
-						#{isPhoneAuth},
 		 				now(),
 		 				#{createBy},
 		 				now(),
@@ -169,6 +177,8 @@
 	   		<if test="null!=background">c_background=#{background},</if>
 			<if test="null!=password">c_password=#{password},</if>
 			<if test="null!=phone">c_phone=#{phone},</if>
+			<if test="null!=wxId">c_wxId=#{wxId},</if>
+			<if test="null!=qqId">c_qqId=#{qqId},</if>
 			<if test="null!=email">c_email=#{email}, </if>
 			<if test="null!=image">c_image=#{image}, </if>
 			<if test="null!=showAuth">c_showAuth=#{showAuth}, </if>

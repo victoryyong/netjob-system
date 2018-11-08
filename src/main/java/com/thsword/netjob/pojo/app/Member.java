@@ -128,6 +128,11 @@ public class Member {
 	/**
 	 * 
 	 */
+	private String province;
+	
+	/**
+	 * 
+	 */
 	private String cityName;
 	
 	/**
@@ -403,5 +408,13 @@ public class Member {
 
 	public void setCompanyAuth(boolean companyAuth) {
 		this.companyAuth = companyAuth;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
 	}
 }

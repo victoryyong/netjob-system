@@ -200,6 +200,7 @@ public class ServeApp {
 			String type = request.getParameter("type");
 			String gender = request.getParameter("gender");
 			String menuId = request.getParameter("menuId");
+			String firstMenuId = request.getParameter("firstMenuId");
 			String citycode = request.getParameter("citycode");
 			String endDate = request.getParameter("endDate");
 			String startDate = request.getParameter("startDate");
@@ -333,6 +334,7 @@ public class ServeApp {
 			map.put("type", type);
 			map.put("gender", gender);
 			map.put("menuId", menuId);
+			map.put("firstMenuId", firstMenuId);
 			map.put("memberId", memberId);
 			map.put("citycode", citycode);
 			map.put("startDate", startDate);

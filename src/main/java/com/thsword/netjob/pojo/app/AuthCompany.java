@@ -22,6 +22,10 @@ public class AuthCompany implements Serializable {
 	 */
 	private String name;
 	/**
+	 * 真实名称
+	 */
+	private String realName;
+	/**
 	 * 号码
 	 */
 	private String code;
@@ -128,5 +132,11 @@ public class AuthCompany implements Serializable {
 	}
 	public void setCitycode(String citycode) {
 		this.citycode = citycode;
+	}
+	public String getRealName() {
+		return realName;
+	}
+	public void setRealName(String realName) {
+		this.realName = realName;
 	}
 }

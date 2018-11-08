@@ -59,7 +59,9 @@
 			<if test="null!=advantage">c_advantage=#{advantage},</if>
 			<if test="null!=experience">c_experience=#{experience}</if>
 		</set>
-		WHERE c_memberId = #{memberId}
+		WHERE 1=1
+		<if test="null!=memberId">and c_memberId = #{memberId}</if>
+		<if test="null!=id">and pk_id = #{id}</if>
 	</update>
 
 	<!-- 根据ID查找 -->

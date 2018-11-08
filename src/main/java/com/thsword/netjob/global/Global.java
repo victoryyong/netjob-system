@@ -96,6 +96,11 @@ public class Global{
 	/** 会员类型 手机注册 */
 	public static final String SYS_MEMBER_TYPE_PHONE="phone";
 	
+	/** 会员状态-激活 */
+	public static final Integer SYS_MEMBER_STATUS_1=1;
+	/** 会员类型-冻结 */
+	public static final Integer SYS_MEMBER_STATUS_2=2;
+	
 	//广告类型
 	/** 广告类型 图片 */
 	public static final String SYS_BANNER_TYPE_IMAGE="image";
@@ -141,10 +146,15 @@ public class Global{
 	/** 其他*/
 	public static final int SYS_MEMBER_PERSON_AUTH_2=2;
 	
-	/** 授权书认证*/
+	/** 营业执照*/
 	public static final int SYS_MEMBER_COMPANY_AUTH_1=1;
-	/** 其他*/
+	/** 委托书*/
 	public static final int SYS_MEMBER_COMPANY_AUTH_2=2;
+	/** 其他*/
+	public static final int SYS_MEMBER_COMPANY_AUTH_3=3;
+	
+	public static final String SYS_MEMBER_AUTH_PUBLIC_0="0";
+	public static final String SYS_MEMBER_AUTH_PUBLIC_1="1";
 	
 	//热播视频来源
 	/** 个人动态*/

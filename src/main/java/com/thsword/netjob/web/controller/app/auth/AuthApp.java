@@ -36,8 +36,13 @@ public class AuthApp {
 	public void list(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
 		try {
 			String memberId =  request.getParameter("memberId");
+			if(StringUtils.isEmpty(memberId)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "memberId不能为空", response, request);
+				return;
+			}
 			AuthPerson person = new AuthPerson();
 			person.setMemberId(memberId);
+			person.setIsPublic("");
 			List<AuthPerson> auths = (List<AuthPerson>) authService.queryAllEntity(IAuthPersonDao.class, person);
 			JSONObject obj = new JSONObject();
 			obj.put("list", auths);
@@ -57,6 +62,14 @@ public class AuthApp {
 		try {
 			String memberId = (String) request.getAttribute("memberId");
 			String citycode = (String) request.getAttribute("citycode");
+			if(StringUtils.isEmpty(auth.getName())){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "name不能为空", response, request);
+				return;
+			}
+			if(StringUtils.isEmpty(auth.getRealName())){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "realName不能为空", response, request);
+				return;
+			}
 			if(StringUtils.isEmpty(auth.getType())){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "type不能为空", response, request);
 				return;
@@ -118,6 +131,10 @@ public class AuthApp {
 					temp.setLinks(auth.getLinks());
 					temp.setStatus(Global.SYS_AUTH_STATUS_1);
 					temp.setName(auth.getName());
+					temp.setIsPublic(auth.getIsPublic());
+					if(auth.getType()==Global.SYS_MEMBER_PERSON_AUTH_1){
+						temp.setIsPublic("0");
+					}
 					temp.setCode(auth.getCode());
 					authService.updateEntity(IAuthPersonDao.class, temp);
 				}
@@ -146,26 +163,48 @@ public class AuthApp {
 				return;
 			}
 			if(StringUtils.isEmpty(auth.getLinks())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "许可证书不能为空", response, request);
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "证书不能为空", response, request);
 				return;
 			}
 			if(StringUtils.isEmpty(auth.getName())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "名称不能为空", response, request);
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "证书名不能为空", response, request);
 				return;
 			}
-			if(auth.getType()==Global.SYS_MEMBER_COMPANY_AUTH_1){
-				 AuthPerson person = new AuthPerson();
-				 person.setType(Global.SYS_MEMBER_PERSON_AUTH_1);
-				 person.setMemberId(memberId);
-				 person = (AuthPerson) authService.queryEntity(IAuthPersonDao.class,person);
-				 if(null==person||person.getStatus()!=Global.SYS_AUTH_STATUS_2){
-					 JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请选完成个人身份证审核", response, request);
-						return;
-				 }
+			if(StringUtils.isEmpty(auth.getRealName())){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "真实姓名不能为空", response, request);
+				return;
+			}
+			if(auth.getType()!=Global.SYS_MEMBER_COMPANY_AUTH_2){
+				if(StringUtils.isEmpty(auth.getCode())){
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "证件号码不能为空", response, request);
+					return;
+				}
+			}
+			 AuthPerson person = new AuthPerson();
+			 person.setType(Global.SYS_MEMBER_PERSON_AUTH_1);
+			 person.setMemberId(memberId);
+			 person = (AuthPerson) authService.queryEntity(IAuthPersonDao.class,person);
+			 if(null==person||person.getStatus()!=Global.SYS_AUTH_STATUS_2){
+				 JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请先完成个人身份证审核", response, request);
+					return;
+			 }
+			 if(Global.SYS_MEMBER_COMPANY_AUTH_1==auth.getType()||Global.SYS_MEMBER_COMPANY_AUTH_2==auth.getType()){
 				 if(!person.getName().equals(auth.getName())){
-					 JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "企业审核与个人真实姓名不匹配", response, request);
+					 JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "企业审核名与个人真实姓名不匹配", response, request);
 					 return;
 				 }
+			 }
+			 if(Global.SYS_MEMBER_COMPANY_AUTH_1==auth.getType()){
+				 AuthCompany temp = new AuthCompany();
+				 temp.setMemberId(memberId);
+				 temp.setType(auth.getType());
+				 temp = (AuthCompany) authService.queryEntity(IAuthCompanyDao.class, temp);
+				 if(null!=temp){
+					 JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "营业执照认证信息已存在", response, request);
+					 return;
+				 }
+			 }
+			 if(Global.SYS_MEMBER_COMPANY_AUTH_2==auth.getType()){
 				 AuthCompany temp = new AuthCompany();
 				 temp.setMemberId(memberId);
 				 temp.setType(auth.getType());
@@ -174,12 +213,7 @@ public class AuthApp {
 					 JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "授权书认证信息已存在", response, request);
 					 return;
 				 }
-			}else{
-				if(StringUtils.isEmpty(auth.getCode())){
-					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "许件号码不能为空", response, request);
-					return;
-				}
-			}
+			 }
 			auth.setMemberId(memberId);
 			auth.setCreateBy(memberId);
 			auth.setCitycode(citycode);
@@ -200,12 +234,22 @@ public class AuthApp {
 	@RequestMapping("app/member/auth/company/edit")
 	public void editCompany(HttpServletRequest request, HttpServletResponse response,AuthCompany auth) throws Exception {
 		try {
-			String authId = request.getParameter("authId");
-			AuthCompany temp = new AuthCompany();
-			temp.setMemberId(authId);
-			temp = (AuthCompany) authService.queryEntityById(IAuthCompanyDao.class, authId);
+			if(StringUtils.isEmpty(auth.getId())){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "id不能为空", response, request);
+				return;
+			}
+			AuthCompany temp = (AuthCompany) authService.queryEntityById(IAuthCompanyDao.class, auth.getId());
 			if(null!=temp){
-				authService.updateEntity(IAuthCompanyDao.class, temp);
+				if(temp.getStatus()==Global.SYS_AUTH_STATUS_2){
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "已审核通过，禁止修改", response, request);
+					return;
+				}else{
+					temp.setLinks(auth.getLinks());
+					temp.setStatus(Global.SYS_AUTH_STATUS_1);
+					temp.setName(auth.getName());
+					temp.setCode(auth.getCode());
+					authService.updateEntity(IAuthCompanyDao.class, temp);
+				}
 			}else{
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "认证信息不存在", response, request);
 				return;
@@ -221,17 +265,21 @@ public class AuthApp {
 	 * 查询企业认证信息
 	 * @time:2018年5月8日 上午12:07:45
 	 */
-	@RequestMapping("app/visitor/auth/company/info")
+	@RequestMapping("app/visitor/auth/company/list")
 	public void info(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
-			String memberId = request.getParameter("memberId");
+			String memberId =  request.getParameter("memberId");
+			if(StringUtils.isEmpty(memberId)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "memberId不能为空", response, request);
+				return;
+			}
 			AuthCompany auth = new AuthCompany();
 			auth.setMemberId(memberId);
 			@SuppressWarnings("unchecked")
 			List<AuthCompany> auths = (List<AuthCompany>) authService.queryAllEntity(IAuthCompanyDao.class, auth);
 			JSONObject obj = new JSONObject();
 			obj.put("list", auths);
-			JsonResponseUtil.successBodyResponse(auth,response, request);
+			JsonResponseUtil.successBodyResponse(auths,response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

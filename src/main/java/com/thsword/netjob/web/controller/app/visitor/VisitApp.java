@@ -98,7 +98,7 @@ public class VisitApp {
 	
 	 * @time:2018年5月14日 上午11:45:35
 	 */
-	@RequestMapping("app/member/visitors")
+	@RequestMapping("app/visitor/visitors")
 	public void visitors(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
 		String memberId = request.getParameter("memberId");
 		if(StringUtils.isEmpty(memberId)){

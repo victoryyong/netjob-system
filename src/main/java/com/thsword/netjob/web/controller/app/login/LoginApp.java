@@ -56,6 +56,14 @@ public class LoginApp {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "登陆类型不能为空", response, request);
 				return;
 			}
+			if (StringUtils.isEmpty(member.getCitycode())) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "citycode不能为空", response, request);
+				return;
+			}
+			if (StringUtils.isEmpty(member.getProvince())) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "province不能为空", response, request);
+				return;
+			}
 			Member temp = new Member();
 			if (type.equals(Global.SYS_MEMBER_TYPE_PHONE)) {
 				if (StringUtils.isEmpty(member.getPhone())) {
@@ -71,6 +79,10 @@ public class LoginApp {
 				member = (Member) memberService.queryEntity(IMemberDao.class, temp);
 				if(null==member){
 					JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_NAME_PASSWORD_ERROR, response, request);
+					return;
+				}
+				if(member.getStatus()==Global.SYS_MEMBER_STATUS_2){
+					JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_ERROR_USER_DISABLED, response, request);
 					return;
 				}
 			} else if (type.equals(Global.SYS_MEMBER_TYPE_QQ)) {
@@ -95,9 +107,13 @@ public class LoginApp {
 					member.setPhoneAuth(false);
 					memberService.addEntity(IMemberDao.class, member);
 					temp = new Member();
-					temp.setWxId(member.getWxId());
+					temp.setQqId(member.getQqId());
 					member = (Member) memberService.queryEntity(IMemberDao.class, temp);
 				}else{
+					if(member.getStatus()==Global.SYS_MEMBER_STATUS_2){
+						JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_ERROR_USER_DISABLED, response, request);
+						return;
+					}
 					member = temp;
 				}
 			} else if (type.equals(Global.SYS_MEMBER_TYPE_WX)) {
@@ -125,6 +141,10 @@ public class LoginApp {
 					temp.setWxId(member.getWxId());
 					member = (Member) memberService.queryEntity(IMemberDao.class, temp);
 				}else{
+					if(member.getStatus()==Global.SYS_MEMBER_STATUS_2){
+						JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_ERROR_USER_DISABLED, response, request);
+						return;
+					}
 					member = temp;
 				}
 			} else {

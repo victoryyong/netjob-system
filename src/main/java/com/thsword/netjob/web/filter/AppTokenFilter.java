@@ -120,11 +120,26 @@ public class AppTokenFilter extends HttpServlet implements HandlerInterceptor {
 								request.setAttribute("memberId", userId);
 								user = (Member) memberService.queryEntityById(IMemberDao.class, userId);
 								if(user!=null){
+									if(user.getStatus()==Global.SYS_MEMBER_STATUS_2){
+										JsonResponseUtil.codeResponse(ErrorUtil.LOGIN_ERROR_USER_DISABLED, response, request);
+										flag=false;
+										return false;
+									}
+									request.setAttribute("member", user);
 									request.setAttribute("memberName", user.getName());
 									request.setAttribute("subject", subject);
 									request.setAttribute("citycode", user.getCitycode());
+									if(!user.isPersonAuth()||StringUtils.isEmpty(user.getPhone())){
+										if(url.indexOf("app/member/bindPhone")<0){
+											JsonResponseUtil.codeResponse(ErrorUtil.NOT_HAS_AUTH_PHONE, response, request);
+											flag=false;
+										}else{
+											flag=true;
+										}
+									}else{
+										flag = true;
+									}
 								}
-								flag = true;
 							}
 						} else {
 							log.info("request error"+ErrorUtil.getMessage(ErrorUtil.REQUEST_TOKEN_ERROR));

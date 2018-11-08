@@ -74,6 +74,7 @@ public class AuthAdmin {
 			map.put("provinceName", provinceName);
 			map.put("cityName", cityName);
 			map.put("status", Global.SYS_AUTH_STATUS_1);
+			@SuppressWarnings("unchecked")
 			List<Auth> auths = (List<Auth>) serveService.queryPageEntity(IAuthDao.class, map);
 			result.put("page", page);
 			result.put("list", auths);
@@ -205,6 +206,7 @@ public class AuthAdmin {
 			map.put("page", page);
 			map.put("citycode", citycode);
 			map.put("status", Global.SYS_AUTH_STATUS_1);
+			@SuppressWarnings("unchecked")
 			List<Brand> serves = (List<Brand>) serveService.queryPageEntity(IBrandDao.class,map);
 			result.put("page", page);
 			result.put("list", serves);
@@ -301,6 +303,7 @@ public class AuthAdmin {
 			map.put("page", page);
 			map.put("citycode", citycode);
 			map.put("status", Global.SYS_AUTH_STATUS_1);
+			@SuppressWarnings("unchecked")
 			List<AuthPerson> persons = (List<AuthPerson>) serveService.queryPageEntity(IAuthPersonDao.class,map);
 			result.put("page", page);
 			result.put("list", persons);
@@ -402,6 +405,7 @@ public class AuthAdmin {
 			map.put("page", page);
 			map.put("citycode", citycode);
 			map.put("status", Global.SYS_AUTH_STATUS_1);
+			@SuppressWarnings("unchecked")
 			List<AuthCompany> persons = (List<AuthCompany>) serveService.queryPageEntity(IAuthCompanyDao.class,map);
 			result.put("page", page);
 			result.put("list", persons);

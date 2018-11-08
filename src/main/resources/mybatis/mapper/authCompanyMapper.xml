@@ -10,8 +10,12 @@
 		<result property="type" column="c_type" />
 		<!-- tradeCode -->
 		<result property="name" column="c_name" />
+		<!-- tradeCode -->
+		<result property="realName" column="c_realName" />
 		<!-- tradeLinks -->
 		<result property="code" column="c_code" />
+		<!-- tradeLinks -->
+		<result property="status" column="c_status" />
 		<!-- tradeLinks -->
 		<result property="links" column="c_links" />
 		<result property="createDate" column="c_createDate" />
@@ -70,6 +74,7 @@
 			<if test="null!=type">c_type=#{type}, </if>
 			<if test="null!=name">c_name=#{name}, </if>
 			<if test="null!=code">c_code=#{code},</if>
+			<if test="null!=status">c_status=#{status},</if>
 			<if test="null!=links">c_links=#{links}</if>
 		</set>
 		WHERE 1=1
@@ -81,7 +86,6 @@
 	<!-- 根据ID查找 -->
 	<select id="queryEntityById" parameterType="java.lang.String" resultMap="authCompanyMapper">
 		<![CDATA[ SELECT t.* FROM t_auth_company t WHERE pk_id = #{entityId} ]]>
-		<if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
 	</select>
 
 	<!--  条件查询查询所有 -->

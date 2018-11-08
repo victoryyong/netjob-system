@@ -40,6 +40,8 @@
 		<result property="cityName" column="c_city_name" />
 		<!-- 区 -->
 		<result property="area" column="c_area" />
+		<!-- 区 -->
+		<result property="status" column="c_status" />
 		<!-- 详细地址 -->
 		<result property="detailAddress" column="c_detail_address" />
 		<!-- 关键字 -->

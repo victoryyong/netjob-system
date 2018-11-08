@@ -40,11 +40,11 @@ public class JsonResponseUtil {
 			json.put(BODY, null);
 			request.setAttribute(CODE, code);
 			json.put(MESSAGE, ErrorUtil.getMessage(code));
-			response.getWriter().write(
-					JSONObject.toJSONString(json));
 			/*response.getWriter().write(
+					JSONObject.toJSONString(json));*/
+			response.getWriter().write(
 					JSONObject.toJSONString(json,
-							SerializerFeature.WriteMapNullValue));*/
+							SerializerFeature.WriteMapNullValue));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,6 +60,8 @@ public class JsonResponseUtil {
 			json.put(BODY, null);
 			request.setAttribute(CODE, code);
 			json.put(MESSAGE, message);
+			/*response.getWriter().write(
+					JSONObject.toJSONString(json));*/
 			response.getWriter().write(
 					JSONObject.toJSONString(json,
 							SerializerFeature.WriteMapNullValue));
@@ -78,11 +80,11 @@ public class JsonResponseUtil {
 			request.setAttribute(CODE, code);
 			json.put(MESSAGE, message);
 			json.put(BODY, body);
-			response.getWriter().write(
-					JSONObject.toJSONString(json));
 			/*response.getWriter().write(
+					JSONObject.toJSONString(json));*/
+			response.getWriter().write(
 					JSONObject.toJSONString(json,
-							SerializerFeature.WriteMapNullValue));*/
+							SerializerFeature.WriteMapNullValue));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,11 +100,11 @@ public class JsonResponseUtil {
 			request.setAttribute(CODE, code);
 			json.put(MESSAGE, ErrorUtil.getMessage(code));
 			json.put(BODY, body);
-			response.getWriter().write(
-					JSONObject.toJSONString(json));
 			/*response.getWriter().write(
+					JSONObject.toJSONString(json));*/
+			response.getWriter().write(
 					JSONObject.toJSONString(json,
-							SerializerFeature.WriteMapNullValue));*/
+							SerializerFeature.WriteMapNullValue));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

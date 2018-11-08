@@ -13,6 +13,8 @@
 		<!-- code -->
 		<result property="name" column="c_name" />
 		<!-- code -->
+		<result property="realName" column="c_realName" />
+		<!-- code -->
 		<result property="status" column="c_status" />
 		<!-- code -->
 		<result property="isPublic" column="c_isPublic" />
@@ -34,6 +36,7 @@
 						c_name,
 						c_isPublic,
 						c_citycode,
+						c_realName,
 						c_links,
 						c_createDate,
 						c_createBy,
@@ -48,6 +51,7 @@
 						#{name},
 						#{isPublic},
 						#{citycode},
+						#{realName},
 						#{links},
 						now(),
 						#{createBy},
@@ -74,6 +78,7 @@
 			c_updateDate=now(),
 			<if test="null!=code">c_code=#{code},</if>
 			<if test="null!=name">c_name=#{name},</if>
+			<if test="null!=realName">c_realName=#{realName},</if>
 			<if test="null!=status">c_status=#{status},</if>
 			<if test="null!=isPublic">c_isPublic=#{isPublic}, </if>
 			<if test="null!=links">c_links=#{links}</if>

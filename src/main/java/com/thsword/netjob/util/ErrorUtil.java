@@ -54,6 +54,11 @@ public class ErrorUtil{
 	 * 文件上传出错
 	 */
 	public static final int FILE_UPLOAD_ERROR = -204;
+	
+	/**
+	 * 未绑定手机
+	 */
+	public static final int NOT_HAS_AUTH_PHONE = -205;
 	/** --------------------文件end---------------------------- */
 
 	/** --------------------登陆begin---------------------------- */
@@ -216,6 +221,9 @@ public class ErrorUtil{
 			break;
 		case -204:
 			message = "文件上传出错";
+			break;
+		case -205:
+			message = "请绑定手机";
 			break;
 		case -301:
 			message = "用户校验出错";
