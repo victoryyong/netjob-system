@@ -48,12 +48,24 @@ public class MemberApp {
 		String memberId = (String) request.getAttribute("memberId");
 		String phone = (String) request.getParameter("phone");
 		JSONObject obj = new JSONObject();
-		if(!StringUtils.isEmpty(member.getPhone())||member.isPhoneAuth()||member.getType()==Global.SYS_MEMBER_TYPE_PHONE){
+		if(!StringUtils.isEmpty(member.getPhone())||member.getPhoneAuth()||member.getType()==Global.SYS_MEMBER_TYPE_PHONE){
 			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "已绑定手机", response, request);
 			return;
 		}
 		if(StringUtils.isEmpty(phone)){
 			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "phone不能为空", response, request);
+			return;
+		}
+		if (StringUtils.isEmpty(member.getCitycode())) {
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "citycode不能为空", response, request);
+			return;
+		}
+		if (StringUtils.isEmpty(member.getCityName())) {
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "cityName不能为空", response, request);
+			return;
+		}
+		if (StringUtils.isEmpty(member.getProvinceName())) {
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "provinceName不能为空", response, request);
 			return;
 		}
 		Member temp = new Member();
@@ -64,6 +76,9 @@ public class MemberApp {
 			temp = new Member();
 			temp.setId(memberId);
 			temp.setPhone(phone);
+			temp.setCitycode(member.getCitycode());
+			temp.setCityName(member.getCityName());
+			temp.setProvinceName(member.getProvinceName());
 			memberService.updateEntity(IMemberDao.class, temp);
 			obj.put("token", null);
 		}else{

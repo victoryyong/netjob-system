@@ -129,7 +129,7 @@ public class AppTokenFilter extends HttpServlet implements HandlerInterceptor {
 									request.setAttribute("memberName", user.getName());
 									request.setAttribute("subject", subject);
 									request.setAttribute("citycode", user.getCitycode());
-									if(!user.isPersonAuth()||StringUtils.isEmpty(user.getPhone())){
+									if(!user.getPhoneAuth()||StringUtils.isEmpty(user.getPhone())){
 										if(url.indexOf("app/member/bindPhone")<0){
 											JsonResponseUtil.codeResponse(ErrorUtil.NOT_HAS_AUTH_PHONE, response, request);
 											flag=false;
@@ -138,6 +138,10 @@ public class AppTokenFilter extends HttpServlet implements HandlerInterceptor {
 										}
 									}else{
 										flag = true;
+									}
+									if(flag&&StringUtils.isEmpty(user.getCitycode())){
+										JsonResponseUtil.codeResponse(ErrorUtil.NOT_HAS_REGISTER_CITY, response, request);
+										flag=false;
 									}
 								}
 							}

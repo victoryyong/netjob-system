@@ -68,6 +68,11 @@ public class Global{
     /** 极光SECRET */
     public static final String JPUSH_ACCESS_SECRET="JPUSH.ACCESS.SECRET";
     
+    //聚合网认证
+    /** 证件识别*/
+    public static final String JUHE_PERSONCARD_URL = "http://v.juhe.cn/certificates/query.php";
+    public static final String JUHE_ACCESS_PERSONCARD_KEY = "JUHE.ACCESS.PERSONCARD.KEY";
+    
     //权限类型常量 
     /** 权限类型 一级菜单 */
     public static final Integer SYS_PERMISSION_TYPE_MENU1=1;

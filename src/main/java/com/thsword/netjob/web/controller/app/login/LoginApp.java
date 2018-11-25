@@ -56,14 +56,6 @@ public class LoginApp {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "登陆类型不能为空", response, request);
 				return;
 			}
-			if (StringUtils.isEmpty(member.getCitycode())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "citycode不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(member.getProvince())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "province不能为空", response, request);
-				return;
-			}
 			Member temp = new Member();
 			if (type.equals(Global.SYS_MEMBER_TYPE_PHONE)) {
 				if (StringUtils.isEmpty(member.getPhone())) {
@@ -86,6 +78,22 @@ public class LoginApp {
 					return;
 				}
 			} else if (type.equals(Global.SYS_MEMBER_TYPE_QQ)) {
+				/*if (StringUtils.isEmpty(member.getCitycode())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "citycode不能为空", response, request);
+					return;
+				}
+				if (StringUtils.isEmpty(member.getCityName())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "cityName不能为空", response, request);
+					return;
+				}
+				if (StringUtils.isEmpty(member.getProvinceName())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "provinceName不能为空", response, request);
+					return;
+				}*/
+				/*if (StringUtils.isEmpty(member.getProvince())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "province不能为空", response, request);
+					return;
+				}*/
 				if (StringUtils.isEmpty(member.getQqId())) {
 					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "QQId不能为空", response, request);
 					return;
@@ -117,6 +125,22 @@ public class LoginApp {
 					member = temp;
 				}
 			} else if (type.equals(Global.SYS_MEMBER_TYPE_WX)) {
+				/*if (StringUtils.isEmpty(member.getCitycode())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "citycode不能为空", response, request);
+					return;
+				}
+				if (StringUtils.isEmpty(member.getCityName())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "cityName不能为空", response, request);
+					return;
+				}
+				if (StringUtils.isEmpty(member.getProvinceName())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "provinceName不能为空", response, request);
+					return;
+				}*/
+				/*if (StringUtils.isEmpty(member.getProvince())) {
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "province不能为空", response, request);
+					return;
+				}*/
 				if (StringUtils.isEmpty(member.getWxId())) {
 					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "WXId不能为空", response, request);
 					return;

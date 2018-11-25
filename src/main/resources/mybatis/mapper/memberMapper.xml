@@ -120,7 +120,6 @@
 						c_image,
 						c_address,
 						c_citycode,
-						c_province,
 						c_city_name,
 						c_province_name,
 						c_type,
@@ -145,7 +144,6 @@
 						#{image},
 						#{address},
 						#{citycode},
-						#{province},
 						#{cityName},
 						#{provinceName},
 						#{type},
@@ -188,7 +186,12 @@
 			<if test="null!=personAuth">c_personAuth=#{personAuth}, </if>
 			<if test="null!=companyAuth">c_companyAuth=#{companyAuth}, </if>
 			<if test="null!=visitors">c_visitors=#{visitors}, </if>
+			<if test="null!=citycode">c_citycode=#{citycode}, </if>
+			<if test="null!=cityName">c_cityName=#{cityName}, </if>
+			<if test="null!=provinceName">c_provinceName=#{provinceName}, </if>
 			<if test="null!=agrees">c_agrees=#{agrees}, </if>
+			<if test="null!=agrees">c_agrees=#{agrees}, </if>
+			<if test="null!=age">c_age=#{age}, </if>
 			<if test="null!=fans">c_fans=#{fans}, </if>
 			<if test="null!=trades">c_trades=#{trades}, </if>
 			<if test="null!=address">c_address=#{address},</if>

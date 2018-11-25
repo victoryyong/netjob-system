@@ -362,7 +362,7 @@ public class AuthAdmin {
 						}
 					}
 					AuthPerson temPerson = new AuthPerson();
-					temPerson.setId(id);
+					temPerson.setId(UUIDUtil.get32UUID());
 					temPerson.setStatus(Integer.parseInt(status));
 					baseService.updateEntity(IAuthPersonDao.class, temPerson);
 					Auth auth = new Auth();

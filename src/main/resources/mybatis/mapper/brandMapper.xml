@@ -125,6 +125,7 @@
 		<if test="null!=cityName and ''!=cityName">and t.c_city_name = #{cityName}</if>
 		<if test="null!=title and ''!=title">and t.c_title like "%"#{title}"%"</if>
 		<if test="null!=citycode and ''!=citycode">and t.c_citycode =#{citycode}</if>
+		<if test="null!=memberId and ''!=memberId">and t.c_memberId =#{memberId}</if>
 	</select>
 
 	<!-- #######################CRUD end####################### -->

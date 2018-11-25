@@ -59,6 +59,10 @@ public class ErrorUtil{
 	 * 未绑定手机
 	 */
 	public static final int NOT_HAS_AUTH_PHONE = -205;
+	/**
+	 * 未绑定注册城市
+	 */
+	public static final int NOT_HAS_REGISTER_CITY = -206;
 	/** --------------------文件end---------------------------- */
 
 	/** --------------------登陆begin---------------------------- */
@@ -224,6 +228,9 @@ public class ErrorUtil{
 			break;
 		case -205:
 			message = "请绑定手机";
+			break;
+		case -206:
+			message = "未绑定注册城市";
 			break;
 		case -301:
 			message = "用户校验出错";

@@ -93,15 +93,15 @@ public class Member {
 	/**
 	 * 手机认证
 	 */
-	private boolean phoneAuth;
+	private Boolean phoneAuth;
 	/**
 	 * 个人认证
 	 */
-	private boolean personAuth;
+	private Boolean personAuth;
 	/**
 	 * 企业认证
 	 */
-	private boolean companyAuth;
+	private Boolean companyAuth;
 	/**
 	 * 是否显示认证信息
 	 */
@@ -127,8 +127,8 @@ public class Member {
 	
 	/**
 	 * 
-	 */
-	private String province;
+	 *//*
+	private String province;*/
 	
 	/**
 	 * 
@@ -171,6 +171,22 @@ public class Member {
 		this.name = name;
 	}
 
+	public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public String getBackground() {
+		return background;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+
 	public Integer getAge() {
 		return age;
 	}
@@ -185,14 +201,6 @@ public class Member {
 
 	public void setGender(Integer gender) {
 		this.gender = gender;
-	}
-	
-	public Integer getVisitors() {
-		return visitors;
-	}
-
-	public void setVisitors(Integer visitors) {
-		this.visitors = visitors;
 	}
 
 	public String getPassword() {
@@ -243,12 +251,92 @@ public class Member {
 		this.image = image;
 	}
 
+	public Integer getFans() {
+		return fans;
+	}
+
+	public void setFans(Integer fans) {
+		this.fans = fans;
+	}
+
+	public Integer getTrades() {
+		return trades;
+	}
+
+	public void setTrades(Integer trades) {
+		this.trades = trades;
+	}
+
 	public String getAddress() {
 		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public Integer getVisitors() {
+		return visitors;
+	}
+
+	public void setVisitors(Integer visitors) {
+		this.visitors = visitors;
+	}
+
+	public Integer getAgrees() {
+		return agrees;
+	}
+
+	public void setAgrees(Integer agrees) {
+		this.agrees = agrees;
+	}
+
+	public Integer getCreditScore() {
+		return creditScore;
+	}
+
+	public void setCreditScore(Integer creditScore) {
+		this.creditScore = creditScore;
+	}
+
+	public Integer getSkillScore() {
+		return skillScore;
+	}
+
+	public void setSkillScore(Integer skillScore) {
+		this.skillScore = skillScore;
+	}
+
+	public Boolean getPhoneAuth() {
+		return phoneAuth;
+	}
+
+	public void setPhoneAuth(Boolean phoneAuth) {
+		this.phoneAuth = phoneAuth;
+	}
+
+	public Boolean getPersonAuth() {
+		return personAuth;
+	}
+
+	public void setPersonAuth(Boolean personAuth) {
+		this.personAuth = personAuth;
+	}
+
+	public Boolean getCompanyAuth() {
+		return companyAuth;
+	}
+
+	public void setCompanyAuth(Boolean companyAuth) {
+		this.companyAuth = companyAuth;
+	}
+
+	public Boolean getShowAuth() {
+		return showAuth;
+	}
+
+	public void setShowAuth(Boolean showAuth) {
+		this.showAuth = showAuth;
 	}
 
 	public String getType() {
@@ -265,6 +353,30 @@ public class Member {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getCitycode() {
+		return citycode;
+	}
+
+	public void setCitycode(String citycode) {
+		this.citycode = citycode;
+	}
+
+	public String getProvinceName() {
+		return provinceName;
+	}
+
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
 	}
 
 	public Date getCreateDate() {
@@ -297,124 +409,5 @@ public class Member {
 
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
-	}
-
-	public Integer getAgrees() {
-		return agrees;
-	}
-
-	public void setAgrees(Integer agrees) {
-		this.agrees = agrees;
-	}
-
-	public Integer getCreditScore() {
-		return creditScore;
-	}
-
-	public void setCreditScore(Integer creditScore) {
-		this.creditScore = creditScore;
-	}
-
-	public Integer getSkillScore() {
-		return skillScore;
-	}
-
-	public void setSkillScore(Integer skillScore) {
-		this.skillScore = skillScore;
-	}
-
-	public Boolean getShowAuth() {
-		return showAuth;
-	}
-
-	public void setShowAuth(Boolean showAuth) {
-		this.showAuth = showAuth;
-	}
-
-	public Integer getFans() {
-		return fans;
-	}
-
-	public void setFans(Integer fans) {
-		this.fans = fans;
-	}
-
-	public String getCitycode() {
-		return citycode;
-	}
-
-	public void setCitycode(String citycode) {
-		this.citycode = citycode;
-	}
-	public Integer getTrades() {
-		return trades;
-	}
-
-	public void setTrades(Integer trades) {
-		this.trades = trades;
-	}
-
-	public String getProvinceName() {
-		return provinceName;
-	}
-
-	public void setProvinceName(String provinceName) {
-		this.provinceName = provinceName;
-	}
-
-	public String getCityName() {
-		return cityName;
-	}
-
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
-
-	public String getRealName() {
-		return realName;
-	}
-
-	public void setRealName(String realName) {
-		this.realName = realName;
-	}
-
-	public String getBackground() {
-		return background;
-	}
-
-	public void setBackground(String background) {
-		this.background = background;
-	}
-
-	public boolean isPhoneAuth() {
-		return phoneAuth;
-	}
-
-	public void setPhoneAuth(boolean phoneAuth) {
-		this.phoneAuth = phoneAuth;
-	}
-
-	public boolean isPersonAuth() {
-		return personAuth;
-	}
-
-	public void setPersonAuth(boolean personAuth) {
-		this.personAuth = personAuth;
-	}
-
-	public boolean isCompanyAuth() {
-		return companyAuth;
-	}
-
-	public void setCompanyAuth(boolean companyAuth) {
-		this.companyAuth = companyAuth;
-	}
-
-	public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
 	}
 }
