@@ -69,7 +69,7 @@ public class VisitApp {
 		map.put("memberId", memberId);
 		map.put("visitorId", visitorId);
 		map.put("startDate", DateUtil.getDate(DateUtil.getString(new Date(), DateUtil.FORMAT_STYLE_2)+" 00:00:00", DateUtil.FORMAT_STYLE_1));
-		map.put("endDate", DateUtil.getDate(DateUtil.getString(new Date(), DateUtil.FORMAT_STYLE_2)+"23:59:59", DateUtil.FORMAT_STYLE_1));
+		map.put("endDate", DateUtil.getDate(DateUtil.getString(new Date(), DateUtil.FORMAT_STYLE_2)+" 23:59:59", DateUtil.FORMAT_STYLE_1));
 		map.put("page", page);
 		List<Map<String, Object>> visitors = memberService.queryPageVisitors(map);
 		if(!CollectionUtils.isEmpty(visitors)){

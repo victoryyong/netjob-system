@@ -5,54 +5,50 @@ import java.util.Date;
 /**
  * 
 
- * @Description:订单
+ * @Description:账户交易记录
 
  * @author:yong
 
  * @time:2018年5月7日 下午5:47:41
  */
-public class Order {
+public class CashRecord {
 	private String id;
 	/**
 	 * 用户ID
 	 */
 	private String memberId;
 	/**
+	 * 收款或付款人ID
+	 */
+	private String targetId;
+	/**
+	 * 收款或付款人名称
+	 */
+	private String targetName;
+	/**
+	 * 流水号
+	 */
+	private String flowId;
+	/**
 	 * 订单号
 	 */
-	private String orderCode;
+	private String orderId;
 	/**
-	 *服务ID 
+	 * 交易金额
+	 * */
+	private String money;
+	/**
+	 * 交易类型(1现金充值 2转账 3充值网币)
 	 */
-	private String serveId;
+	private Integer recordType;
 	/**
-	 * 服务地址ID
+	 * 支付方式（1-微信 2-支付宝 3-银行卡 4-账户余额）
 	 */
-	private String addressId;
+	private Integer payWay;
 	/**
-	 * 服务标题
-	 */
-	private String title;
-	/**
-	 * 单价
-	 */
-	private double price;
-	/**
-	 * 数量
-	 */
-	private Integer count;
-	/**
-	 * 城市编码
+	 * 城市
 	 */
 	private String citycode;
-	/**
-	 * 备注说明
-	 */
-	private String remark;
-	/**
-	 * 说明图文链接
-	 */
-	private String remarkLink;
 	/**
 	 * 创建时间
 	 */
@@ -81,59 +77,47 @@ public class Order {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public String getOrderCode() {
-		return orderCode;
+	public String getTargetId() {
+		return targetId;
 	}
-	public void setOrderCode(String orderCode) {
-		this.orderCode = orderCode;
+	public void setTargetId(String targetId) {
+		this.targetId = targetId;
 	}
-	public String getServeId() {
-		return serveId;
+	public String getTargetName() {
+		return targetName;
 	}
-	public void setServeId(String serveId) {
-		this.serveId = serveId;
+	public void setTargetName(String targetName) {
+		this.targetName = targetName;
 	}
-	public String getAddressId() {
-		return addressId;
+	public String getFlowId() {
+		return flowId;
 	}
-	public void setAddressId(String addressId) {
-		this.addressId = addressId;
+	public void setFlowId(String flowId) {
+		this.flowId = flowId;
 	}
-	public String getTitle() {
-		return title;
+	public String getOrderId() {
+		return orderId;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
-	public double getPrice() {
-		return price;
+	public String getMoney() {
+		return money;
 	}
-	public void setPrice(double price) {
-		this.price = price;
+	public void setMoney(String money) {
+		this.money = money;
 	}
-	public Integer getCount() {
-		return count;
+	public Integer getRecordType() {
+		return recordType;
 	}
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setRecordType(Integer recordType) {
+		this.recordType = recordType;
 	}
 	public String getCitycode() {
 		return citycode;
 	}
 	public void setCitycode(String citycode) {
 		this.citycode = citycode;
-	}
-	public String getRemarkLink() {
-		return remarkLink;
-	}
-	public void setRemarkLink(String remarkLink) {
-		this.remarkLink = remarkLink;
 	}
 	public Date getCreateDate() {
 		return createDate;
@@ -158,5 +142,11 @@ public class Order {
 	}
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
+	}
+	public Integer getPayWay() {
+		return payWay;
+	}
+	public void setPayWay(Integer payWay) {
+		this.payWay = payWay;
 	}
 }

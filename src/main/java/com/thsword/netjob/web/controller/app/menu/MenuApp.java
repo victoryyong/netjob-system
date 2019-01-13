@@ -1,5 +1,6 @@
 package com.thsword.netjob.web.controller.app.menu;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.thsword.netjob.service.MenuService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.utils.object.UUIDUtil;
+import com.thsword.utils.page.Page;
 /**
  * 菜单
 
@@ -181,6 +183,60 @@ public class MenuApp {
 			}
 			menuService.deletePrivateMenu(memberId,menuId);
 			JsonResponseUtil.successCodeResponse(response, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	/**
+	 * 默认菜单
+	 * @time:2018年5月10日 下午9:33:16
+	 */
+	@RequestMapping("app/visitor/menu/defaults")
+	public void defaults(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
+		try {
+			String userId = request.getParameter("userId");
+			page.setSort("c_clicks");
+			page.setDir(Page.DIR_TYPE_DESC);
+			page.setPageSize(9);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("page", page);
+			@SuppressWarnings("unchecked")
+			List<Menu> menus = (List<Menu>) menuService.queryPageEntity(IMenuDao.class, map);
+			
+			Map<String, Object> orderMap = new HashMap<>();
+			orderMap.put("memberId", userId);
+			List<Menu> orderMenus = menuService.queryPrivateMenus(orderMap);
+			
+			List<Menu> results = new ArrayList<Menu>();
+			int i=0;
+			if(!CollectionUtils.isEmpty(orderMenus)){
+				i=orderMenus.size();
+				results.addAll(orderMenus);
+				for (Menu menu : menus) {
+					if(i==9){
+						break;
+					}
+					boolean find = false;
+					for (Menu orderMenu : orderMenus) {
+						if(orderMenu.getId().equals(menu.getId())){
+							find=true;
+							break;
+						}
+					}
+					if(!find){
+						results.add(menu);
+						i++;
+					}
+				}
+			}else{
+				results=menus;
+			}
+			JSONObject obj = new JSONObject();
+			obj.put("list", results);
+			
+			JsonResponseUtil.successBodyResponse(obj,response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

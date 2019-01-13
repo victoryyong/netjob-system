@@ -19,8 +19,10 @@ import com.thsword.netjob.pojo.app.News;
 import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.service.TokenService;
 import com.thsword.netjob.util.ErrorUtil;
+import com.thsword.netjob.util.JmessageUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.util.TokenUtil;
+import com.thsword.utils.md5.Md5Util;
 import com.thsword.utils.object.UUIDUtil;
 
 @Controller
@@ -51,6 +53,7 @@ public class LoginApp {
 	@RequestMapping("app/login")
 	public void list(HttpServletRequest request, HttpServletResponse response, Member member) throws Exception {
 		try {
+			String password = member.getPassword();
 			String type = request.getParameter("type");
 			if (StringUtils.isEmpty(type)) {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "登陆类型不能为空", response, request);
@@ -204,6 +207,16 @@ public class LoginApp {
 				//}
 			}
 			obj.put("token", token.getAccess_token());
+			if(type.equals(Global.SYS_MEMBER_TYPE_PHONE)){
+				String imId = JmessageUtil.getUserInfo(member);
+				member.setPassword(Md5Util.getMd5Str(member.getId()));
+				if(StringUtils.isEmpty(imId)){
+					JmessageUtil.RegisterUser(member);
+					imId = JmessageUtil.getUserInfo(member);
+				}
+				member.setImId(imId);
+				member.setPassword(null);
+			}
 			obj.put("member", member);
 			JsonResponseUtil.successBodyResponse(obj, response, request);
 		} catch (Exception e) {

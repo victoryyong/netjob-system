@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
@@ -21,12 +22,14 @@ import com.thsword.netjob.dao.IRecordDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Account;
 import com.thsword.netjob.pojo.app.AccountCoin;
+import com.thsword.netjob.pojo.app.CashRecord;
 import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.pojo.app.News;
-import com.thsword.netjob.pojo.app.Record;
 import com.thsword.netjob.service.AccountService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.util.WxpayAppUtil;
+import com.thsword.utils.ip.IPUtil;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 
@@ -34,22 +37,90 @@ import com.thsword.utils.page.Page;
 public class AccountApp {
 	@Resource(name = "accountService")
 	AccountService accountService;
+	
+	/**
+	 * 
+	 * @Description:充值账户
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@RequestMapping("app/member/account/wxPay")
+	public void rechargeWx(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			String attach = (String) request.getAttribute("memberId");
+			String total_fee = (String) request.getParameter("total_fee");
+			String flowId = UUIDUtil.get32FlowID();
+			String ip = IPUtil.getRemoteHost(request);
+			if(StringUtils.isEmpty(total_fee)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额不能为空", response, request);
+				return;
+			}
+			try {
+				Integer.parseInt(total_fee);
+			} catch (Exception e) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额格式不正确", response, request);
+				return;
+			}
+			Map<String, String> map = WxpayAppUtil.doUnifiedOrder(total_fee, flowId, ip, attach);
+			map.put("out_trade_no", flowId);
+			JsonResponseUtil.successBodyResponse(map, response, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description:查询支付结果
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@RequestMapping("app/rechangeWx/callback")
+	public void callback(HttpServletRequest request, HttpServletResponse response,@RequestBody JSONObject obj) throws Exception {
+		try {
+			System.out.println(obj.toJSONString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description:查询支付结果
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@RequestMapping("app/member/account/confirmRecharge")
+	public void configRecharge(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			String out_trade_no = (String) request.getParameter("out_trade_no");
+			if(StringUtils.isEmpty(out_trade_no)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "out_trade_no不能为空", response, request);
+				return;
+			}
+			Map<String, String> map = WxpayAppUtil.doOrderQuery(out_trade_no);
+			JsonResponseUtil.successBodyResponse(map, response, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@RequestMapping("app/member/account/wxPay/getSandKey")
+	public void getSandKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			String key = WxpayAppUtil.doGetSandboxSignKey();
+			JsonResponseUtil.successBodyResponse(key, response, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
 
 	/**
 	 * 
-	
 	 * @Description:充值账户
-	
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/recharge")
@@ -129,17 +200,15 @@ public class AccountApp {
 			news.setUpdateBy(member.getId());
 			accountService.addEntity(INewsDao.class, news);
 			//添加交易记录
-			Record record = new Record();
+			CashRecord record = new CashRecord();
 			record.setId(UUIDUtil.get32UUID());
 			record.setMemberId(memberId);
 			record.setTargetId(memberId);
 			record.setTargetName(member.getName());
 			record.setRecordType(Global.SYS_MEMBER_ACCOUNT_RECORD_TYPE_1);
-			record.setAccountType(Global.SYS_MEMBER_ACCOUNT_TYPE_1);
 			record.setCitycode(member.getCitycode());
 			record.setMoney(moneyDouble+"");
 			record.setFlowId(flowId);
-			record.setPayType(payTypeInt);
 			record.setCitycode(member.getCitycode());
 			record.setCreateBy(member.getId());
 			record.setUpdateBy(member.getId());
@@ -242,17 +311,15 @@ public class AccountApp {
 			news.setUpdateBy(member.getId());
 			accountService.addEntity(INewsDao.class, news);*/
 			//添加交易记录(网币)
-			Record recordCoin = new Record();
+			CashRecord recordCoin = new CashRecord();
 			recordCoin.setId(UUIDUtil.get32UUID());
 			recordCoin.setMemberId(memberId);
 			recordCoin.setTargetId(memberId);
 			recordCoin.setTargetName(member.getName());
-			recordCoin.setAccountType(Global.SYS_MEMBER_ACCOUNT_TYPE_2);
 			recordCoin.setRecordType(Global.SYS_MEMBER_ACCOUNT_RECORD_TYPE_1);
 			recordCoin.setCitycode(member.getCitycode());
 			recordCoin.setMoney(num+"");
-			recordCoin.setFlowId(UUIDUtil.get28FlowID());
-			recordCoin.setPayType(payTypeInt);
+			recordCoin.setFlowId(UUIDUtil.get32FlowID());
 			recordCoin.setCitycode(member.getCitycode());
 			recordCoin.setCreateBy(member.getId());
 			recordCoin.setUpdateBy(member.getId());
@@ -260,17 +327,14 @@ public class AccountApp {
 			
 			if(payTypeInt==Global.SYS_MEMBER_ACCOUNT_PAY_TYPE_1){
 				//添加交易记录(现金)
-				Record record = new Record();
+				CashRecord record = new CashRecord();
 				record.setId(UUIDUtil.get32UUID());
 				record.setMemberId(memberId);
 				record.setTargetId(memberId);
 				record.setTargetName(member.getName());
-				record.setAccountType(Global.SYS_MEMBER_ACCOUNT_TYPE_1);
 				recordCoin.setRecordType(Global.SYS_MEMBER_ACCOUNT_RECORD_TYPE_2);
 				record.setCitycode(member.getCitycode());
 				record.setMoney(moneyDouble+"");
-				record.setFlowId(UUIDUtil.get28FlowID());
-				record.setPayType(payTypeInt);
 				record.setCitycode(member.getCitycode());
 				record.setCreateBy(member.getId());
 				record.setUpdateBy(member.getId());
@@ -346,7 +410,7 @@ public class AccountApp {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("app/member/account/records")
-	public void record(HttpServletRequest request, HttpServletResponse response,Page page,Record record) throws Exception {
+	public void record(HttpServletRequest request, HttpServletResponse response,Page page,CashRecord record) throws Exception {
 		try {
 			String accountType = request.getParameter("accountType");
 			String recordType = request.getParameter("recordType");
@@ -356,7 +420,7 @@ public class AccountApp {
 			map.put("accountType",accountType);
 			map.put("recordType",recordType);
 			map.put("memberId",memberId);
-			List<Record> records = (List<Record>) accountService.queryPageEntity(IRecordDao.class, map);
+			List<CashRecord> records = (List<CashRecord>) accountService.queryPageEntity(IRecordDao.class, map);
 			JSONObject obj = new JSONObject();
 			obj.put("list", records);
 			obj.put("page", page);
@@ -386,9 +450,9 @@ public class AccountApp {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "flowId不能为空", response, request);
 				return;
 			}
-			Record record = new Record();
+			CashRecord record = new CashRecord();
 			record.setFlowId(flowId);
-			record = (Record) accountService.queryEntity(IRecordDao.class, record);
+			record = (CashRecord) accountService.queryEntity(IRecordDao.class, record);
 			JsonResponseUtil.successBodyResponse(record, response, request);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -169,8 +169,9 @@
 		  on 
 		  mm.c_menuId = mn.pk_id
 		 WHERE 1=1
-		 <if test="null!=memberId">and mm.c_memberId = #{memberId}</if>
-		 <if test="null!=menuId">and mm.c_menuId = #{menuId}</if>
+		 and mn.pk_id is not null
+		 <if test="null!=memberId and ''!=memberId">and mm.c_memberId = #{memberId}</if>
+		 <if test="null!=menuId and ''!=menuId ">and mm.c_menuId = #{menuId}</if>
 		 order by mm.c_createDate desc
 	</select>
 	

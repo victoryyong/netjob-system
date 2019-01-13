@@ -1,5 +1,6 @@
 package com.thsword.netjob.web.controller.app.member;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,19 +10,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
+import com.thsword.netjob.dao.ICollectDao;
+import com.thsword.netjob.dao.IFriendDao;
 import com.thsword.netjob.dao.IMemberDao;
 import com.thsword.netjob.dao.ITokenDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.Token;
+import com.thsword.netjob.pojo.app.Collect;
+import com.thsword.netjob.pojo.app.Friend;
 import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.service.MemberService;
+import com.thsword.netjob.util.AmapUtil;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.util.TokenUtil;
+import com.thsword.utils.date.DateUtil;
+import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 
 @Controller
@@ -43,70 +52,90 @@ public class MemberApp {
 	 * @time:2018年5月14日 上午11:45:35
 	 */
 	@RequestMapping("app/member/bindPhone")
-	public void phoneAuth(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Member member = (Member) request.getAttribute("member");
-		String memberId = (String) request.getAttribute("memberId");
-		String phone = (String) request.getParameter("phone");
-		JSONObject obj = new JSONObject();
-		if(!StringUtils.isEmpty(member.getPhone())||member.getPhoneAuth()||member.getType()==Global.SYS_MEMBER_TYPE_PHONE){
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "已绑定手机", response, request);
-			return;
-		}
-		if(StringUtils.isEmpty(phone)){
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "phone不能为空", response, request);
-			return;
-		}
-		if (StringUtils.isEmpty(member.getCitycode())) {
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "citycode不能为空", response, request);
-			return;
-		}
-		if (StringUtils.isEmpty(member.getCityName())) {
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "cityName不能为空", response, request);
-			return;
-		}
-		if (StringUtils.isEmpty(member.getProvinceName())) {
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "provinceName不能为空", response, request);
-			return;
-		}
-		Member temp = new Member();
-		temp.setPhone(phone);
-		temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
-		//手机未被注册
-		if(null==temp){
-			temp = new Member();
-			temp.setId(memberId);
-			temp.setPhone(phone);
-			temp.setCitycode(member.getCitycode());
-			temp.setCityName(member.getCityName());
-			temp.setProvinceName(member.getProvinceName());
-			memberService.updateEntity(IMemberDao.class, temp);
-			obj.put("token", null);
-		}else{
-			String existId = temp.getId();
-			String existName = temp.getName();
-			temp = new Member();
-			temp.setId(existId);
-			if(member.getType().equals(Global.SYS_MEMBER_TYPE_QQ)){
-				temp.setQqId(member.getQqId());
-			}else if(member.getType().equals(Global.SYS_MEMBER_TYPE_WX)){
-				temp.setWxId(member.getWxId());
+	public void bindPhone(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			
+			Member member = (Member) request.getAttribute("member");
+			String memberId = (String) request.getAttribute("memberId");
+			String phone = (String) request.getParameter("phone");
+			String citycode = request.getParameter("citycode");
+			String cityName = request.getParameter("cityName");
+			String provinceName = request.getParameter("provinceName");
+			JSONObject obj = new JSONObject();
+			if(!StringUtils.isEmpty(member.getPhone())||member.getPhoneAuth()||member.getType()==Global.SYS_MEMBER_TYPE_PHONE){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "已绑定手机", response, request);
+				return;
 			}
-			memberService.updateEntity(IMemberDao.class, temp);
-			memberService.deleteEntityById(IMemberDao.class, memberId);
-			Token token = new Token();
-			token.setUserId(memberId);
-			token.setSubject(Global.JWT_SUBJECT_APP);
-			Token oldToken = (Token) memberService.queryEntity(ITokenDao.class, token);
-			memberService.deleteEntity(ITokenDao.class, oldToken);
-			token.setUserId(existId);
-			oldToken = (Token) memberService.queryEntity(ITokenDao.class, token);
-			memberService.deleteEntity(ITokenDao.class, oldToken);
-			//生成新的token
-			token = TokenUtil.getToken(existId,existName,Global.JWT_SUBJECT_APP,Global.getSetting(Global.JWT_SECRET_APP_KEY));
-			memberService.addEntity(ITokenDao.class, token);
-			obj.put("token", token.getAccess_token());
+			if(StringUtils.isEmpty(phone)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "phone不能为空", response, request);
+				return;
+			}
+			if (StringUtils.isEmpty(citycode)) {
+				if(!StringUtils.isEmpty(member.getCitycode())){
+					citycode=member.getCitycode();
+				}else{
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "citycode不能为空", response, request);
+					return;
+				}
+			}
+			if (StringUtils.isEmpty(cityName)) {
+				if(!StringUtils.isEmpty(member.getCityName())){
+					cityName=member.getCityName();
+				}else{
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "cityName不能为空", response, request);
+					return;
+				}
+			}
+			if (StringUtils.isEmpty(provinceName)) {
+				if(!StringUtils.isEmpty(member.getProvinceName())){
+					provinceName=member.getProvinceName();
+				}else{
+					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "provinceName不能为空", response, request);
+					return;
+				}
+			}
+			Member temp = new Member();
+			temp.setPhone(phone);
+			temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
+			//手机未被注册
+			if(null==temp){
+				temp = new Member();
+				temp.setId(memberId);
+				temp.setPhone(phone);
+				temp.setCitycode(citycode);
+				temp.setCityName(cityName);
+				temp.setProvinceName(provinceName);
+				memberService.updateEntity(IMemberDao.class, temp);
+				obj.put("token", null);
+			}else{
+				String existId = temp.getId();
+				String existName = temp.getName();
+				temp = new Member();
+				temp.setId(existId);
+				if(member.getType().equals(Global.SYS_MEMBER_TYPE_QQ)){
+					temp.setQqId(member.getQqId());
+				}else if(member.getType().equals(Global.SYS_MEMBER_TYPE_WX)){
+					temp.setWxId(member.getWxId());
+				}
+				memberService.updateEntity(IMemberDao.class, temp);
+				memberService.deleteEntityById(IMemberDao.class, memberId);
+				Token token = new Token();
+				token.setUserId(memberId);
+				token.setSubject(Global.JWT_SUBJECT_APP);
+				Token oldToken = (Token) memberService.queryEntity(ITokenDao.class, token);
+				memberService.deleteEntity(ITokenDao.class, oldToken);
+				token.setUserId(existId);
+				oldToken = (Token) memberService.queryEntity(ITokenDao.class, token);
+				memberService.deleteEntity(ITokenDao.class, oldToken);
+				//生成新的token
+				token = TokenUtil.getToken(existId,existName,Global.JWT_SUBJECT_APP,Global.getSetting(Global.JWT_SECRET_APP_KEY));
+				memberService.addEntity(ITokenDao.class, token);
+				obj.put("token", token.getAccess_token());
+			}
+			JsonResponseUtil.successBodyResponse(obj, response, request);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		JsonResponseUtil.successBodyResponse(obj, response, request);
 	}
 	
 	/**
@@ -127,13 +156,62 @@ public class MemberApp {
 	 * @time:2018年5月14日 上午11:45:35
 	 */
 	@RequestMapping("app/visitor/memberInfo")
-	public void visit(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String memberId = request.getParameter("memberId");
-		if(StringUtils.isEmpty(memberId)){
+	public void visit(HttpServletRequest request, HttpServletResponse response, Page page) throws Exception {
+		String memberId = request.getParameter("userId")+"";
+		String friendId = request.getParameter("memberId");
+		if (StringUtils.isEmpty(friendId)) {
 			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "memberId不能为空", response, request);
 			return;
 		}
-		Member member = (Member) memberService.queryEntityById(IMemberDao.class, memberId);
+		if (StringUtils.isEmpty(memberId)) {
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "userId不能为空", response, request);
+			return;
+		}
+		Member member = (Member) memberService.queryEntityById(IMemberDao.class, friendId);
+		//是否好友
+		Friend friend = new Friend();
+		friend.setFriendId(friendId);
+		friend.setMemberId(memberId);
+		friend = (Friend) memberService.queryEntity(IFriendDao.class, friend);
+		boolean flag = false;
+		if(friend!=null){
+			flag = true;
+		}
+		member.setMyFriend(flag);
+		//是否粉丝
+		Collect collect = new Collect();
+		collect.setBizId(friendId);
+		collect.setMemberId(memberId);
+		collect = (Collect) memberService.queryEntity(ICollectDao.class, collect);
+		flag = false;
+		if(friend!=null){
+			flag = true;
+		}
+		member.setMyFans(flag);
+		//添加访问记录
+		Map<String, Object> map = new HashMap<>();
+		page.setSort("mv.c_createDate");
+		page.setDir(Page.DIR_TYPE_DESC);
+		map.put("memberId", memberId);
+		map.put("visitorId", friendId);
+		map.put("startDate", DateUtil.getDate(DateUtil.getString(new Date(), DateUtil.FORMAT_STYLE_2)+" 00:00:00", DateUtil.FORMAT_STYLE_1));
+		map.put("endDate", DateUtil.getDate(DateUtil.getString(new Date(), DateUtil.FORMAT_STYLE_2)+" 23:59:59", DateUtil.FORMAT_STYLE_1));
+		map.put("page", page);
+		List<Map<String, Object>> visitors = memberService.queryPageVisitors(map);
+		if(!CollectionUtils.isEmpty(visitors)){
+			memberService.updateVisitor(visitors.get(0).get("mv_id")+"");
+		}else{
+			memberService.addVisitor(UUIDUtil.get32UUID(), memberId, friendId);
+		}
+		//计算距离
+		if(!StringUtils.isEmpty(member.getLatitude())&&!StringUtils.isEmpty(member.getLongitude())){
+			String longitude = request.getParameter("longitude");
+			String latitude = request.getParameter("latitude");
+			if(!StringUtils.isEmpty(longitude)&&!StringUtils.isEmpty(latitude)){
+				Double distance = AmapUtil.distanceByLongNLat(Double.parseDouble(longitude), Double.parseDouble(longitude), Double.parseDouble(member.getLatitude()), Double.parseDouble(member.getLongitude()));
+				member.setDistance(distance);
+			}
+		}
 		JsonResponseUtil.successBodyResponse(member, response, request);
 	}	
 	

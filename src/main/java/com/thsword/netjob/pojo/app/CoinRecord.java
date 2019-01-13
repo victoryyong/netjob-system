@@ -5,54 +5,42 @@ import java.util.Date;
 /**
  * 
 
- * @Description:订单
+ * @Description:交易记录
 
  * @author:yong
 
  * @time:2018年5月7日 下午5:47:41
  */
-public class Order {
+public class CoinRecord {
 	private String id;
 	/**
 	 * 用户ID
 	 */
 	private String memberId;
 	/**
-	 * 订单号
+	 * 收款或付款人ID
 	 */
-	private String orderCode;
+	private String targetId;
 	/**
-	 *服务ID 
+	 * 收款或付款人名称
 	 */
-	private String serveId;
+	private String targetName;
 	/**
-	 * 服务地址ID
+	 * 流水号
 	 */
-	private String addressId;
+	private String flowId;
 	/**
-	 * 服务标题
+	 * 交易金额
+	 * */
+	private String money;
+	/**
+	 * 交易类型(1充值 2打赏)
 	 */
-	private String title;
+	private Integer recordType;
 	/**
-	 * 单价
-	 */
-	private double price;
-	/**
-	 * 数量
-	 */
-	private Integer count;
-	/**
-	 * 城市编码
+	 * 城市
 	 */
 	private String citycode;
-	/**
-	 * 备注说明
-	 */
-	private String remark;
-	/**
-	 * 说明图文链接
-	 */
-	private String remarkLink;
 	/**
 	 * 创建时间
 	 */
@@ -81,59 +69,41 @@ public class Order {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public String getOrderCode() {
-		return orderCode;
+	public String getTargetId() {
+		return targetId;
 	}
-	public void setOrderCode(String orderCode) {
-		this.orderCode = orderCode;
+	public void setTargetId(String targetId) {
+		this.targetId = targetId;
 	}
-	public String getServeId() {
-		return serveId;
+	public String getTargetName() {
+		return targetName;
 	}
-	public void setServeId(String serveId) {
-		this.serveId = serveId;
+	public void setTargetName(String targetName) {
+		this.targetName = targetName;
 	}
-	public String getAddressId() {
-		return addressId;
+	public String getFlowId() {
+		return flowId;
 	}
-	public void setAddressId(String addressId) {
-		this.addressId = addressId;
+	public void setFlowId(String flowId) {
+		this.flowId = flowId;
 	}
-	public String getTitle() {
-		return title;
+	public String getMoney() {
+		return money;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setMoney(String money) {
+		this.money = money;
 	}
-	public double getPrice() {
-		return price;
+	public Integer getRecordType() {
+		return recordType;
 	}
-	public void setPrice(double price) {
-		this.price = price;
-	}
-	public Integer getCount() {
-		return count;
-	}
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setRecordType(Integer recordType) {
+		this.recordType = recordType;
 	}
 	public String getCitycode() {
 		return citycode;
 	}
 	public void setCitycode(String citycode) {
 		this.citycode = citycode;
-	}
-	public String getRemarkLink() {
-		return remarkLink;
-	}
-	public void setRemarkLink(String remarkLink) {
-		this.remarkLink = remarkLink;
 	}
 	public Date getCreateDate() {
 		return createDate;

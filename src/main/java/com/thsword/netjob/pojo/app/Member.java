@@ -54,6 +54,10 @@ public class Member {
 	 */
 	private String qqId;
 	/**
+	 * 极光IM id
+	 */
+	private String imId;
+	/**
 	 * 图片
 	 */
 	private String image;
@@ -106,6 +110,19 @@ public class Member {
 	 * 是否显示认证信息
 	 */
 	private Boolean showAuth;
+	
+	/**
+	 * 是否好友
+	 */
+	private Boolean myFriend;
+	/**
+	 * 
+	 */
+	private Boolean myFans;
+	/**
+	 * 
+	 */
+	private Double distance;
 	/**
 	 * 会员类型
 	 */
@@ -124,7 +141,14 @@ public class Member {
 	 * 
 	 */
 	private String provinceName;
-	
+	/**
+	 * 经度
+	 */
+	private String longitude;
+	/**
+	 * 纬度
+	 */
+	private String latitude;
 	/**
 	 * 
 	 *//*
@@ -409,5 +433,53 @@ public class Member {
 
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
+	}
+
+	public Boolean getMyFriend() {
+		return myFriend;
+	}
+
+	public void setMyFriend(Boolean myFriend) {
+		this.myFriend = myFriend;
+	}
+
+	public Boolean getMyFans() {
+		return myFans;
+	}
+
+	public void setMyFans(Boolean myFans) {
+		this.myFans = myFans;
+	}
+
+	public Double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getImId() {
+		return imId;
+	}
+
+	public void setImId(String imId) {
+		this.imId = imId;
 	}
 }

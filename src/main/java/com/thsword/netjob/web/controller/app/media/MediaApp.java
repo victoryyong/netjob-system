@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IMediaDao;
+import com.thsword.netjob.dao.IMemberDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Media;
+import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.utils.page.Page;
@@ -46,6 +48,16 @@ public class MediaApp {
 	@RequestMapping("app/visitor/index/videos")
 	public void list(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
 		try {
+			String userId = request.getAttribute("userId")+"";
+			String longitude = request.getParameter("longitude");
+			String latitude = request.getParameter("latitude");
+			if(!StringUtils.isEmpty(latitude)&&!StringUtils.isEmpty(latitude)){
+				Member member = new Member();
+				member.setId(userId);
+				member.setLatitude(latitude);
+				member.setLongitude(longitude);
+				memberService.updateEntity(IMemberDao.class, member);
+			};
 			Map<String, Object> map = new HashMap<>();
 			String citycode = request.getParameter("citycode");
 			map.put("page", page);

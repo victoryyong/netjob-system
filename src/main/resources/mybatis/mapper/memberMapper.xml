@@ -36,6 +36,10 @@
 		<result property="companyAuth" column="c_companyAuth" />
 		<!-- 手机认证 -->
 		<result property="phoneAuth" column="c_phoneAuth" />
+		<!-- 经度-->
+		<result property="longitude" column="c_longitude" />
+		<!-- 纬度 -->
+		<result property="latitude" column="c_latitude" />
 		<!-- 邮箱 -->
 		<result property="email" column="c_email" />
 		<!-- 电话 -->
@@ -187,8 +191,8 @@
 			<if test="null!=companyAuth">c_companyAuth=#{companyAuth}, </if>
 			<if test="null!=visitors">c_visitors=#{visitors}, </if>
 			<if test="null!=citycode">c_citycode=#{citycode}, </if>
-			<if test="null!=cityName">c_cityName=#{cityName}, </if>
-			<if test="null!=provinceName">c_provinceName=#{provinceName}, </if>
+			<if test="null!=cityName">c_city_name=#{cityName}, </if>
+			<if test="null!=provinceName">c_province_name=#{provinceName}, </if>
 			<if test="null!=agrees">c_agrees=#{agrees}, </if>
 			<if test="null!=agrees">c_agrees=#{agrees}, </if>
 			<if test="null!=age">c_age=#{age}, </if>
@@ -197,6 +201,8 @@
 			<if test="null!=address">c_address=#{address},</if>
 			<if test="null!=status">c_status=#{status}, </if>
 			<if test="null!=citycode">c_citycode = #{citycode},</if>
+			<if test="null!=longitude">c_longitude = #{longitude},</if>
+			<if test="null!=latitude">c_latitude = #{latitude},</if>
 		</set>
 		WHERE pk_id = #{id}
 	</update>

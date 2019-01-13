@@ -139,7 +139,7 @@ public class AppTokenFilter extends HttpServlet implements HandlerInterceptor {
 									}else{
 										flag = true;
 									}
-									if(flag&&StringUtils.isEmpty(user.getCitycode())){
+									if(flag&&StringUtils.isEmpty(user.getCitycode())&&user.getType().equals("phone")){
 										JsonResponseUtil.codeResponse(ErrorUtil.NOT_HAS_REGISTER_CITY, response, request);
 										flag=false;
 									}

@@ -73,6 +73,23 @@ public class Global{
     public static final String JUHE_PERSONCARD_URL = "http://v.juhe.cn/certificates/query.php";
     public static final String JUHE_ACCESS_PERSONCARD_KEY = "JUHE.ACCESS.PERSONCARD.KEY";
     
+    //微信支付配置
+    /**微信支付appId*/
+    public static final String WX_PAY_APPID="WX.PAY.APPID";
+    /**微信支付商户号ID*/
+    public static final String WX_PAY_MCHID="WX.PAY.MCHID";
+    /**微信支付密钥*/
+    public static final String WX_PAY_SECRET_KEY="WX.PAY.SECRET.KEY";
+    /** 微信支付回调地址*/
+    public static final String WX_PAY_CALLBACK="http://wy-168.com/netjob/app/rechangeWx/callback";
+    /** 是否适用沙箱环境*/
+    public static boolean WX_PAY_USESANDBOX=true;
+    
+    //网约信息
+    public static final String NETJOB_PAY_APP_NAMA="网约";
+    //网约充值信息
+    public static final String NETJOB_PAY_RECHARGE_NAMA="网约-账户充值";
+    
     //权限类型常量 
     /** 权限类型 一级菜单 */
     public static final Integer SYS_PERMISSION_TYPE_MENU1=1;

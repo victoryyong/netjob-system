@@ -262,7 +262,7 @@
             <version>4.5.3</version>
         </dependency>
 
-		<!-- 支付宝 -->
+		<!-- 支付宝支付 -->
 		<dependency>
 			<groupId>com.alipay.sdk</groupId>
 			<artifactId>alipay-sdk-java</artifactId>
@@ -274,19 +274,19 @@
 			<version>2.6.0</version> </dependency> <dependency> <groupId>io.springfox</groupId> 
 			<artifactId>springfox-swagger-ui</artifactId> <version>2.6.0</version> </dependency> -->
 
-		<!-- 极光IM -->
+		<!-- 极光推送 -->
 		<dependency>
 			<groupId>cn.jpush.api</groupId>
 			<artifactId>jiguang-common</artifactId>
 			<version>1.1.3</version>
 		</dependency>
+		<!-- 极光IM -->
 		<dependency>
 			<groupId>cn.jpush.api</groupId>
 			<artifactId>jmessage-client</artifactId>
 			<version>1.1.8</version>
 		</dependency>
 
-		<!-- 极光推送 -->
 
 	</dependencies>
 	<build>
