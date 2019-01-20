@@ -1,35 +1,32 @@
-package com.thsword.netjob.util.wx;
+package com.thsword.netjob.util.wxpay;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.thsword.netjob.global.Global;
-import com.thsword.netjob.util.wx.WXPayConstants.SignType;
+import com.thsword.netjob.util.wxpay.WXPayConstants.SignType;
 
 public class WXPay {
 
     private static WXPayConfig config;
-    private SignType signType;
+    private static SignType signType;
+    private static String signTypeStr;
     private boolean autoReport;
     private static boolean useSandbox;
     private static String notifyUrl;
     private WXPayRequest wxPayRequest;
     {
     	config = WXPayConfigImpl.getInstance();
-    	useSandbox = Global.WX_PAY_USESANDBOX;
+    	useSandbox = Boolean.parseBoolean(Global.getSetting(Global.WX_PAY_USESANDBOX));
     	notifyUrl = Global.WX_PAY_CALLBACK;
+    	signType = useSandbox?SignType.MD5:SignType.HMACSHA256;
+    	signTypeStr=useSandbox?WXPayConstants.MD5:WXPayConstants.HMACSHA256;
     }
     public WXPay() throws Exception {
     	this(true);
     }
 	public WXPay(boolean autoReport) throws Exception {
     	checkWXPayConfig();
-        if (useSandbox) {
-            this.signType = SignType.MD5; // 沙箱环境
-        }
-        else {
-            this.signType = SignType.HMACSHA256;
-        }
         this.wxPayRequest = new WXPayRequest(config);
     }
 
@@ -71,13 +68,8 @@ public class WXPay {
         reqData.put("appid", config.getAppID());
         reqData.put("mch_id", config.getMchID());
         reqData.put("nonce_str", WXPayUtil.generateNonceStr());
-        if (SignType.MD5.equals(this.signType)) {
-            reqData.put("sign_type", WXPayConstants.MD5);
-        }
-        else if (SignType.HMACSHA256.equals(this.signType)) {
-            reqData.put("sign_type", WXPayConstants.HMACSHA256);
-        }
-        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), this.signType));
+        reqData.put("sign_type", signTypeStr);
+        reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), signType));
         return reqData;
     }
 
@@ -90,7 +82,7 @@ public class WXPay {
      */
     public boolean isResponseSignatureValid(Map<String, String> reqData) throws Exception {
         // 返回数据的签名方式和请求中给定的签名方式是一致的
-        return WXPayUtil.isSignatureValid(reqData, config.getKey(), this.signType);
+        return WXPayUtil.isSignatureValid(reqData, config.getKey(), signType);
     }
 
     /**
@@ -101,26 +93,6 @@ public class WXPay {
      * @throws Exception
      */
     public boolean isPayResultNotifySignatureValid(Map<String, String> reqData) throws Exception {
-        String signTypeInData = reqData.get(WXPayConstants.FIELD_SIGN_TYPE);
-        SignType signType;
-        if (signTypeInData == null) {
-            signType = SignType.MD5;
-        }
-        else {
-            signTypeInData = signTypeInData.trim();
-            if (signTypeInData.length() == 0) {
-                signType = SignType.MD5;
-            }
-            else if (WXPayConstants.MD5.equals(signTypeInData)) {
-                signType = SignType.MD5;
-            }
-            else if (WXPayConstants.HMACSHA256.equals(signTypeInData)) {
-                signType = SignType.HMACSHA256;
-            }
-            else {
-                throw new Exception(String.format("Unsupported sign_type: %s", signTypeInData));
-            }
-        }
         return WXPayUtil.isSignatureValid(reqData, config.getKey(), signType);
     }
 
@@ -345,7 +317,30 @@ public class WXPay {
             reqData.put("notify_url", notifyUrl);
         }
         String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
-        return this.processResponseXml(respXml);
+        Map<String, String> map =this.processResponseXml(respXml);
+        Map<String, String> signMap = new HashMap<String, String>();
+		if(null!=map){
+			String wxSign = map.get(WXPayConstants.FIELD_SIGN);
+			reqData.put("sign", wxSign);
+			if(!WXPayUtil.isSignatureValid(this.fillRequestData(reqData), config.getKey(), signType)){
+				throw new Exception("微信返回签名与统一下单签名不匹配");
+			}
+			String noncestr = WXPayUtil.generateNonceStr();
+			String timeStamp = WXPayUtil.getCurrentTimestamp()+"";
+			signMap.put("appid", config.getAppID());
+			signMap.put("partnerid", config.getMchID());
+			signMap.put("prepayid", map.get("prepay_id"));
+			signMap.put("noncestr", noncestr);
+			signMap.put("timestamp", timeStamp); 
+			signMap.put("package", "Sign=WXPay");
+			String paySign = WXPayUtil.generateSignature(signMap, config.getKey(),signType); 
+			map.remove("nonce_str");
+			map.remove("sign");
+			map.put("paySign", paySign);
+			map.put("noncestr", noncestr);
+			map.put("timeStamp", timeStamp);
+		}
+        return map;
     }
 
 

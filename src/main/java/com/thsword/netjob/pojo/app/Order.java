@@ -18,21 +18,49 @@ public class Order {
 	 */
 	private String memberId;
 	/**
+	 * 商家ID
+	 */
+	private String sellerId;
+	/**
+	 * 商家名称
+	 */
+	private String sellerName;
+	/**
+	 * 商家图片
+	 */
+	private String sellerImage;
+	/**
 	 * 订单号
 	 */
 	private String orderCode;
+	/**
+	 * 付款单号
+	 */
+	private String flowId;
 	/**
 	 *服务ID 
 	 */
 	private String serveId;
 	/**
-	 * 服务地址ID
+	 * 服务标题
 	 */
-	private String addressId;
+	private String serveTitle;
 	/**
 	 * 服务标题
 	 */
-	private String title;
+	private String serveImage;
+	/**
+	 * 服务标题
+	 */
+	private String firstMenuName;
+	/**
+	 * 服务标题
+	 */
+	private String menuName;
+	/**
+	 * 地址ID
+	 */
+	private String addressId;
 	/**
 	 * 单价
 	 */
@@ -41,6 +69,10 @@ public class Order {
 	 * 数量
 	 */
 	private Integer count;
+	/**
+	 * 业务方状态
+	 */
+	private Integer status;
 	/**
 	 * 城市编码
 	 */
@@ -99,11 +131,53 @@ public class Order {
 	public void setAddressId(String addressId) {
 		this.addressId = addressId;
 	}
-	public String getTitle() {
-		return title;
+	public String getFlowId() {
+		return flowId;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setFlowId(String flowId) {
+		this.flowId = flowId;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public String getServeTitle() {
+		return serveTitle;
+	}
+	public void setServeTitle(String serveTitle) {
+		this.serveTitle = serveTitle;
+	}
+	public String getServeImage() {
+		return serveImage;
+	}
+	public void setServeImage(String serveImage) {
+		this.serveImage = serveImage;
+	}
+	public String getSellerName() {
+		return sellerName;
+	}
+	public void setSellerName(String sellerName) {
+		this.sellerName = sellerName;
+	}
+	public String getSellerImage() {
+		return sellerImage;
+	}
+	public void setSellerImage(String sellerImage) {
+		this.sellerImage = sellerImage;
+	}
+	public String getFirstMenuName() {
+		return firstMenuName;
+	}
+	public void setFirstMenuName(String firstMenuName) {
+		this.firstMenuName = firstMenuName;
+	}
+	public String getMenuName() {
+		return menuName;
+	}
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
 	}
 	public double getPrice() {
 		return price;
@@ -158,5 +232,11 @@ public class Order {
 	}
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
+	}
+	public String getSellerId() {
+		return sellerId;
+	}
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
 	}
 }

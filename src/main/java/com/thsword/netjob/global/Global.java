@@ -83,12 +83,27 @@ public class Global{
     /** 微信支付回调地址*/
     public static final String WX_PAY_CALLBACK="http://wy-168.com/netjob/app/rechangeWx/callback";
     /** 是否适用沙箱环境*/
-    public static boolean WX_PAY_USESANDBOX=true;
+    public static String WX_PAY_USESANDBOX="WX.PAY.USESANDBOX";
+    
+    /**微信支付appId*/
+    public static final String ALIPAY_PAY_APPID="ALIPAY.PAY.APPID";
+    /**微信支付商户号ID*/
+    public static final String ALIPAY_PAY_UID="ALIPAY.PAY.UID";
+    /**微信支付密钥*/
+    public static final String ALIPAY_PAY_PRIVATE_KEY="ALIPAY.PAY.PRIVATE.KEY";
+    /**微信支付公钥*/
+    public static final String ALIPAY_PAY_PUBLIC_KEY="ALIPAY.PAY.PUBLIC.KEY";
+    /** 微信支付回调地址*/
+    public static final String ALIPAY_PAY_CALLBACK="http://wy-168.com/netjob/app/rechangeAlipay/callback";
+    /** 是否适用沙箱环境*/
+    public static String ALIPAY_PAY_USESANDBOX="ALIPAY.PAY.USESANDBOX";
     
     //网约信息
     public static final String NETJOB_PAY_APP_NAMA="网约";
     //网约充值信息
     public static final String NETJOB_PAY_RECHARGE_NAMA="网约-账户充值";
+    //网约保证金充值信息
+    public static final String NETJOB_PAY_RECHARGE_PROMISE_NAMA="网约-保证金充值";
     
     //权限类型常量 
     /** 权限类型 一级菜单 */
@@ -150,6 +165,21 @@ public class Global{
 	public static final int SYS_MEMBER_PRICE_TYPE_1=1;
 	/** 定价方式（2议价）*/
 	public static final int SYS_MEMBER_PRICE_TYPE_2=2;
+	
+	//订单常量
+	/**状态(1-待接单 2-已接单 3-已拒单  4-待退款  5-已退款 6-拒绝退款 7-待签收 8-已签收 9-完成)*/
+	public static final int SYS_ORDER_STATUS_PAYING=1;
+	public static final int SYS_ORDER_STATUS_PAYED=2;
+	public static final int SYS_ORDER_STATUS_ACCEPTING=3;
+	public static final int SYS_ORDER_STATUS_ACCEPTED=4;
+	public static final int SYS_ORDER_STATUS_REFUSED=5;
+	public static final int SYS_ORDER_STATUS_REFUNDING=6;
+	public static final int SYS_ORDER_STATUS_REFUNDED=7;
+	public static final int SYS_ORDER_STATUS_REFUND_REFUSED=8;
+	public static final int SYS_ORDER_STATUS_SIGNING=9;
+	public static final int SYS_ORDER_STATUS_SIGNED=10;
+	public static final int SYS_ORDER_STATUS_FINISH=11;
+
 	
 	//服务类型
 	/** 服务*/

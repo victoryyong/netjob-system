@@ -83,12 +83,11 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/app/**" />
 			<bean class="com.thsword.netjob.web.filter.AccessFilter">
-				<!-- <property name="allowUrls">  
+				<property name="allowUrls">  
 		            <list>  
-		              <value>/admin/login</value>
-		              <value>/admin/logout</value>
+		              <value>/app/rechangeWx/callback</value>
 		            </list>  
-          		</property>  --> 
+          		</property>
 			</bean>
 		</mvc:interceptor>
 		<mvc:interceptor>

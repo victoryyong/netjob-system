@@ -1,4 +1,4 @@
-package com.thsword.netjob.util.wx;
+package com.thsword.netjob.util.wxpay;
 
 import java.io.InputStream;
 

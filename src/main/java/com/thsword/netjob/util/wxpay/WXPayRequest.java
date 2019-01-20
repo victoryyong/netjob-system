@@ -1,4 +1,4 @@
-package com.thsword.netjob.util.wx;
+package com.thsword.netjob.util.wxpay;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,13 +18,14 @@ import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 
-import static com.thsword.netjob.util.wx.WXPayConstants.USER_AGENT;
+import static com.thsword.netjob.util.wxpay.WXPayConstants.USER_AGENT;
 
 public class WXPayRequest {
     private WXPayConfig config;

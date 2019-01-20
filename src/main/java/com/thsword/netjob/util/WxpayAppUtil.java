@@ -4,20 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.thsword.netjob.global.Global;
-import com.thsword.netjob.util.wx.WXPay;
-import com.thsword.netjob.util.wx.WXPayConfigImpl;
-import com.thsword.netjob.util.wx.WXPayUtil;
+import com.thsword.netjob.util.wxpay.WXPay;
+import com.thsword.netjob.util.wxpay.WXPayConfigImpl;
+import com.thsword.netjob.util.wxpay.WXPayUtil;
 
 public class WxpayAppUtil {
 	/**
      *统一下单
      */
-	public static Map<String, String> doUnifiedOrder(String total_fee,String out_trade_no,String ip,String attach) {
+	public static Map<String, String> doUnifiedOrder(String total_fee,String out_trade_no,String ip) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("body", Global.NETJOB_PAY_RECHARGE_NAMA);
         data.put("out_trade_no", out_trade_no);
         data.put("device_info", "");
-        data.put("attach", attach);
         data.put("fee_type", "CNY");
         data.put("total_fee", total_fee);
         data.put("spbill_create_ip", ip);

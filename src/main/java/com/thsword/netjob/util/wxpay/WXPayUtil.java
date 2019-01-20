@@ -1,6 +1,7 @@
-package com.thsword.netjob.util.wx;
+package com.thsword.netjob.util.wxpay;
 
-import com.thsword.netjob.util.wx.WXPayConstants.SignType;
+import com.thsword.netjob.util.wxpay.WXPayConstants.SignType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -16,6 +17,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
