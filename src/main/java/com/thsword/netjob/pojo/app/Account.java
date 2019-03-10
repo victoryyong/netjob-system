@@ -1,5 +1,6 @@
 package com.thsword.netjob.pojo.app;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -20,15 +21,11 @@ public class Account {
 	/**
 	 * 账户余额
 	 * */
-	private Double money;
+	private BigDecimal money;
 	/**
-	 * 收入金额
+	 * 状态（1-激活 2-冻结）
 	 */
-	private Double income;
-	/**
-	 * 支出金额
-	 */
-	private Double pay;
+	private Integer status;
 	/**
 	 * 创建时间
 	 */
@@ -57,10 +54,10 @@ public class Account {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public Double getMoney() {
+	public BigDecimal getMoney() {
 		return money;
 	}
-	public void setMoney(Double money) {
+	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
 	public Date getCreateDate() {
@@ -87,16 +84,10 @@ public class Account {
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
 	}
-	public Double getIncome() {
-		return income;
+	public Integer getStatus() {
+		return status;
 	}
-	public void setIncome(Double income) {
-		this.income = income;
-	}
-	public Double getPay() {
-		return pay;
-	}
-	public void setPay(Double pay) {
-		this.pay = pay;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

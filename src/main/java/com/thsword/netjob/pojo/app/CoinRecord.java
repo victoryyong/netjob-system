@@ -26,17 +26,33 @@ public class CoinRecord {
 	 */
 	private String targetName;
 	/**
+	 * 付款人ID
+	 */
+	private String resourceId;
+	/**
+	 * 付款人名称
+	 */
+	private String resourceName;
+	/**
 	 * 流水号
 	 */
 	private String flowId;
 	/**
-	 * 交易金额
-	 * */
-	private String money;
+	 * 收入
+	 */
+	private long income;
+	/**
+	 * 支出
+	 */
+	private long outcome;
 	/**
 	 * 交易类型(1充值 2打赏)
 	 */
 	private Integer recordType;
+	/**
+	 * 1-收入 2-支出
+	 */
+	private Integer isIn;
 	/**
 	 * 城市
 	 */
@@ -81,17 +97,35 @@ public class CoinRecord {
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
+	public String getResourceId() {
+		return resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+	public String getResourceName() {
+		return resourceName;
+	}
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
+	}
 	public String getFlowId() {
 		return flowId;
 	}
 	public void setFlowId(String flowId) {
 		this.flowId = flowId;
 	}
-	public String getMoney() {
-		return money;
+	public long getIncome() {
+		return income;
 	}
-	public void setMoney(String money) {
-		this.money = money;
+	public void setIncome(long income) {
+		this.income = income;
+	}
+	public long getOutcome() {
+		return outcome;
+	}
+	public void setOutcome(long outcome) {
+		this.outcome = outcome;
 	}
 	public Integer getRecordType() {
 		return recordType;
@@ -128,5 +162,11 @@ public class CoinRecord {
 	}
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
+	}
+	public Integer getIsIn() {
+		return isIn;
+	}
+	public void setIsIn(Integer isIn) {
+		this.isIn = isIn;
 	}
 }

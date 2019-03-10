@@ -16,10 +16,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IDictDao;
 import com.thsword.netjob.dao.IMediaDao;
+import com.thsword.netjob.dao.IMenuDao;
 import com.thsword.netjob.dao.IServeDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.Dict;
 import com.thsword.netjob.pojo.app.Media;
+import com.thsword.netjob.pojo.app.Menu;
 import com.thsword.netjob.pojo.app.Serve;
 import com.thsword.netjob.service.ServeService;
 import com.thsword.netjob.util.AmapUtil;
@@ -200,11 +202,17 @@ public class ServeApp {
 			String type = request.getParameter("type");
 			String gender = request.getParameter("gender");
 			String menuId = request.getParameter("menuId");
-			String firstMenuId = request.getParameter("firstMenuId");
+			//String firstMenuId = request.getParameter("firstMenuId");
 			String citycode = request.getParameter("citycode");
 			String endDate = request.getParameter("endDate");
 			String startDate = request.getParameter("startDate");
 			String timeRange = request.getParameter("timeRange");
+			//判断类型级别
+			Menu menu = (Menu) serveService.queryEntityById(IMenuDao.class, menuId);
+			int level = 1;
+			if(null!=menu){
+				level=menu.getLevel();
+			}
 			//查询参数
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("status", Global.SYS_AUTH_STATUS_2);
@@ -333,8 +341,11 @@ public class ServeApp {
 			map.put("page", page);
 			map.put("type", type);
 			map.put("gender", gender);
-			map.put("menuId", menuId);
-			map.put("firstMenuId", firstMenuId);
+			if(level==1){
+				map.put("firstMenuId", menuId);
+			}else{
+				map.put("menuId", menuId);
+			}
 			map.put("memberId", memberId);
 			map.put("citycode", citycode);
 			map.put("startDate", startDate);

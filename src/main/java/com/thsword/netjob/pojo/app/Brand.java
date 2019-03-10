@@ -19,7 +19,7 @@ public class Brand {
 	private String memberId;
 	private String memberName;
 	/**
-	 * 
+	 *转载ID 
 	 */
 	private String brandId;
 	/**
@@ -42,6 +42,10 @@ public class Brand {
 	 * 作者
 	 */
 	private String author;
+	/**
+	 * 作者ID
+	 */
+	private String authorId;
 	/**
 	 * 作者
 	 */
@@ -195,5 +199,11 @@ public class Brand {
 	}
 	public void setMemberName(String memberName) {
 		this.memberName = memberName;
+	}
+	public String getAuthorId() {
+		return authorId;
+	}
+	public void setAuthorId(String authorId) {
+		this.authorId = authorId;
 	}
 }

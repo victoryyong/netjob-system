@@ -1,5 +1,6 @@
 package com.thsword.netjob.web.controller.app.member;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.jmessage.api.common.model.Members;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.ICollectDao;
@@ -236,14 +239,51 @@ public class MemberApp {
 	public void recommend(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
 		try {
 			String citycode=request.getParameter("citycode");
-			Map<String, Object> map = new HashMap<>();
-			map.put("citycode", citycode);
-			map.put("page", page);
-			List<Member> members = (List<Member>) memberService.queryPageFamous(IMemberDao.class, map);
-			JSONObject obj = new JSONObject();
-			obj.put("list", members);
-			obj.put("page", page);
-			JsonResponseUtil.successBodyResponse(obj, response, request);
+			Member temp = new Member();
+			temp.setCitycode(citycode);
+			int count = memberService.queryCountEntity(IMemberDao.class, temp);
+			if(count<50){
+				List<Member> members = (List<Member>) memberService.queryAllEntity(IMemberDao.class, temp);
+				int lackCount = 50;
+				Page lackPage = new Page(1, lackCount);
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("page", lackPage);
+				List<Member> lackMembers = (List<Member>) memberService.queryPageFamous(IMemberDao.class, map);
+				List<Member> temps = new ArrayList<Member>();
+				temps.addAll(members);
+				for (Member lackMember : lackMembers) {
+					boolean findMember = false;
+					for (Member member : members) {
+						if(member.getId().equals(lackMember.getId())){
+							findMember=true;
+							break;
+						}
+					}
+					if(!findMember){
+						temps.add(lackMember);
+					}
+				}
+				List<Member> resultMembers = new ArrayList<Member>();
+				int startNum = (page.getCurrentPage()-1)*page.getPageSize()+1;
+				int endNum = page.getCurrentPage()*page.getPageSize();
+				for(int i=1;i<=temps.size();i++){
+					if(i>=startNum&&i<=endNum){
+						if(temps.size()>=i){
+							resultMembers.add(temps.get(i-1));
+						}
+					}
+				}
+				JsonResponseUtil.successBodyResponse(resultMembers, response, request);
+			}else{
+				Map<String, Object> map = new HashMap<>();
+				map.put("citycode", citycode);
+				map.put("page", page);
+				List<Member> members = (List<Member>) memberService.queryPageFamous(IMemberDao.class, map);
+				JSONObject obj = new JSONObject();
+				obj.put("list", members);
+				obj.put("page", page);
+				JsonResponseUtil.successBodyResponse(obj, response, request);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

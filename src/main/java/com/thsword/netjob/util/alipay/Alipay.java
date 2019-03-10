@@ -54,6 +54,8 @@ public class Alipay {
     	// SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
     	AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
     	model.setBody(Global.NETJOB_PAY_RECHARGE_NAMA);
+    	model.setSubject(Global.NETJOB_PAY_APP_NAMA);
+    	model.setTimeoutExpress("60m");
     	model.setOutTradeNo(out_trade_no);// outtradeno 生存订单
     	model.setTotalAmount(total_amount);
     	request.setBizModel(model);
@@ -63,11 +65,7 @@ public class Alipay {
     			config.getPrivateKey(), formate, charset, config.getPublicKey(),
     		signType);
     	AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
-    	if(response.getCode().equals("10000")){
-    		return response.getBody();
-    	}else{
-    		throw new Exception(response.getCode()+":"+response.getMsg());
-    	}
+    	return response.getBody();
     }
     
     /**
@@ -86,11 +84,7 @@ public class Alipay {
     			config.getPrivateKey(), formate, charset, config.getPublicKey(),
     		signType);
     	AlipayTradeQueryResponse  response = alipayClient.execute(request);
-    	if(response.getCode().equals("10000")){
-    		return response.getBody();
-    	}else{
-    		throw new Exception(response.getCode()+":"+response.getMsg());
-    	}
+    	return response.getBody();
     }
     
     public static boolean rsaCheck(Map<String, String> params) throws Exception{

@@ -48,6 +48,11 @@
 		<typeAlias alias="active" type="com.thsword.netjob.pojo.app.Active" />
 		<typeAlias alias="collect" type="com.thsword.netjob.pojo.app.Collect" />
 		<typeAlias alias="friend" type="com.thsword.netjob.pojo.app.Friend" />
+		<typeAlias alias="rechargeOrder" type="com.thsword.netjob.pojo.app.RechargeOrder" />
+		<typeAlias alias="account" type="com.thsword.netjob.pojo.app.Account" />
+		<typeAlias alias="accountCoin" type="com.thsword.netjob.pojo.app.AccountCoin" />
+		<typeAlias alias="cashRecord" type="com.thsword.netjob.pojo.app.CashRecord" />
+		<typeAlias alias="coinRecord" type="com.thsword.netjob.pojo.app.CoinRecord" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mapper/userMapper.xml" />
@@ -76,5 +81,10 @@
 		<mapper resource="mybatis/mapper/activeMapper.xml" />
 		<mapper resource="mybatis/mapper/collectMapper.xml" />
 		<mapper resource="mybatis/mapper/friendMapper.xml" />
+		<mapper resource="mybatis/mapper/rechargeOrderMapper.xml" />
+		<mapper resource="mybatis/mapper/accountMapper.xml" />
+		<mapper resource="mybatis/mapper/accountCoinMapper.xml" />
+		<mapper resource="mybatis/mapper/cashRecordMapper.xml" />
+		<mapper resource="mybatis/mapper/coinRecordMapper.xml" />
 	</mappers>
 </configuration>

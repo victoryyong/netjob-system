@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IRechargeOrderDao">
+	<resultMap id="rechargeOrderMapper" type="rechargeOrder">
+		<!-- ID -->
+		<result property="id" column="pk_id" />
+		<!-- 流水ID -->
+		<result property="flowId" column="c_flowId" />
+		<!-- 充值类型 -->
+		<result property="type" column="c_type" />
+		<!-- 充值方式 -->
+		<result property="way" column="c_way" />
+		<!-- 充值金额 -->
+		<result property="total_fee" column="c_total_fee" />
+		<!-- 充值状态 -->
+		<result property="status" column="c_status" />
+		<!-- 用户Id-->
+		<result property="memberId" column="c_memberId" />
+		<!-- 充值时间-->
+		<result property="createDate" column="c_createDate" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="rechargeOrder"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_rechargeOrder (
+						pk_id,
+						c_flowId,
+						c_type,
+						c_way,
+						c_memberId,
+						c_total_fee,
+						c_status,
+						c_createDate,
+						c_createBy,
+						c_updateDate,
+						c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{flowId},
+						#{type},
+						#{way},
+						#{memberId},
+						#{total_fee},
+						#{status},
+						now(),
+						#{createBy},
+						now(),
+						#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="rechargeOrder">
+		<![CDATA[ DELETE FROM t_rechargeOrder WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_rechargeOrder WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="rechargeOrder">
+		UPDATE t_rechargeOrder
+		<set>
+			c_updateDate=now(),
+			<if test="null!=status">c_status=#{status},</if>
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="rechargeOrderMapper">
+		<![CDATA[ SELECT t.* FROM t_rechargeOrder t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="rechargeOrderMapper" parameterType="rechargeOrder">
+		 <![CDATA[ SELECT * FROM t_rechargeOrder WHERE 1=1]]>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="rechargeOrderMapper" parameterType="rechargeOrder">
+		 <![CDATA[ SELECT * FROM t_rechargeOrder WHERE 1=1]]>
+		 <if test="null!=flowId and ''!=flowId">and c_flowId=#{flowId}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="rechargeOrder">
+		 <![CDATA[ SELECT count(*) FROM t_rechargeOrder WHERE 1=1]]>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="rechargeOrderMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_rechargeOrder WHERE 1=1]]>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+</mapper>

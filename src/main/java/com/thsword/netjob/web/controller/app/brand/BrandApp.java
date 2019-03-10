@@ -60,6 +60,7 @@ public class BrandApp {
 			brandShow.setType(Global.SYS_MEMBER_BRANDSHOW_RESOURCE_1);
 			brandShow.setMemberId(memberId);
 			brandShow.setAuthor(memberName);
+			brandShow.setAuthorId(memberId);
 			brandShow.setCreateBy(memberId);
 			brandShow.setUpdateBy(memberId);
 			brandShow.setCitycode(member.getCitycode());
@@ -121,6 +122,7 @@ public class BrandApp {
 			brand.setType(Global.SYS_MEMBER_BRANDSHOW_RESOURCE_2);
 			String reproduceId = brand.getMemberId();
 			if(!StringUtils.isEmpty(reproduceId)){
+				brand.setAuthorId(reproduceId);
 				Member member = (Member) brandService.queryEntityById(IMemberDao.class, reproduceId);
 				if(null!=member){
 					if(member.getId().equals(memberId)){

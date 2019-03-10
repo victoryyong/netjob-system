@@ -1,5 +1,6 @@
 package com.thsword.netjob.pojo.app;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -18,33 +19,41 @@ public class CashRecord {
 	 */
 	private String memberId;
 	/**
-	 * 收款或付款人ID
+	 * 收款人ID
 	 */
 	private String targetId;
 	/**
-	 * 收款或付款人名称
+	 * 收款人名称
 	 */
 	private String targetName;
+	/**
+	 * 付款人ID
+	 */
+	private String resourceId;
+	/**
+	 * 付款人名称
+	 */
+	private String resourceName;
+	/**
+	 * 收入
+	 */
+	private BigDecimal income;
+	/**
+	 * 支出
+	 */
+	private BigDecimal outcome;
 	/**
 	 * 流水号
 	 */
 	private String flowId;
 	/**
-	 * 订单号
-	 */
-	private String orderId;
-	/**
-	 * 交易金额
-	 * */
-	private String money;
-	/**
-	 * 交易类型(1现金充值 2转账 3充值网币)
+	 * 交易类型
 	 */
 	private Integer recordType;
 	/**
-	 * 支付方式（1-微信 2-支付宝 3-银行卡 4-账户余额）
+	 * 1-收入 2-支出
 	 */
-	private Integer payWay;
+	private Integer isIn;
 	/**
 	 * 城市
 	 */
@@ -86,6 +95,18 @@ public class CashRecord {
 	public String getTargetName() {
 		return targetName;
 	}
+	public String getResourceId() {
+		return resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+	public String getResourceName() {
+		return resourceName;
+	}
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
+	}
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
@@ -95,23 +116,23 @@ public class CashRecord {
 	public void setFlowId(String flowId) {
 		this.flowId = flowId;
 	}
-	public String getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-	public String getMoney() {
-		return money;
-	}
-	public void setMoney(String money) {
-		this.money = money;
-	}
 	public Integer getRecordType() {
 		return recordType;
 	}
 	public void setRecordType(Integer recordType) {
 		this.recordType = recordType;
+	}
+	public BigDecimal getIncome() {
+		return income;
+	}
+	public void setIncome(BigDecimal income) {
+		this.income = income;
+	}
+	public BigDecimal getOutcome() {
+		return outcome;
+	}
+	public void setOutcome(BigDecimal outcome) {
+		this.outcome = outcome;
 	}
 	public String getCitycode() {
 		return citycode;
@@ -143,10 +164,10 @@ public class CashRecord {
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
 	}
-	public Integer getPayWay() {
-		return payWay;
+	public Integer getIsIn() {
+		return isIn;
 	}
-	public void setPayWay(Integer payWay) {
-		this.payWay = payWay;
+	public void setIsIn(Integer isIn) {
+		this.isIn = isIn;
 	}
 }

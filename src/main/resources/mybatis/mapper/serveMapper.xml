@@ -24,7 +24,7 @@
 		<!-- 描述 -->
 		<result property="description" column="c_description" />
 		<!-- 类型id -->
-		<result property="firstMenuId" column="c_menu_id" />
+		<result property="firstMenuId" column="c_first_menu_id" />
 		<result property="menuId" column="c_menu_id" />
 		<result property="firstMenuName" column="firstMenuName" />
 		<result property="menuName" column="menuName" />

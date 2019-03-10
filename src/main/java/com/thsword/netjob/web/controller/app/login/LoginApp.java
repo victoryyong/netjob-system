@@ -278,7 +278,7 @@ public class LoginApp {
 			temp.setPhone(member.getPhone());
 			temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
 			if(null!=temp){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "该用户已注册", response, request);
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "该手机号已经注册，可直接登录", response, request);
 				return;
 			}
 			member.setId(UUIDUtil.get32UUID());

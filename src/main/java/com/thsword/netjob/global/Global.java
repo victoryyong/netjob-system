@@ -231,29 +231,58 @@ public class Global{
 	//现金-网币 比例
 	public static final int SYS_MEMBER_MONEY_COIN_RATE=10;
 	
+	
 	//账户类型
 	/** 现金账户*/
 	public static final int SYS_MEMBER_ACCOUNT_TYPE_1=1;
 	/** 网币账户*/
 	public static final int SYS_MEMBER_ACCOUNT_TYPE_2=2;
 	
-	//交易类型
-	/** 收入*/
-	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_1=1;
-	/** 支出*/
-	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_2=2;
-	
-	//支付方式
-	/** 现金账户*/
-	public static final int SYS_MEMBER_ACCOUNT_PAY_TYPE_1=1;
-	/** 网币账户*/
-	public static final int SYS_MEMBER_ACCOUNT_PAY_TYPE_2=2;
+	//账户充值方式
 	/** 微信*/
-	public static final int SYS_MEMBER_ACCOUNT_PAY_TYPE_3=3;
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_WAY_1=1;
 	/** 支付宝*/
-	public static final int SYS_MEMBER_ACCOUNT_PAY_TYPE_4=4;
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_WAY_2=2;
 	/** 银行账户*/
-	public static final int SYS_MEMBER_ACCOUNT_PAY_TYPE_5=5;
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_WAY_3=3;
+	//是否收入（1-是 2-否）
+	public static final int SYS_MEMBER_ACCOUNT_ISIN_1=1;
+	public static final int SYS_MEMBER_ACCOUNT_ISIN_2=2;
+	
+	//账户充值状态（1-待支付 2-已支付 3-支付超时 4-已关闭）
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1=1;
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_2=2;
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_3=3;
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_4=4;
+	
+	//账户充值类型
+	/** 现金账户*/
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1=1;
+	/** 保证金*/
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2=2;
+	
+	//现金账户记录类型
+	/** 充值*/
+	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_1=1;
+	/** 支付订单*/
+	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_2=2;
+	/** 退款*/
+	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_3=3;
+	/** 账户提现*/
+	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_4=4;
+	/** 兑换网币*/
+	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_5=5;
+	/** 网币提现*/
+	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_6=6;
+	
+	
+	//网币账户记录类型
+	/** 充值*/
+	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_1=1;
+	/** 网币提现*/
+	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_2=2;
+	/** 打赏*/
+	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_3=3;
 	
 	//是否默认地址
 	public static final int SYS_MEMBER_ADDRESS_IS_DEFAULT_YES=1;

@@ -14,8 +14,12 @@
 		<result property="links" column="c_links" />
 		<!-- tips -->
 		<result property="tips" column="c_tips" />
+		<!-- brandId -->
+		<result property="brandId" column="c_brandId" />
 		<!-- author -->
 		<result property="author" column="c_author" />
+		<!-- author -->
+		<result property="authorId" column="c_authorId" />
 		<!-- content -->
 		<result property="content" column="c_content" />
 		<!-- content -->
@@ -43,6 +47,8 @@
 						c_title,
 						c_type,
 						c_links,
+						c_brandId,
+						c_authorId,
 						c_author,
 						c_content,
 						c_citycode,
@@ -59,6 +65,8 @@
 						#{title},
 						#{type},
 						#{links},
+						#{brandId},
+						#{authorId},
 						#{author},
 						#{content},
 						#{citycode},

@@ -22,13 +22,9 @@ public class AccountCoin {
 	 * */
 	private Long num;
 	/**
-	 * 支出
+	 * 状态（1-激活 2-冻结）
 	 */
-	private Long pay;
-	/**
-	 * 收入
-	 */
-	private Long income;
+	private Integer status;
 	/**
 	 * 创建时间
 	 */
@@ -87,16 +83,10 @@ public class AccountCoin {
 	public void setNum(Long num) {
 		this.num = num;
 	}
-	public Long getPay() {
-		return pay;
+	public Integer getStatus() {
+		return status;
 	}
-	public void setPay(Long pay) {
-		this.pay = pay;
-	}
-	public Long getIncome() {
-		return income;
-	}
-	public void setIncome(Long income) {
-		this.income = income;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }
