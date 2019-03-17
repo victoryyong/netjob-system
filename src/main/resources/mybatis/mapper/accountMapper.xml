@@ -11,6 +11,17 @@
 		<!-- appId -->
 		<result property="status" column="c_status" />
 	</resultMap>
+	
+	<resultMap id="accountPwdMapper" type="account">
+		<!-- ID -->
+		<result property="id" column="pk_id" />
+		<!-- 名称 -->
+		<result property="memberId" column="c_memberId" />
+		<!-- 类型 -->
+		<result property="password" column="c_password" />
+		<!-- appId -->
+		<result property="status" column="c_status" />
+	</resultMap>
 
 	<!-- #######################CRUD begin####################### -->  
 	<!-- 增加 -->
@@ -87,4 +98,19 @@
 	</select>
 
 	<!-- #######################CRUD end####################### -->
+	
+	<!-- 更新 -->
+	<update id="updatePassword" parameterType="account">
+		UPDATE t_account
+		set
+			c_updateDate=now(),
+			c_password=#{password}
+		WHERE c_memberId = #{memberId}
+	</update>
+	
+	<!-- 更新 -->
+	<select id="queryPwdMember" parameterType="account" resultMap="accountPwdMapper">
+		SELECT * FROM t_account WHERE 1=1
+		 and c_memberId = #{memberId}
+	</select>
 </mapper>

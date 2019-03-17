@@ -23,6 +23,10 @@ public class Account {
 	 * */
 	private BigDecimal money;
 	/**
+	 * 支付密码
+	 */
+	private String password;
+	/**
 	 * 状态（1-激活 2-冻结）
 	 */
 	private Integer status;
@@ -89,5 +93,11 @@ public class Account {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

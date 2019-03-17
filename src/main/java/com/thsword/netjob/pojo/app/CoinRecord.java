@@ -26,17 +26,13 @@ public class CoinRecord {
 	 */
 	private String targetName;
 	/**
-	 * 付款人ID
-	 */
-	private String resourceId;
-	/**
-	 * 付款人名称
-	 */
-	private String resourceName;
-	/**
 	 * 流水号
 	 */
-	private String flowId;
+	private String tradeNo;
+	/**
+	 * 订单ID
+	 */
+	private String orderId;
 	/**
 	 * 收入
 	 */
@@ -97,23 +93,11 @@ public class CoinRecord {
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
-	public String getResourceId() {
-		return resourceId;
+	public String getTradeNo() {
+		return tradeNo;
 	}
-	public void setResourceId(String resourceId) {
-		this.resourceId = resourceId;
-	}
-	public String getResourceName() {
-		return resourceName;
-	}
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
-	public String getFlowId() {
-		return flowId;
-	}
-	public void setFlowId(String flowId) {
-		this.flowId = flowId;
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
 	}
 	public long getIncome() {
 		return income;
@@ -168,5 +152,11 @@ public class CoinRecord {
 	}
 	public void setIsIn(Integer isIn) {
 		this.isIn = isIn;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 }

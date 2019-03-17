@@ -19,21 +19,13 @@ public class CashRecord {
 	 */
 	private String memberId;
 	/**
-	 * 收款人ID
+	 * 收款或付款人ID
 	 */
 	private String targetId;
 	/**
-	 * 收款人名称
+	 * 收款或付款人名称
 	 */
 	private String targetName;
-	/**
-	 * 付款人ID
-	 */
-	private String resourceId;
-	/**
-	 * 付款人名称
-	 */
-	private String resourceName;
 	/**
 	 * 收入
 	 */
@@ -43,9 +35,13 @@ public class CashRecord {
 	 */
 	private BigDecimal outcome;
 	/**
-	 * 流水号
+	 * 交易号
 	 */
-	private String flowId;
+	private String tradeNo;
+	/**
+	 * 订单ID
+	 */
+	private String orderId;
 	/**
 	 * 交易类型
 	 */
@@ -95,26 +91,14 @@ public class CashRecord {
 	public String getTargetName() {
 		return targetName;
 	}
-	public String getResourceId() {
-		return resourceId;
-	}
-	public void setResourceId(String resourceId) {
-		this.resourceId = resourceId;
-	}
-	public String getResourceName() {
-		return resourceName;
-	}
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-	}
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 	}
-	public String getFlowId() {
-		return flowId;
+	public String getTradeNo() {
+		return tradeNo;
 	}
-	public void setFlowId(String flowId) {
-		this.flowId = flowId;
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
 	}
 	public Integer getRecordType() {
 		return recordType;
@@ -169,5 +153,11 @@ public class CashRecord {
 	}
 	public void setIsIn(Integer isIn) {
 		this.isIn = isIn;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 }

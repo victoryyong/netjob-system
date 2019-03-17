@@ -6,4 +6,8 @@ public interface IAccountDao extends IBaseDao{
 
 	Account queryAccountByMemberId(String memberId);
 
+	void updatePassword(Account acc);
+	
+	Account queryPwdMember(String memberId);
+
 }

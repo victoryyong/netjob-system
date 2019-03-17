@@ -10,7 +10,7 @@ import java.util.Date;
  * @author Lenovo
  *
  */
-public class RechargeOrder implements Serializable {
+public class OrderAccount implements Serializable {
 
 	private static final long serialVersionUID = -6756090072891967330L;
 	private String id;
@@ -19,19 +19,27 @@ public class RechargeOrder implements Serializable {
 	 */
 	private String memberId;
 	/**
-	 * 订单ID
+	 * 订单目标ID
 	 */
-	private String flowId;
+	private String targetId;
 	/**
-	 * 充值金额
+	 * 交易号
+	 */
+	private String tradeNo;
+	/**
+	 * 金额
 	 */
 	private BigDecimal total_fee;
 	/**
-	 * 充值方式(1-微信 2-支付宝 3-银行卡)
+	 * 网币数目
+	 */
+	private long num;
+	/**
+	 * 充值方式(1-微信 2-支付宝 3-银行卡 4-现金账户)
 	 */
 	private Integer way;
 	/**
-	 * 充值类型（1-现金账户 2-保证金）
+	 * 充值类型（1-现金账户 2-保证金 3-网币）
 	 */
 	private Integer type;
 	/**
@@ -66,17 +74,29 @@ public class RechargeOrder implements Serializable {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public String getFlowId() {
-		return flowId;
+	public String getTargetId() {
+		return targetId;
 	}
-	public void setFlowId(String flowId) {
-		this.flowId = flowId;
+	public void setTargetId(String targetId) {
+		this.targetId = targetId;
+	}
+	public String getTradeNo() {
+		return tradeNo;
+	}
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
 	}
 	public BigDecimal getTotal_fee() {
 		return total_fee;
 	}
 	public void setTotal_fee(BigDecimal total_fee) {
 		this.total_fee = total_fee;
+	}
+	public long getNum() {
+		return num;
+	}
+	public void setNum(long num) {
+		this.num = num;
 	}
 	public Integer getWay() {
 		return way;

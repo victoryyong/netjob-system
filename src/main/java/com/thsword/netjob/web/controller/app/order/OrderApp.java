@@ -66,9 +66,9 @@ public class OrderApp {
 				return;
 			}
 			order.setId(UUIDUtil.get32UUID());
-			order.setFlowId(UUIDUtil.get32FlowID());
+			//order.setFlowId(UUIDUtil.get32FlowID());
 			order.setStatus(Global.SYS_ORDER_STATUS_PAYING);
-			order.setOrderCode(UUIDUtil.get32ORDERID());
+			//order.setOrderCode(UUIDUtil.get32ORDERID());
 			order.setCitycode(citycode);
 			order.setMemberId(memberId);
 			JsonResponseUtil.successCodeResponse(response, request);

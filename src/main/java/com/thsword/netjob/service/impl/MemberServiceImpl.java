@@ -49,4 +49,17 @@ public class MemberServiceImpl extends BaseServiceImpl implements MemberService{
 	public List<Member> queryPageFamous(Class<IMemberDao> class1, Map<String, Object> map) {
 		return memberDao.queryPageFamous(map);
 	}
+
+	@Override
+	public boolean hasPhoneAuth(String memberId) throws Exception{
+		try {
+			Member member = (Member) memberDao.queryEntityById(memberId);
+			if(null==member){
+				throw new Exception("账号不存在");
+			}
+			return member.getPhoneAuth();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 }

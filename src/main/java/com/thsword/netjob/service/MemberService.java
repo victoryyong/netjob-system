@@ -131,5 +131,11 @@ public interface MemberService extends IBaseService{
 	 */
 	List<Member> queryPageFamous(Class<IMemberDao> class1, Map<String, Object> map);
 	
+	
+	/**
+	 * 是否绑定手机
+	 */
+	public boolean hasPhoneAuth(String memberId) throws Exception;
+	
 
 }

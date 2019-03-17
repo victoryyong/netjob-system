@@ -20,8 +20,10 @@
 		<result property="income" column="c_income" />
 		<!-- 支出金额 -->
 		<result property="outcome" column="c_outcome" />
-		<!-- 流水号、订单号 -->
-		<result property="flowId" column="c_flowId" />
+		<!-- 流水号、交易号 -->
+		<result property="tradeNo" column="c_tradeNo" />
+		<!-- 订单ID -->
+		<result property="orderId" column="c_orderId" />
 		<!-- 交易类型 -->
 		<result property="recordType" column="c_recordType" />
 		<!-- 城市 -->
@@ -40,12 +42,11 @@
 						c_memberId,
 						c_targetId,
 						c_targetName,
-						c_resourceId,
-						c_resourceName,
 						c_isIn,
 						c_income,
 						c_outcome,
-						c_flowId,
+						c_tradeNo,
+						c_orderId,
 						c_recordType,
 						c_citycode,
 						c_createDate,
@@ -58,12 +59,11 @@
 						#{memberId},
 						#{targetId},
 						#{targetName},
-						#{resourceId},
-						#{resourceName},
 						#{isIn},
 						#{income},
 						#{outcome},
-						#{flowId},
+						#{tradeNo},
+						#{orderId},
 						#{recordType},
 						#{citycode},
 						now(),
@@ -102,13 +102,18 @@
 	<!--  条件查询查询所有 -->
 	<select id="queryAllEntity" resultMap="cashRecordMapper" parameterType="cashRecord">
 		 <![CDATA[ SELECT * FROM t_cashRecord WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=tradeNo and ''!=tradeNo">and c_tradeNo = #{tradeNo}</if>
+		 <if test="null!=orderId and ''!=orderId">and c_orderId = #{orderId}</if>
 		 order by c_createDate desc
 	</select>
 	
 	<!--  条件查询查询所有 -->
 	<select id="queryEntity" resultMap="cashRecordMapper" parameterType="cashRecord">
 		 <![CDATA[ SELECT * FROM t_cashRecord WHERE 1=1]]>
-		 <if test="null!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=tradeNo and ''!=tradeNo">and c_tradeNo = #{tradeNo}</if>
+		 <if test="null!=orderId and ''!=orderId">and c_orderId = #{orderId}</if>
 	</select>
 	
 	<!--  条件查询查询所有 -->
@@ -123,7 +128,8 @@
 		 <if test="null!=targetId and ''!=targetId">and c_targetId = #{targetId}</if>
 		 <if test="null!=resourceId and ''!=resourceId">and c_resourceId = #{resourceId}</if>
 		 <if test="null!=isIn and ''!=isIn">and c_isIn = #{isIn}</if>
-		 <if test="null!=flowId and ''!=flowId">and c_flowId = #{flowId}</if>
+		 <if test="null!=tradeNo and ''!=tradeNo">and c_tradeNo = #{tradeNo}</if>
+		 <if test="null!=orderId and ''!=orderId">and c_orderId = #{orderId}</if>
 		 <if test="null!=recordType and ''!=recordType">and c_recordType = #{recordType}</if>
 	</select>
 

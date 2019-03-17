@@ -245,6 +245,10 @@ public class Global{
 	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_WAY_2=2;
 	/** 银行账户*/
 	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_WAY_3=3;
+	/** 现金账户*/
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_WAY_4=4;
+	/** 网币账户*/
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_WAY_5=5;
 	//是否收入（1-是 2-否）
 	public static final int SYS_MEMBER_ACCOUNT_ISIN_1=1;
 	public static final int SYS_MEMBER_ACCOUNT_ISIN_2=2;
@@ -258,8 +262,10 @@ public class Global{
 	//账户充值类型
 	/** 现金账户*/
 	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1=1;
-	/** 保证金*/
+	/** 网币*/
 	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2=2;
+	/** 保证金*/
+	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_3=3;
 	
 	//现金账户记录类型
 	/** 充值*/
@@ -279,10 +285,12 @@ public class Global{
 	//网币账户记录类型
 	/** 充值*/
 	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_1=1;
-	/** 网币提现*/
+	/** 账户兑换*/
 	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_2=2;
-	/** 打赏*/
+	/** 网币提现*/
 	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_3=3;
+	/** 打赏*/
+	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_4=4;
 	
 	//是否默认地址
 	public static final int SYS_MEMBER_ADDRESS_IS_DEFAULT_YES=1;
