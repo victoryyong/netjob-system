@@ -175,23 +175,33 @@
 
 	<!-- 根据ID查找 -->
 	<select id="queryEntityById" parameterType="java.lang.String" resultMap="serveMapper">
-		<![CDATA[ SELECT t.*,m.c_name FROM t_serve t left join t_menu m on m.pk_id = t.c_menu_id
-		left join t_menu fm on fm.pk_id = t.c_first_menu_id
-		 WHERE t.pk_id = #{entityId} ]]>
+		<![CDATA[ 
+		 SELECT t.*,m.c_name as menuName,fm.c_name as firstMenuName FROM t_serve t
+		 left join t_menu fm on fm.pk_id = t.c_first_menu_id
+		 left join t_menu m on m.pk_id = t.c_menu_id
+		 WHERE 1=1
+		 and t.pk_id = #{entityId} ]]>
 	</select>
 
 	<!--  条件查询查询所有 -->
 	<select id="queryAllEntity" resultMap="serveMapper" parameterType="serve">
-		 <![CDATA[ SELECT t.*,m.c_name FROM t_serve t,t_menu m 
+		 <![CDATA[ 
+		 SELECT t.*,m.c_name as menuName,fm.c_name as firstMenuName FROM t_serve t
 		 left join t_menu fm on fm.pk_id = t.c_first_menu_id
-		 WHERE m.pk_id = t.c_menu_id]]>
+		 left join t_menu m on m.pk_id = t.c_menu_id
+		 WHERE 1=1
+		 ]]>
 	</select>
 	
 	<!--  条件查询查询所有 -->
 	<select id="queryEntity" resultMap="serveMapper" parameterType="serve">
-		 <![CDATA[ SELECT t.*,m.c_name FROM t_serve t,t_menu m 
+		 <![CDATA[ 
+		 SELECT t.*,m.c_name as menuName,fm.c_name as firstMenuName FROM t_serve t
 		 left join t_menu fm on fm.pk_id = t.c_first_menu_id
-		 WHERE m.pk_id = t.c_menu_id]]>
+		 left join t_menu m on m.pk_id = t.c_menu_id
+		 WHERE 1=1
+		 ]]>
+		  <if test="null!=id and ''!=id">and t.pk_id = #{id}</if>
 	</select>
 	
 	<!--  条件查询查询所有 -->

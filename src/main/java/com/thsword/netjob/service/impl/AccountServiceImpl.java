@@ -24,6 +24,7 @@ import com.thsword.netjob.pojo.app.OrderAccount;
 import com.thsword.netjob.service.AccountService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.object.UUIDUtil;
 @Service(value = "accountService")
 public class AccountServiceImpl extends BaseServiceImpl implements AccountService{
@@ -52,10 +53,10 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		order.setTradeNo(out_trade_no);
 		order = (OrderAccount) orderAccountDao.queryEntity(order);
 		if(null==order){
-			throw new Exception("订单不存在");
+			throw new ServiceException("订单不存在");
 		}
 		if(order.getStatus()!=Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1){
-			throw new Exception("订单已关闭");
+			throw new ServiceException("订单已关闭");
 		}
 		String memberId = order.getMemberId();
 		BigDecimal money= order.getTotal_fee();
@@ -115,10 +116,10 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		order.setTradeNo(tradeNo);
 		order = (OrderAccount) orderAccountDao.queryEntity(order);
 		if(null==order){
-			throw new Exception("订单不存在");
+			throw new ServiceException("订单不存在");
 		}
 		if(order.getStatus()!=Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1){
-			throw new Exception("订单已关闭");
+			throw new ServiceException("订单已关闭");
 		}
 		String memberId = order.getMemberId();
 		BigDecimal money= order.getTotal_fee();
@@ -126,7 +127,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		AccountCoin addAcc = new AccountCoin();
 		addAcc.setMemberId(memberId);
 		addAcc = (AccountCoin) accountCoinDao.queryEntity(addAcc);
-		long numFormat = money.multiply(new BigDecimal(Global.SYS_MEMBER_MONEY_COIN_RATE)).setScale(0, BigDecimal.ROUND_DOWN).longValue();;
+		long numFormat = money.multiply(new BigDecimal(Global.getSetting(Global.SYS_MEMBER_MONEY_COIN_RATE))).setScale(0, BigDecimal.ROUND_DOWN).longValue();;
 		if(null==addAcc){
 			addAcc=new AccountCoin();
 			addAcc.setNum(numFormat);
@@ -182,10 +183,10 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		String memberId = order.getMemberId();
 		BigDecimal money= order.getTotal_fee();
 		if(null==order){
-			throw new Exception("订单不存在");
+			throw new ServiceException("订单不存在");
 		}
 		if(order.getStatus()!=Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1){
-			throw new Exception("订单已关闭");
+			throw new ServiceException("订单已关闭");
 		}
 		Member member = (Member) memberDao.queryEntityById(memberId);
 		//扣减账户余额
@@ -193,10 +194,10 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		ac.setMemberId(memberId);
 		ac = (Account) accountDao.queryEntity(ac);
 		if(ac==null){
-			throw new Exception("账户不存在");
+			throw new ServiceException("账户不存在");
 		}
 		if(order.getTotal_fee().compareTo(ac.getMoney())>0){
-			throw new Exception("账户余额不足");
+			throw new ServiceException("账户余额不足");
 		}
 		ac.setMoney(ac.getMoney().subtract(money));
 		accountDao.updateEntity(ac);
@@ -206,7 +207,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		acc.setMemberId(memberId);
 		acc = (AccountCoin) accountCoinDao.queryEntity(acc);
 		long num = 0;
-		num = money.multiply(new BigDecimal(Global.SYS_MEMBER_MONEY_COIN_RATE)).setScale(0, BigDecimal.ROUND_DOWN).longValue();
+		num = money.multiply(new BigDecimal(Global.getSetting(Global.SYS_MEMBER_MONEY_COIN_RATE+""))).setScale(0, BigDecimal.ROUND_DOWN).longValue();
 		if(null==acc){
 			acc=new AccountCoin();
 			acc.setNum(num);
@@ -270,10 +271,10 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		long numFormat = order.getNum();
 		String targetId = order.getTargetId();
 		if(null==order){
-			throw new Exception("订单不存在");
+			throw new ServiceException("订单不存在");
 		}
 		if(order.getStatus()!=Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1){
-			throw new Exception("订单已关闭");
+			throw new ServiceException("订单已关闭");
 		}
 		Member member = (Member) memberDao.queryEntityById(memberId);
 		Member targetMember = (Member) memberDao.queryEntityById(targetId);	

@@ -2,25 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thsword.netjob.dao.IOrderDao">
 	<resultMap id="orderMapper" type="order">
-		<result property="id" column="c_content" />
+		<result property="id" column="pk_id" />
 		<result property="memberId" column="c_memberId" />
 		<result property="sellerId" column="c_sellerId" />
+		<result property="sellerName" column="c_sellerName" />
+		<result property="sellerImage" column="c_sellerImage" />
+		<result property="tradeNo" column="c_tradeNo" />
 		<result property="serveId" column="c_serveId" />
-		<result property="serveName" column="c_serveName" />
 		<result property="serveTitle" column="c_serveTitle" />
 		<result property="serveImage" column="c_serveImage" />
-		<result property="orderCode" column="c_orderCode" />
-		<result property="flowId" column="c_flowId" />
+		<result property="firstMenuId" column="c_firstMenuId" />
+		<result property="firstMenuName" column="c_firstMenuName" />
+		<result property="menuId" column="c_menuId" />
+		<result property="menuName" column="c_menuName" />
 		<result property="addressId" column="c_addressId" />
+		<result property="address" column="c_addressId" />
 		<result property="price" column="c_price" />
 		<result property="count" column="c_count" />
 		<result property="status" column="c_status" />
 		<result property="citycode" column="c_citycode" />
 		<result property="remark" column="c_remark" />
 		<result property="remarkLink" column="c_remarkLink" />
-		<result property="firstMenuName" column="c_firstMenuName" />
-		<result property="menuName" column="c_menuName" />
 		<result property="createDate" column="c_createDate" />
+		<result property="updateDate" column="c_updateDate" />
 	</resultMap>
 
 	<!-- #######################CRUD begin####################### -->  
@@ -32,19 +36,24 @@
 						pk_id,
 						c_memberId,
 						c_sellerId,
+						c_sellerName,
+						c_sellerImage,
+						c_tradeNo,
 						c_serveId,
-						c_serveName,
-						c_orderCode,
-						c_flowId,
+						c_serveTitle,
+						c_serveImage,
+						c_firstMenuId,
+						c_firstMenuName,
+						c_menuId,
+						c_menuName,
 						c_addressId,
+						c_address,
 						c_price,
 						c_count,
 						c_status,
 						c_citycode,
 						c_remark,
 						c_remarkLink,
-						c_firstMenuName,
-						c_menuName,
 						c_createDate,
 						c_createBy,
 						c_updateDate,
@@ -54,19 +63,24 @@
 						#{id},
 						#{memberId},
 						#{sellerId},
+						#{sellerName},
+						#{sellerImage},
+						#{tradeNo},
 						#{serveId},
-						#{serveName},
-						#{orderCode},
-						#{flowId},
+						#{serveTitle},
+						#{serveImage},
+						#{firstMenuId},
+						#{firstMenuName},
+						#{menuId},
+						#{menuName},
 						#{addressId},
+						#{address},
 						#{price},
 						#{count},
 						#{status},
 						#{citycode},
 						#{remark},
 						#{remarkLink},
-						#{firstMenuName},
-						#{menuName},
 						now(),
 						#{createBy},
 						now(),
@@ -92,6 +106,9 @@
 			c_updateDate=now()
 			<if test="null!=addressId">
 				c_addressId=#{addressId},
+			</if>
+			<if test="null!=address">
+				c_address=#{address},
 			</if>
 			<if test="null!=price">
 				c_price=#{price},
@@ -139,6 +156,9 @@
 	<select id="queryPageEntity" resultMap="orderMapper" parameterType="java.util.Map">
 		 <![CDATA[ SELECT * FROM t_order WHERE 1=1]]>
 		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=sellerId and ''!=sellerId">and c_sellerId = #{sellerId}</if>
+		 <if test="null!=status and ''!=status">and c_status = #{status}</if>
 	</select>
 
 	<!-- #######################CRUD end####################### -->

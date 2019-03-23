@@ -1,5 +1,6 @@
 package com.thsword.netjob.pojo.app;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -30,13 +31,9 @@ public class Order {
 	 */
 	private String sellerImage;
 	/**
-	 * 订单号
+	 * 交易号
 	 */
-	private String orderCode;
-	/**
-	 * 付款单号
-	 */
-	private String flowId;
+	private String tradeNo;
 	/**
 	 *服务ID 
 	 */
@@ -46,25 +43,31 @@ public class Order {
 	 */
 	private String serveTitle;
 	/**
-	 * 服务标题
+	 * 服务图片
 	 */
 	private String serveImage;
 	/**
-	 * 服务标题
+	 * 一级类型
 	 */
+	private String firstMenuId;
 	private String firstMenuName;
 	/**
-	 * 服务标题
+	 * 二级类型
 	 */
+	private String menuId;
 	private String menuName;
 	/**
 	 * 地址ID
 	 */
 	private String addressId;
 	/**
+	 * 地址详情
+	 */
+	private String address;
+	/**
 	 * 单价
 	 */
-	private double price;
+	private BigDecimal price;
 	/**
 	 * 数量
 	 */
@@ -113,12 +116,6 @@ public class Order {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public String getOrderCode() {
-		return orderCode;
-	}
-	public void setOrderCode(String orderCode) {
-		this.orderCode = orderCode;
-	}
 	public String getServeId() {
 		return serveId;
 	}
@@ -131,11 +128,11 @@ public class Order {
 	public void setAddressId(String addressId) {
 		this.addressId = addressId;
 	}
-	public String getFlowId() {
-		return flowId;
+	public String getTradeNo() {
+		return tradeNo;
 	}
-	public void setFlowId(String flowId) {
-		this.flowId = flowId;
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
 	}
 	public Integer getStatus() {
 		return status;
@@ -167,6 +164,18 @@ public class Order {
 	public void setSellerImage(String sellerImage) {
 		this.sellerImage = sellerImage;
 	}
+	public String getFirstMenuId() {
+		return firstMenuId;
+	}
+	public void setFirstMenuId(String firstMenuId) {
+		this.firstMenuId = firstMenuId;
+	}
+	public String getMenuId() {
+		return menuId;
+	}
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
 	public String getFirstMenuName() {
 		return firstMenuName;
 	}
@@ -179,10 +188,10 @@ public class Order {
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	public Integer getCount() {
@@ -196,6 +205,12 @@ public class Order {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	public String getCitycode() {
 		return citycode;

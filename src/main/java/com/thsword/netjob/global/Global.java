@@ -73,6 +73,11 @@ public class Global{
     public static final String JUHE_PERSONCARD_URL = "http://v.juhe.cn/certificates/query.php";
     public static final String JUHE_ACCESS_PERSONCARD_KEY = "JUHE.ACCESS.PERSONCARD.KEY";
     
+    //网约业务配置
+    //现金-网币 比例
+  	public static final String SYS_MEMBER_MONEY_COIN_RATE="NETJOB.MONEYTOCOIN.RATE";
+  	public static final String SYS_MEMBER_SERVE_TIP_RATE="NETJOB.SERVE.TIP.RATE";
+    
     //微信支付配置
     /**微信支付appId*/
     public static final String WX_PAY_APPID="WX.PAY.APPID";
@@ -167,18 +172,34 @@ public class Global{
 	public static final int SYS_MEMBER_PRICE_TYPE_2=2;
 	
 	//订单常量
-	/**状态(1-待接单 2-已接单 3-已拒单  4-待退款  5-已退款 6-拒绝退款 7-待签收 8-已签收 9-完成)*/
+	/**状态(1-待付款 2-已付款 3-待接单  4-已接单  5-已拒单 6-退款中 7-已退款 8-拒绝退款 9-待签收 10-已签收)*/
+	
+	/**待付款/待付款*/
 	public static final int SYS_ORDER_STATUS_PAYING=1;
+	/**已付款/待接单*/
 	public static final int SYS_ORDER_STATUS_PAYED=2;
-	public static final int SYS_ORDER_STATUS_ACCEPTING=3;
-	public static final int SYS_ORDER_STATUS_ACCEPTED=4;
-	public static final int SYS_ORDER_STATUS_REFUSED=5;
-	public static final int SYS_ORDER_STATUS_REFUNDING=6;
-	public static final int SYS_ORDER_STATUS_REFUNDED=7;
-	public static final int SYS_ORDER_STATUS_REFUND_REFUSED=8;
-	public static final int SYS_ORDER_STATUS_SIGNING=9;
-	public static final int SYS_ORDER_STATUS_SIGNED=10;
-	public static final int SYS_ORDER_STATUS_FINISH=11;
+	/**已接单/已接单*/
+	public static final int SYS_ORDER_STATUS_ACCEPTED=3;
+	/**已拒单/已拒单*/
+	public static final int SYS_ORDER_STATUS_REJECT=4;
+	/**已退款（拒单）/已退款（拒单）*/
+	public static final int SYS_ORDER_STATUS_REJECT_REFUNDED=5;
+	/**申请退款/申请退款*/
+	public static final int SYS_ORDER_STATUS_APPLYING=6;
+	/**待维权/拒绝退款*/
+	public static final int SYS_ORDER_STATUS_APPLYING_REJECT=7;
+	/** 已维权/待举证*/
+	public static final int SYS_ORDER_STATUS_RIGHTED=8;
+	/** 已举证/已举证*/
+	public static final int SYS_ORDER_STATUS_APPROVED=9;
+	/** 待签收/待签收*/
+	public static final int SYS_ORDER_STATUS_SIGNING=10;
+	/** 已签收/已签收*/
+	public static final int SYS_ORDER_STATUS_SIGNED=11;
+	/** 已评论*/
+	public static final int SYS_ORDER_STATUS_COMMENTED=12;
+	/** 已关闭*/
+	public static final int SYS_ORDER_STATUS_CLOSED=13;
 
 	
 	//服务类型
@@ -228,9 +249,6 @@ public class Global{
 	/** 充值*/
 	public static final int SYS_MEMBER_NEWS_TYPE_2=2;
 	
-	//现金-网币 比例
-	public static final int SYS_MEMBER_MONEY_COIN_RATE=10;
-	
 	
 	//账户类型
 	/** 现金账户*/
@@ -258,6 +276,7 @@ public class Global{
 	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_2=2;
 	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_3=3;
 	public static final int SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_4=4;
+	
 	
 	//账户充值类型
 	/** 现金账户*/
@@ -291,6 +310,15 @@ public class Global{
 	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_3=3;
 	/** 打赏*/
 	public static final int SYS_MEMBER_ACCOUNTCOIN_RECORD_TYPE_4=4;
+	
+	
+	//中央账户状态
+	/** 已收入**/
+	public static final int SYS_MEMBER_ACCOUNTCENTER_STATUS_1=1;
+	/** 已交付**/
+	public static final int SYS_MEMBER_ACCOUNTCENTER_STATUS_2=2;
+	/** 已退回**/
+	public static final int SYS_MEMBER_ACCOUNTCENTER_STATUS_3=3;
 	
 	//是否默认地址
 	public static final int SYS_MEMBER_ADDRESS_IS_DEFAULT_YES=1;

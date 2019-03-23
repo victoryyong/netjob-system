@@ -113,4 +113,11 @@
 		SELECT * FROM t_account WHERE 1=1
 		 and c_memberId = #{memberId}
 	</select>
+	
+	<select id="queryAccountByMemberId" parameterType="account" resultMap="accountMapper">
+		SELECT * FROM t_account WHERE 1=1
+		 and c_memberId = #{memberId}
+	</select>
+	
+	
 </mapper>
