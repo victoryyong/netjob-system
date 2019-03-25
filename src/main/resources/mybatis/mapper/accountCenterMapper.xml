@@ -4,78 +4,24 @@
 	<resultMap id="accountCenterMapper" type="accountCenter">
 		<!-- ID -->
 		<result property="id" column="pk_id" />
-		<!-- 金额 -->
+		<!-- 名称 -->
+		<result property="memberId" column="c_memberId" />
+		<!-- 类型 -->
 		<result property="money" column="c_money" />
-		<!-- 订单ID -->
-		<result property="orderId" column="c_orderId" />
-		<!-- 交易号 -->
-		<result property="tradeNo" column="c_tradeNo" />
-		<!-- 买家ID -->
-		<result property="sellerId" column="c_sellerId" />
-		<!-- 卖家ID -->
-		<result property="buyerId" column="c_buyerId" />
-		<!-- 服务费 -->
-		<result property="tip" column="c_tip" />
-		<!-- 状态 -->
+		<!-- appId -->
 		<result property="status" column="c_status" />
-		<!-- 创建时间 -->
-		<result property="createDate" column="c_createDate" />
-		<!-- 更新时间 -->
-		<result property="updateDate" column="c_updateDate" />
 	</resultMap>
+	
 
 	<!-- #######################CRUD begin####################### -->  
-	<!-- 增加 -->
-	<insert id="addEntity" parameterType="accountCenter"
-		keyProperty="id">
-		<![CDATA[
-			INSERT INTO t_accountCenter (
-						pk_id,
-						c_money,
-						c_tip,
-						c_orderId,
-						c_tradeNo,
-						c_sellerId,
-						c_buyerId,
-						c_status,
-						c_createDate,
-						c_createBy,
-						c_updateDate,
-						c_updateBy
-		 				)
-				VALUES(
-						#{id},
-						#{money},
-						#{tip},
-						#{orderId},
-						#{tradeNo},
-						#{sellerId},
-						#{buyerId},
-						#{status},
-						now(),
-						#{createBy},
-						now(),
-						#{updateBy}
-				 	  	)
-		]]>
-	</insert>
-
-	<!-- 删除 -->
-	<delete id="deleteEntity" parameterType="accountCenter">
-		<![CDATA[ DELETE FROM t_accountCenter WHERE pk_id=#{id}]]>
-	</delete>
-
-	<!-- 根据ID删除 -->
-	<delete id="deleteEntityById" parameterType="java.lang.String">
-		<![CDATA[ DELETE FROM t_accountCenter WHERE pk_id=#{entityId}]]>
-	</delete>
 
 	<!-- 更新 -->
 	<update id="updateEntity" parameterType="accountCenter">
 		UPDATE t_accountCenter
 		<set>
 			c_updateDate=now(),
-			<if test="null!=status">c_status=#{status}</if>
+			<if test="null!=money">c_money=#{money},</if>
+			<if test="null!=updateBy">c_updateBy=#{updateBy}</if>
 		</set>
 		WHERE pk_id = #{id}
 	</update>
@@ -94,21 +40,8 @@
 	<!--  条件查询查询所有 -->
 	<select id="queryEntity" resultMap="accountCenterMapper" parameterType="accountCenter">
 		 <![CDATA[ SELECT * FROM t_accountCenter WHERE 1=1]]>
-		 <if test="null!=orderId and ''!=orderId">and c_orderId = #{orderId}</if>
-		 <if test="null!=tradeNo and ''!=tradeNo">and c_tradeNo = #{tradeNo}</if>
+		 <if test="null!=memberId">and c_memberId = #{memberId}</if>
 	</select>
 	
-	<!--  条件查询查询所有 -->
-	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="accountCenter">
-		 <![CDATA[ SELECT count(*) FROM t_accountCenter WHERE 1=1]]>
-	</select>
-	
-	<!-- 查询分页列表(分页) -->
-	<select id="queryPageEntity" resultMap="accountCenterMapper" parameterType="java.util.Map">
-		 <![CDATA[ SELECT * FROM t_accountCenter WHERE 1=1]]>
-	</select>
-
 	<!-- #######################CRUD end####################### -->
-	
-	
 </mapper>

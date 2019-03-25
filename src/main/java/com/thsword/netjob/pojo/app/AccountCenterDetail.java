@@ -6,24 +6,40 @@ import java.util.Date;
 /**
  * 
 
- * @Description:现金账户
+ * @Description:中央账户
 
  * @author:yong
 
  * @time:2018年5月7日 下午5:47:41
  */
-public class AccountCenter {
+public class AccountCenterDetail {
 	private String id;
 	/**
-	 * 用户ID
-	 */
-	private String memberId;
-	/**
-	 * 账户余额
+	 * 金额
 	 * */
 	private BigDecimal money;
 	/**
-	 * 状态（1-激活 2-冻结）
+	 * 服务费
+	 */
+	private BigDecimal tip;
+	/**
+	 * 订单ID
+	 */
+	private String orderId;
+	/**
+	 * 交易单号
+	 */
+	private String tradeNo;
+	/**
+	 * 卖家ID
+	 */
+	private String sellerId;
+	/**
+	 * 买家ID
+	 */
+	private String buyerId;
+	/**
+	 * 状态
 	 */
 	private Integer status;
 	/**
@@ -47,12 +63,6 @@ public class AccountCenter {
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	public String getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
 	}
 	public BigDecimal getMoney() {
 		return money;
@@ -89,5 +99,35 @@ public class AccountCenter {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public String getTradeNo() {
+		return tradeNo;
+	}
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+	public String getSellerId() {
+		return sellerId;
+	}
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
+	}
+	public String getBuyerId() {
+		return buyerId;
+	}
+	public void setBuyerId(String buyerId) {
+		this.buyerId = buyerId;
+	}
+	public BigDecimal getTip() {
+		return tip;
+	}
+	public void setTip(BigDecimal tip) {
+		this.tip = tip;
 	}
 }

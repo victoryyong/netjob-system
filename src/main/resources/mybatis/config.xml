@@ -52,10 +52,11 @@
 		<typeAlias alias="orderAccount" type="com.thsword.netjob.pojo.app.OrderAccount" />
 		<typeAlias alias="account" type="com.thsword.netjob.pojo.app.Account" />
 		<typeAlias alias="accountCoin" type="com.thsword.netjob.pojo.app.AccountCoin" />
-		<typeAlias alias="accountCoin" type="com.thsword.netjob.pojo.app.AccountCenter" />
+		<typeAlias alias="accountCenter" type="com.thsword.netjob.pojo.app.AccountCenter" />
+		<typeAlias alias="accountCenterDetail" type="com.thsword.netjob.pojo.app.AccountCenterDetail" />
 		<typeAlias alias="cashRecord" type="com.thsword.netjob.pojo.app.CashRecord" />
 		<typeAlias alias="coinRecord" type="com.thsword.netjob.pojo.app.CoinRecord" />
-		<typeAlias alias="coinRecord" type="com.thsword.netjob.pojo.app.RefundApprove" />
+		<typeAlias alias="refundApprove" type="com.thsword.netjob.pojo.app.RefundApprove" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mapper/userMapper.xml" />
@@ -89,6 +90,7 @@
 		<mapper resource="mybatis/mapper/accountMapper.xml" />
 		<mapper resource="mybatis/mapper/accountCoinMapper.xml" />
 		<mapper resource="mybatis/mapper/accountCenterMapper.xml" />
+		<mapper resource="mybatis/mapper/accountCenterDetailMapper.xml" />
 		<mapper resource="mybatis/mapper/cashRecordMapper.xml" />
 		<mapper resource="mybatis/mapper/coinRecordMapper.xml" />
 		<mapper resource="mybatis/mapper/refundApproveMapper.xml" />

@@ -75,7 +75,11 @@ public class Order {
 	/**
 	 * 业务方状态
 	 */
-	private Integer status;
+	private Integer buyerStatus;
+	/**
+	 * 商家状态
+	 */
+	private Integer sellerStatus;
 	/**
 	 * 城市编码
 	 */
@@ -134,11 +138,17 @@ public class Order {
 	public void setTradeNo(String tradeNo) {
 		this.tradeNo = tradeNo;
 	}
-	public Integer getStatus() {
-		return status;
+	public Integer getBuyerStatus() {
+		return buyerStatus;
 	}
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setBuyerStatus(Integer buyerStatus) {
+		this.buyerStatus = buyerStatus;
+	}
+	public Integer getSellerStatus() {
+		return sellerStatus;
+	}
+	public void setSellerStatus(Integer sellerStatus) {
+		this.sellerStatus = sellerStatus;
 	}
 	public String getServeTitle() {
 		return serveTitle;

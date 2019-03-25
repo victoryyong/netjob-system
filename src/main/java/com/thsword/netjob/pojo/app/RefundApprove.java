@@ -1,6 +1,7 @@
 package com.thsword.netjob.pojo.app;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -33,13 +34,17 @@ public class RefundApprove implements Serializable {
 	 */
 	private String tradeNo;
 	/**
+	 * 
+	 */
+	private BigDecimal money;
+	/**
 	 * 原因
 	 */
 	private String reason;
 	/**
 	 * 1-退款/2-维权/3-举证 
 	 */
-	private String type;
+	private Integer type;
 	/**
 	 * 文件链接
 	 */
@@ -59,6 +64,7 @@ public class RefundApprove implements Serializable {
 	/**
 	 * 更新人
 	 */
+	private String updateBy;
 	public String getId() {
 		return id;
 	}
@@ -95,10 +101,10 @@ public class RefundApprove implements Serializable {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
-	public String getType() {
+	public Integer getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 	public String getLinks() {
@@ -124,5 +130,17 @@ public class RefundApprove implements Serializable {
 	}
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+	public String getUpdateBy() {
+		return updateBy;
+	}
+	public void setUpdateBy(String updateBy) {
+		this.updateBy = updateBy;
+	}
+	public BigDecimal getMoney() {
+		return money;
+	}
+	public void setMoney(BigDecimal money) {
+		this.money = money;
 	}
 }

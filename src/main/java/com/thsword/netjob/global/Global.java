@@ -174,33 +174,49 @@ public class Global{
 	//订单常量
 	/**状态(1-待付款 2-已付款 3-待接单  4-已接单  5-已拒单 6-退款中 7-已退款 8-拒绝退款 9-待签收 10-已签收)*/
 	
-	/**待付款/待付款*/
-	public static final int SYS_ORDER_STATUS_PAYING=1;
-	/**已付款/待接单*/
-	public static final int SYS_ORDER_STATUS_PAYED=2;
-	/**已接单/已接单*/
-	public static final int SYS_ORDER_STATUS_ACCEPTED=3;
-	/**已拒单/已拒单*/
-	public static final int SYS_ORDER_STATUS_REJECT=4;
-	/**已退款（拒单）/已退款（拒单）*/
-	public static final int SYS_ORDER_STATUS_REJECT_REFUNDED=5;
-	/**申请退款/申请退款*/
-	public static final int SYS_ORDER_STATUS_APPLYING=6;
-	/**待维权/拒绝退款*/
-	public static final int SYS_ORDER_STATUS_APPLYING_REJECT=7;
-	/** 已维权/待举证*/
-	public static final int SYS_ORDER_STATUS_RIGHTED=8;
-	/** 已举证/已举证*/
-	public static final int SYS_ORDER_STATUS_APPROVED=9;
-	/** 待签收/待签收*/
-	public static final int SYS_ORDER_STATUS_SIGNING=10;
-	/** 已签收/已签收*/
-	public static final int SYS_ORDER_STATUS_SIGNED=11;
-	/** 已评论*/
-	public static final int SYS_ORDER_STATUS_COMMENTED=12;
-	/** 已关闭*/
-	public static final int SYS_ORDER_STATUS_CLOSED=13;
+	/**买家-待付款*/
+	public static final int SYS_ORDER_BUYER_STATUS_PAYING=1;
+	/**买家-已付款*/
+	public static final int SYS_ORDER_BUYER_STATUS_PAYED=2;
+	/**买家-已接单*/
+	public static final int SYS_ORDER_BUYER_STATUS_ACCEPTED=3;
+	/**买家-已退款（拒单）*/
+	public static final int SYS_ORDER_BUYER_STATUS_CANCEL_REFUNDED=4;
+	/**买家-待签收*/
+	public static final int SYS_ORDER_BUYER_STATUS_SIGNING=5;
+	/**买家-已签收*/
+	public static final int SYS_ORDER_BUYER_STATUS_SIGNED=6;
+	/**买家-待评论*/
+	public static final int SYS_ORDER_BUYER_STATUS_COMMENTING=7;
+	/**买家-已关闭*/
+	public static final int SYS_ORDER_BUYER_STATUS_CLOSED=8;
+	/**买家-申请退款*/
+	public static final int SYS_ORDER_BUYER_STATUS_APPLYING=9;
+	/**买家-已退款（申请）*/
+	public static final int SYS_ORDER_BUYER_STATUS_APPLY_REFUND=10;
+	/**买家-待维权*/
+	public static final int SYS_ORDER_BUYER_STATUS_RIGHTING=11;
+	/**买家-已维权*/
+	public static final int SYS_ORDER_BUYER_STATUS_RIGHTED=12;
 
+	/**商家-待接单*/
+	public static final int SYS_ORDER_SELLER_STATUS_ACCEPTING=1;
+	/**商家-已接单*/
+	public static final int SYS_ORDER_SELLER_STATUS_ACCEPTED=2;
+	/**商家-已拒单*/
+	public static final int SYS_ORDER_SELLER_STATUS_CANCEL=3;
+	/**商家-已完成*/
+	public static final int SYS_ORDER_SELLER_STATUS_FINISH=4;
+	/**商家-拒绝退款*/
+	public static final int SYS_ORDER_SELLER_STATUS_APPLY_REJECT=5;
+	/**商家-已退款*/
+	public static final int SYS_ORDER_SELLER_STATUS_APPLY_REFUND=6;
+	/**商家-待举证*/
+	public static final int SYS_ORDER_SELLER_STATUS_APPROVING=7;
+	/**商家-已举证*/
+	public static final int SYS_ORDER_SELLER_STATUS_APPROVED=8;
+	/**商家-已关闭*/
+	public static final int SYS_ORDER_SELLER_STATUS_CLOSED=9;
 	
 	//服务类型
 	/** 服务*/
@@ -255,6 +271,9 @@ public class Global{
 	public static final int SYS_MEMBER_ACCOUNT_TYPE_1=1;
 	/** 网币账户*/
 	public static final int SYS_MEMBER_ACCOUNT_TYPE_2=2;
+	
+	//中央账户ID
+	public static final String SYS_NETJOB_CENTER_ACCOUNT_ID="netjob_center_account_id";
 	
 	//账户充值方式
 	/** 微信*/
@@ -319,6 +338,14 @@ public class Global{
 	public static final int SYS_MEMBER_ACCOUNTCENTER_STATUS_2=2;
 	/** 已退回**/
 	public static final int SYS_MEMBER_ACCOUNTCENTER_STATUS_3=3;
+	
+	//售后类型
+	/** 退款*/
+	public static final int SYS_MEMBER_ORDER_REFUND=1;
+	/** 维权*/
+	public static final int SYS_MEMBER_ORDER_RIGHT=2;
+	/** 举证*/
+	public static final int SYS_MEMBER_ORDER_APPROVE=3;
 	
 	//是否默认地址
 	public static final int SYS_MEMBER_ADDRESS_IS_DEFAULT_YES=1;
