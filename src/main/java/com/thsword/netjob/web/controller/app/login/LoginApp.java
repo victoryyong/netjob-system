@@ -53,7 +53,6 @@ public class LoginApp {
 	@RequestMapping("app/login")
 	public void list(HttpServletRequest request, HttpServletResponse response, Member member) throws Exception {
 		try {
-			String password = member.getPassword();
 			String type = request.getParameter("type");
 			if (StringUtils.isEmpty(type)) {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "登陆类型不能为空", response, request);

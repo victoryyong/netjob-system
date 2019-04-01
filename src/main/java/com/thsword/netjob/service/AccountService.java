@@ -34,11 +34,11 @@ public interface AccountService extends IBaseService{
 	 * @param memberId
 	 * @param password
 	 */
-	void updatePassword(Account acc);
+	void updatePassword(Account acc) throws Exception;
 	/**
 	 * 查询账户
 	 * @param memberId
 	 */
-	Account queryPwdMember(String memberId);
+	Account queryPwdMember(String memberId) throws Exception;
 	
 }

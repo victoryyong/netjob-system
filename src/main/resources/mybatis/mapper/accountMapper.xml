@@ -18,6 +18,8 @@
 		<!-- 名称 -->
 		<result property="memberId" column="c_memberId" />
 		<!-- 类型 -->
+		<result property="money" column="c_money" />
+		<!-- 类型 -->
 		<result property="password" column="c_password" />
 		<!-- appId -->
 		<result property="status" column="c_status" />

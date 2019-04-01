@@ -31,6 +31,7 @@ import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.util.AmapUtil;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.util.RedisUtils;
 import com.thsword.netjob.util.TokenUtil;
 import com.thsword.utils.date.DateUtil;
 import com.thsword.utils.object.UUIDUtil;
@@ -366,6 +367,7 @@ public class MemberApp {
 	@RequestMapping("app/forgetPwd")
 	public void forgetPwd(HttpServletRequest request, HttpServletResponse response, Member member) throws Exception {
 		try {
+			String identifyCode = request.getParameter("identifyCode");
 			if (StringUtils.isEmpty(member.getPhone())) {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "电话不能为空", response, request);
 				return;
@@ -374,7 +376,28 @@ public class MemberApp {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
 				return;
 			}
+			if (StringUtils.isEmpty(identifyCode)) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码不能为空", response, request);
+				return;
+			}
+			String redisKey = "member:forgetLoginPwd:"+member.getPhone();
+			String redisValue=RedisUtils.get(redisKey);
+			if(StringUtils.isEmpty(redisValue)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码无效", response, request);
+				return;
+			}
+			JSONObject idenfifyInfo = JSONObject.parseObject(redisValue);
 			
+			String checkPhone = idenfifyInfo.getString("phone");
+			String checkIdentifyCode = idenfifyInfo.getString("identifyCode");
+			if(!checkPhone.equals(member.getPhone())){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "号码不匹配", response, request);
+				return;
+			}
+			if(!checkIdentifyCode.equals(identifyCode)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码错误", response, request);
+				return;
+			}
 			Member temp = new Member();
 			temp.setPhone(member.getPhone());
 			temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
@@ -384,6 +407,7 @@ public class MemberApp {
 			}
 			temp.setPassword(member.getPassword());
 			memberService.updateEntity(IMemberDao.class, temp);
+			RedisUtils.del(redisKey);
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();

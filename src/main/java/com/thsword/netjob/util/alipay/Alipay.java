@@ -27,7 +27,7 @@ public class Alipay {
 	{
 	    	config = AlipayConfig.getInstance();
 	    	useSandbox = Boolean.parseBoolean(Global.getSetting(Global.ALIPAY_PAY_USESANDBOX));
-	    	notifyUrl = Global.WX_PAY_CALLBACK;
+	    	notifyUrl = Global.ALIPAY_PAY_CALLBACK;
 	    	gateway = useSandbox?"https://openapi.alipaydev.com/gateway.do":"https://openapi.alipay.com/gateway.do";
 	    	signType = "RSA2";
 	    	formate = "json";

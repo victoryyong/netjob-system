@@ -352,11 +352,11 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		
 	}
 	@Override
-	public void updatePassword(Account acc) {
+	public void updatePassword(Account acc) throws Exception{
 		accountDao.updatePassword(acc);
 	}
 	@Override
-	public Account queryPwdMember(String memberId) {
+	public Account queryPwdMember(String memberId) throws Exception{
 		return accountDao.queryPwdMember(memberId);
 	}
 }

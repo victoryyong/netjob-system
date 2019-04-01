@@ -24,17 +24,20 @@ import com.thsword.netjob.dao.IAccountCoinDao;
 import com.thsword.netjob.dao.IAccountDao;
 import com.thsword.netjob.dao.ICashRecordDao;
 import com.thsword.netjob.dao.ICoinRecordDao;
+import com.thsword.netjob.dao.IMemberDao;
 import com.thsword.netjob.dao.IOrderAccountDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Account;
 import com.thsword.netjob.pojo.app.AccountCoin;
 import com.thsword.netjob.pojo.app.CashRecord;
 import com.thsword.netjob.pojo.app.CoinRecord;
+import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.pojo.app.OrderAccount;
 import com.thsword.netjob.service.AccountService;
 import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.util.RedisUtils;
 import com.thsword.netjob.util.WxpayAppUtil;
 import com.thsword.netjob.util.alipay.Alipay;
 import com.thsword.netjob.util.alipay.AlipayUtils;
@@ -53,6 +56,26 @@ public class AccountApp {
 	MemberService memberService;
 	private static final Log log = LogFactory.getLog(AccountApp.class);
 	
+	@RequestMapping("app/member/account/hasPassword")
+	public void hasPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			boolean flag = false;
+			String memberId = request.getAttribute("memberId")+"";
+			Account acc = accountService.queryPwdMember(memberId);
+			if(null!=acc&&!StringUtils.isEmpty(acc.getPassword())){
+				flag = true;
+			}
+			JsonResponseUtil.successBodyResponse(flag, response, request);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+			log.info(e.getMessage(),e);
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.info(e.getMessage(),e);
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询异常",response, request);
+		}
+	}
 	
 	/**
 	 * 
@@ -74,7 +97,7 @@ public class AccountApp {
 			}*/
 			Account acc = new Account();
 			acc.setMemberId(memberId);
-			acc = (Account) accountService.queryEntity(IAccountDao.class, acc);
+			acc = accountService.queryPwdMember(memberId);
 			if(null==acc){
 				acc=new Account();
 				acc.setCreateBy(memberId);
@@ -84,6 +107,11 @@ public class AccountApp {
 				acc.setMoney(new BigDecimal(0));
 				accountService.addEntity(IAccountDao.class, acc);
 				acc.setPassword(password);
+			}else if(StringUtils.isEmpty(acc.getPassword())){
+				acc.setPassword(password);
+			}else{
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"已设置支付密码", response, request);
+				return;
 			}
 			accountService.updatePassword(acc);
 			JsonResponseUtil.successCodeResponse(response, request);
@@ -108,21 +136,21 @@ public class AccountApp {
 		try {
 			String memberId = request.getAttribute("memberId")+"";
 			String password = request.getParameter("password");
+			String newPassword = request.getParameter("newPassword");
 			if(StringUtils.isEmpty(password)){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
 				return;
 			}
-			/*if(!memberService.hasPhoneAuth(memberId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请进行手机认证", response, request);
-				return;
-			}*/
-			Account acc = new Account();
-			acc.setMemberId(memberId);
-			acc = (Account) accountService.queryEntity(IAccountDao.class, acc);
+			Account acc = accountService.queryPwdMember(memberId);
 			if(null==acc){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户不存在", response, request);
 				return;
 			}
+			if(!acc.getPassword().equals(password)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码错误", response, request);
+				return;
+			}
+			acc.setPassword(newPassword);
 			accountService.updatePassword(acc);
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (ServiceException e) {
@@ -131,6 +159,75 @@ public class AccountApp {
 		}catch (Exception e) {
 			log.info(e.getMessage(),e);
 			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"重置密码异常",response, request);
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description:忘记密码
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@RequestMapping("app/visitor/account/forgetPwd")
+	public void forgetPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			String identifyCode = request.getParameter("identifyCode");
+			String phone = request.getParameter("phone");
+			String password = request.getParameter("password");
+			if (StringUtils.isEmpty(phone)) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "电话不能为空", response, request);
+				return;
+			}
+			if (StringUtils.isEmpty(password)) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
+				return;
+			}
+			if (StringUtils.isEmpty(identifyCode)) {
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码不能为空", response, request);
+				return;
+			}
+			String redisKey = "member:forgetPayPwd:"+phone;
+			String redisValue=RedisUtils.get(redisKey);
+			if(StringUtils.isEmpty(redisValue)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码无效", response, request);
+				return;
+			}
+			JSONObject idenfifyInfo = JSONObject.parseObject(redisValue);
+			
+			String checkPhone = idenfifyInfo.getString("phone");
+			String checkIdentifyCode = idenfifyInfo.getString("identifyCode");
+			if(!checkPhone.equals(phone)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "号码不匹配", response, request);
+				return;
+			}
+			if(!checkIdentifyCode.equals(identifyCode)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码错误", response, request);
+				return;
+			}
+			Member temp = new Member();
+			temp.setPhone(phone);
+			temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
+			if(null==temp){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户不存在", response, request);
+				return;
+			}
+			Account acc = accountService.queryAccountByMemberId(temp.getId());
+			if(acc==null){
+				acc=new Account();
+				acc.setCreateBy(temp.getId());
+				acc.setUpdateBy(temp.getId());
+				acc.setId(UUIDUtil.get32UUID());
+				acc.setMemberId(temp.getId());
+				acc.setMoney(new BigDecimal(0));
+				accountService.addEntity(IAccountDao.class, acc);
+			}
+			acc.setPassword(password);
+			accountService.updatePassword(acc);
+			
+			RedisUtils.del(redisKey);
+			JsonResponseUtil.successCodeResponse(response, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 	

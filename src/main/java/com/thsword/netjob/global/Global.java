@@ -73,6 +73,20 @@ public class Global{
     public static final String JUHE_PERSONCARD_URL = "http://v.juhe.cn/certificates/query.php";
     public static final String JUHE_ACCESS_PERSONCARD_KEY = "JUHE.ACCESS.PERSONCARD.KEY";
     
+    
+    /** 短信发送*/
+    public static final String JUHE_SMSMESSAGE_URL = "http://v.juhe.cn/sms/send";
+    public static final String JUHE_ACCESS_SMS_KEY = "JUHE.ACCESS.SMS.KEY";
+    /** 短信验证码有效期*/
+    public static final int JUHE_SMSMESSAGE_TIMEOUT=5*60;
+    /** 忘记登录密码验证码*/
+    public static final int JUHE_SMSMESSAGE_IDENTIFY_TYPE_1=1;
+    /** 忘记支付密码验证码*/
+    public static final int JUHE_SMSMESSAGE_IDENTIFY_TYPE_2=2;
+    /** 聚合短信模板*/
+    public static final String JUHE_SMSMESSAGE_IDENTIFY_TEMPLATE="146049";
+    
+    
     //网约业务配置
     //现金-网币 比例
   	public static final String SYS_MEMBER_MONEY_COIN_RATE="NETJOB.MONEYTOCOIN.RATE";

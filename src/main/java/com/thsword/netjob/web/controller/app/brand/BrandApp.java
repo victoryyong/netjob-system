@@ -120,7 +120,7 @@ public class BrandApp {
 			brand.setId(UUIDUtil.get32UUID());
 			brand.setBrandId(brandId);
 			brand.setType(Global.SYS_MEMBER_BRANDSHOW_RESOURCE_2);
-			String reproduceId = brand.getMemberId();
+			String reproduceId = brand.getAuthorId();
 			if(!StringUtils.isEmpty(reproduceId)){
 				brand.setAuthorId(reproduceId);
 				Member member = (Member) brandService.queryEntityById(IMemberDao.class, reproduceId);
