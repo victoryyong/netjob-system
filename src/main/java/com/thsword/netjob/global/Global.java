@@ -41,6 +41,10 @@ public class Global{
     /**app token*/
     public static final String JWT_SUBJECT_APP="app";
     
+    //定时任务状态
+    public static final Integer SYS_TASK_STATUS_0=0;
+    public static final Integer SYS_TASK_STATUS_1=1;
+    
     
     //后台域名
     public static final String SYSTEM_ADMIN_DOMAIN="SYSTEM.ADMIN.DOMAIN";

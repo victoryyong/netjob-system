@@ -93,6 +93,10 @@ public class Order {
 	 */
 	private String remarkLink;
 	/**
+	 * 接单时间
+	 */
+	private Date acceptDate;
+	/**
 	 * 创建时间
 	 */
 	private Date createDate;
@@ -263,5 +267,11 @@ public class Order {
 	}
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
+	}
+	public Date getAcceptDate() {
+		return acceptDate;
+	}
+	public void setAcceptDate(Date acceptDate) {
+		this.acceptDate = acceptDate;
 	}
 }

@@ -65,7 +65,9 @@ public class AccountApp {
 			if(null!=acc&&!StringUtils.isEmpty(acc.getPassword())){
 				flag = true;
 			}
-			JsonResponseUtil.successBodyResponse(flag, response, request);
+			JSONObject obj = new JSONObject();
+			obj.put("hasSetPassword", flag);
+			JsonResponseUtil.successBodyResponse(obj, response, request);
 		} catch (ServiceException e) {
 			e.printStackTrace();
 			log.info(e.getMessage(),e);
@@ -445,21 +447,23 @@ public class AccountApp {
 	public void getAlipayNotify(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, String> params = new HashMap<String, String>();
 		Map<String,Object> requestParams = request.getParameterMap();
-		for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
-			String name = (String) iter.next();
-			String[] values = (String[]) requestParams.get(name);
-			String valueStr = "";
-			for (int i = 0; i < values.length; i++) {
-				valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
-			}
-			// 乱码解决，这段代码在出现乱码时使用。
-			// valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-			params.put(name, valueStr);
-		}
+		log.info("rechangeAlipay requestParams info is "+JSONObject.toJSONString(requestParams));
 		// 切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
 		try {
+			for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
+				String name = (String) iter.next();
+				String[] values = (String[]) requestParams.get(name);
+				String valueStr = "";
+				for (int i = 0; i < values.length; i++) {
+					valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
+				}
+				// 乱码解决，这段代码在出现乱码时使用。
+				// valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+				params.put(name, valueStr);
+			}
 			log.info("alipay callback params is "+JSONObject.toJSONString(params));
-			boolean flag = Alipay.rsaCheck(params);
+			boolean flag = AlipayUtils.rsaCheck(params);
+			log.info("alipay rsaCheck result is "+flag);
 			if (flag) {
 				String trade_status = params.get("trade_status");
 				String out_trade_no = params.get("out_trade_no");
@@ -501,6 +505,7 @@ public class AccountApp {
 			log.info(e.getMessage(),e);
 			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"支付宝充值回调异常",response, request);
 		}
+		log.info("===============回调完成==============");
 		JsonResponseUtil.successCodeResponse(response, request);
 	}
 	

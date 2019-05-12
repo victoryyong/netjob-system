@@ -29,28 +29,12 @@
         	<array>  
             	<value>classpath:properties/dataSource.properties</value>
             	<value>classpath:properties/netjob.properties</value>  
-            	<value>classpath:properties/redis.properties</value>  
+            	<value>classpath:properties/redis.properties</value>
+            	<value>classpath:properties/quartz.properties</value>  
         	</array>  
     	</property>  
     </bean>  
   
-<!--     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  
-        destroy-method="close">  
-        <property name="driverClassName" value="${driverClassName}" />  
-        <property name="url" value="${url}" />  
-        <property name="username" value="${username}" />  
-        <property name="password" value="${password}" />  
-        初始化连接大小  
-        <property name="initialSize" value="${initialSize}"></property>  
-        连接池最大数量  
-        <property name="maxActive" value="${maxActive}"></property>  
-        连接池最大空闲  
-        <property name="maxIdle" value="${maxIdle}"></property>  
-        连接池最小空闲  
-        <property name="minIdle" value="${minIdle}"></property>  
-        获取连接最大等待时间  
-        <property name="maxWait" value="${maxWait}"></property>  
-    </bean>  --> 
     
      <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  
         destroy-method="close">  
@@ -95,30 +79,7 @@
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
 		
-		
-		<!--要调度的对象-->  
-    <!-- <bean id="jobBean" class="com.ims.web.job.CodeJob" />  
-    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
-        <property name="targetObject" ref="jobBean" />  
-        <property name="targetMethod" value="execute" />  
-        将并发设置为false  
-        <property name="concurrent" value="false" />  
-    </bean>  
-  
-    <bean id="trigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
-        <property name="jobDetail" ref="jobDetail" />  
-        表达式，我的是每 30s 执行一次  
-        <property name="cronExpression" value="0 0 0/1 * * ?" />  
-    </bean>  
-  
-     总管理类如果将lazy-init='false'那么容器启动就会执行调度程序    
-    <bean id="startQuertz" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" >  
-        <property name="triggers">  
-            <list>  
-                作业调度器,list下可加入其他的调度器  
-                <ref bean="trigger" />  
-            </list>  
-        </property>  
-    </bean>  -->
     <import resource="spring-redis.xml"/>
+    
+    <import resource="spring-quartz.xml"/>
 </beans>  

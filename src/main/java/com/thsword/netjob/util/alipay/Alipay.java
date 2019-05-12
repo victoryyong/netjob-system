@@ -87,7 +87,7 @@ public class Alipay {
     	return response.getBody();
     }
     
-    public static boolean rsaCheck(Map<String, String> params) throws Exception{
+    public boolean rsaCheck(Map<String, String> params) throws Exception{
     	return AlipaySignature.rsaCheckV1(params, config.getPublicKey(), charset,
 				signType);
     }

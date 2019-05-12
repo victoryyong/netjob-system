@@ -2,6 +2,7 @@ package com.thsword.netjob.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.thsword.netjob.dao.IAccountCenterDao;
@@ -67,9 +69,12 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 			throw new ServiceException("服务不存在");
 		}
 		String sellerId = serve.getMemberId();
-		Address address = (Address) addressDao.queryEntityById(addressId);
-		if(null == address){
-			throw new ServiceException("地址不存在");
+		if(!StringUtils.isEmpty(addressId)){
+			Address address = (Address) addressDao.queryEntityById(addressId);
+			if(null == address){
+				throw new ServiceException("地址不存在");
+			}
+			order.setAddress(address.getProvinceName()+"-"+address.getCityName()+"-"+address.getArea()+" "+address.getDetailAddress());
 		}
 		Member seller = (Member) memberDao.queryEntityById(sellerId);
 		if(null==seller){
@@ -79,7 +84,6 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 		if(null==pwdAccount){
 			throw new ServiceException("账户异常");
 		}
-		order.setAddress(address.getProvinceName()+"-"+address.getCityName()+"-"+address.getArea()+" "+address.getDetailAddress());
 		order.setSellerId(sellerId);
 		order.setSellerName(seller.getName());
 		order.setSellerImage(seller.getImage());
@@ -374,6 +378,7 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 			}
 			order.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_ACCEPTED);
 			order.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_ACCEPTED);
+			order.setAcceptDate(new Date());
 			orderDao.updateEntity(order);
 		}
 	}

@@ -24,6 +24,7 @@
 		<result property="citycode" column="c_citycode" />
 		<result property="remark" column="c_remark" />
 		<result property="remarkLink" column="c_remarkLink" />
+		<result property="acceptDate" column="c_acceptDate" />
 		<result property="createDate" column="c_createDate" />
 		<result property="updateDate" column="c_updateDate" />
 	</resultMap>
@@ -107,6 +108,9 @@
 			c_updateDate=now(),
 			<if test="null!=addressId">
 				c_addressId=#{addressId},
+			</if>
+			<if test="null!=acceptDate">
+				c_acceptDate=#{acceptDate},
 			</if>
 			<if test="null!=address">
 				c_address=#{address},

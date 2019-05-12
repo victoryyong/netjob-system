@@ -86,6 +86,7 @@
 				<property name="allowUrls">  
 		            <list>  
 		              <value>/app/rechangeWx/callback</value>
+		              <value>/app/rechangeAlipay/callback</value>
 		            </list>  
           		</property>
 			</bean>

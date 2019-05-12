@@ -30,6 +30,7 @@
 		<typeAlias alias="dict" type="com.thsword.netjob.pojo.Dict" />
 		<typeAlias alias="setting" type="com.thsword.netjob.pojo.Setting" />
 		<typeAlias alias="auth" type="com.thsword.netjob.pojo.Auth" />
+		<typeAlias alias="jobTask" type="com.thsword.netjob.pojo.JobTask" />
 		
 		<typeAlias alias="member" type="com.thsword.netjob.pojo.app.Member" />
 		<typeAlias alias="banner" type="com.thsword.netjob.pojo.app.Banner" />
@@ -66,6 +67,7 @@
 		<mapper resource="mybatis/mapper/dictMapper.xml" />
 		<mapper resource="mybatis/mapper/settingMapper.xml" />
 		<mapper resource="mybatis/mapper/authMapper.xml" />
+		<mapper resource="mybatis/mapper/jobTaskMapper.xml" />
 		
 		<mapper resource="mybatis/mapper/memberMapper.xml" />
 		<mapper resource="mybatis/mapper/bannerMapper.xml" />

@@ -27,6 +27,7 @@ public class AlipayUtils {
      * @throws Exception
      */
     public static boolean rsaCheck(Map<String, String> params) throws Exception{
-    	return Alipay.rsaCheck(params);
+    	Alipay alipay = new Alipay();
+    	return alipay.rsaCheck(params);
     }
 }

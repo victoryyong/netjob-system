@@ -364,7 +364,7 @@ public class MemberApp {
 		}
 	}
 	
-	@RequestMapping("app/forgetPwd")
+	@RequestMapping("app/visitor/member/forgetPwd")
 	public void forgetPwd(HttpServletRequest request, HttpServletResponse response, Member member) throws Exception {
 		try {
 			String identifyCode = request.getParameter("identifyCode");

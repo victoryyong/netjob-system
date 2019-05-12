@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IOrderDao;
+import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Order;
 import com.thsword.netjob.service.OrderService;
 import com.thsword.netjob.util.ErrorUtil;
@@ -42,10 +43,10 @@ public class OrderApp {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "服务id不能为空", response, request);
 				return;
 			}
-			if (StringUtils.isEmpty(order.getAddressId())) {
+			/*if (StringUtils.isEmpty(order.getAddressId())) {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "地址ID不能为空", response, request);
 				return;
-			}
+			}*/
 			if (StringUtils.isEmpty(order.getPrice())) {
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单单价不能为空", response, request);
 				return;
@@ -64,6 +65,37 @@ public class OrderApp {
 		}catch (Exception e) {
 			log.info(e.getMessage(),e);
 			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"下单异常",response, request);
+		}
+	}
+	
+	/**
+	 * 买家-下单
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@RequestMapping("app/member/order/deleteOrder")
+	public void deleteOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			String orderId = request.getParameter("orderId");
+			if(StringUtils.isEmpty(orderId)){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单id不能为空", response, request);
+				return;
+			}
+			Order order = (Order) orderService.queryEntityById(IOrderDao.class, orderId);
+			if(null==order){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单不存在", response, request);
+				return;
+			}
+			if(order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_PAYING){
+				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "禁止删除", response, request);
+				return;
+			}
+			orderService.deleteEntityById(IOrderDao.class, orderId);
+		} catch (ServiceException e) {
+			log.info(e.getMessage(),e);
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
+		}catch (Exception e) {
+			log.info(e.getMessage(),e);
+			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"删除顶顶那异常",response, request);
 		}
 	}
 	
