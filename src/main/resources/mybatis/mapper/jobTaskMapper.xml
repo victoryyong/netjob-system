@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IJobTaskDao">
+	<resultMap id="jobTaskMapper" type="jobTask">
+		<!-- ID -->
+		<result property="id" column="pk_id" />
+		<!-- 类名 -->
+		<result property="bean" column="c_bean" />
+		<!-- 方法名 -->
+		<result property="method" column="c_method" />
+		<!-- 定时 -->
+		<result property="expression" column="c_expression" />
+		<!-- 状态 -->
+		<result property="status" column="c_status" />
+		<!-- 说明 -->
+		<result property="remark" column="c_remark" />
+		<!-- 创建时间 -->
+		<result property="createDate" column="c_createDate" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="jobTask"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_jobtask (
+						pk_id,
+						c_bean,
+						c_method,
+						c_expression,
+						c_remark,
+						c_createDate,
+						c_createBy,
+						c_updateDate,
+						c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{bean},
+						#{method},
+						#{expression},
+						#{remark},
+						now(),
+						#{createBy},
+						now(),
+						#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="jobTask">
+		<![CDATA[ DELETE FROM t_jobtask WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_jobtask WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="jobTask">
+		UPDATE t_jobtask
+		<set>
+			c_updateDate=now(),
+			<if test="null!=bean">c_bean=#{bean},</if>
+			<if test="null!=method">c_method=#{method}, </if>
+			<if test="null!=expression">c_expression=#{expression}, </if>
+			<if test="null!=remark">c_remark=#{remark},</if>
+			<if test="null!=status">c_status=#{status},</if>
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="jobTaskMapper">
+		<![CDATA[ SELECT t.* FROM t_jobtask t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="jobTaskMapper" parameterType="jobTask">
+		 <![CDATA[ SELECT * FROM t_jobtask WHERE 1=1]]>
+		 <if test="null!=status">and c_status = #{status}</if>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="jobTaskMapper" parameterType="jobTask">
+		 <![CDATA[ SELECT * FROM t_jobtask WHERE 1=1]]>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="jobTask">
+		 <![CDATA[ SELECT count(*) FROM t_jobtask WHERE 1=1]]>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="jobTaskMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_jobtask WHERE 1=1]]>
+		  <if test="null!=status">and c_status = #{status}</if>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+</mapper>

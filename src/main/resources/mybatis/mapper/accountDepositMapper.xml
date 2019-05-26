@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thsword.netjob.dao.IAccountDepositDao">
+	<resultMap id="accountDepositMapper" type="accountDeposit">
+		<!-- ID -->
+		<result property="id" column="pk_id" />
+		<!-- 名称 -->
+		<result property="memberId" column="c_memberId" />
+		<!-- 类型 -->
+		<result property="money" column="c_money" />
+	</resultMap>
+
+	<!-- #######################CRUD begin####################### -->  
+	<!-- 增加 -->
+	<insert id="addEntity" parameterType="accountDeposit"
+		keyProperty="id">
+		<![CDATA[
+			INSERT INTO t_account_deposit (
+						pk_id,
+						c_memberId,
+						c_money,
+						c_createDate,
+						c_createBy,
+						c_updateDate,
+						c_updateBy
+		 				)
+				VALUES(
+						#{id},
+						#{memberId},
+						#{money},
+						now(),
+						#{createBy},
+						now(),
+						#{updateBy}
+				 	  	)
+		]]>
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="deleteEntity" parameterType="accountDeposit">
+		<![CDATA[ DELETE FROM t_account_deposit WHERE pk_id=#{id}]]>
+	</delete>
+
+	<!-- 根据ID删除 -->
+	<delete id="deleteEntityById" parameterType="java.lang.String">
+		<![CDATA[ DELETE FROM t_account_deposit WHERE pk_id=#{entityId}]]>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="updateEntity" parameterType="accountDeposit">
+		UPDATE t_account_deposit
+		<set>
+			c_updateDate=now(),
+		</set>
+		WHERE pk_id = #{id}
+	</update>
+
+	<!-- 根据ID查找 -->
+	<select id="queryEntityById" parameterType="java.lang.String" resultMap="accountDepositMapper">
+		<![CDATA[ SELECT t.* FROM t_account_deposit t WHERE pk_id = #{entityId} ]]>
+	</select>
+
+	<!--  条件查询查询所有 -->
+	<select id="queryAllEntity" resultMap="accountDepositMapper" parameterType="accountDeposit">
+		 <![CDATA[ SELECT * FROM t_account_deposit WHERE 1=1]]>
+		 order by c_createDate desc
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryEntity" resultMap="accountDepositMapper" parameterType="accountDeposit">
+		 <![CDATA[ SELECT * FROM t_account_deposit WHERE 1=1]]>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+	</select>
+	
+	<!--  条件查询查询所有 -->
+	<select id="queryCountEntity" resultType="java.lang.Integer" parameterType="accountDeposit">
+		 <![CDATA[ SELECT count(*) FROM t_account_deposit WHERE 1=1]]>
+	</select>
+	
+	<!-- 查询分页列表(分页) -->
+	<select id="queryPageEntity" resultMap="accountDepositMapper" parameterType="java.util.Map">
+		 <![CDATA[ SELECT * FROM t_account_deposit WHERE 1=1]]>
+	</select>
+
+	<!-- #######################CRUD end####################### -->
+	
+	
+</mapper>
