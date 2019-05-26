@@ -31,6 +31,7 @@
 		<typeAlias alias="setting" type="com.thsword.netjob.pojo.Setting" />
 		<typeAlias alias="auth" type="com.thsword.netjob.pojo.Auth" />
 		<typeAlias alias="jobTask" type="com.thsword.netjob.pojo.JobTask" />
+		<typeAlias alias="log" type="com.thsword.netjob.pojo.Log" />
 		
 		<typeAlias alias="member" type="com.thsword.netjob.pojo.app.Member" />
 		<typeAlias alias="banner" type="com.thsword.netjob.pojo.app.Banner" />
@@ -55,6 +56,7 @@
 		<typeAlias alias="accountCoin" type="com.thsword.netjob.pojo.app.AccountCoin" />
 		<typeAlias alias="accountCenter" type="com.thsword.netjob.pojo.app.AccountCenter" />
 		<typeAlias alias="accountCenterDetail" type="com.thsword.netjob.pojo.app.AccountCenterDetail" />
+		<typeAlias alias="accountDeposit" type="com.thsword.netjob.pojo.app.AccountDeposit" />
 		<typeAlias alias="cashRecord" type="com.thsword.netjob.pojo.app.CashRecord" />
 		<typeAlias alias="coinRecord" type="com.thsword.netjob.pojo.app.CoinRecord" />
 		<typeAlias alias="refundApprove" type="com.thsword.netjob.pojo.app.RefundApprove" />
@@ -68,6 +70,7 @@
 		<mapper resource="mybatis/mapper/settingMapper.xml" />
 		<mapper resource="mybatis/mapper/authMapper.xml" />
 		<mapper resource="mybatis/mapper/jobTaskMapper.xml" />
+		<mapper resource="mybatis/mapper/logMapper.xml" />
 		
 		<mapper resource="mybatis/mapper/memberMapper.xml" />
 		<mapper resource="mybatis/mapper/bannerMapper.xml" />
@@ -93,6 +96,7 @@
 		<mapper resource="mybatis/mapper/accountCoinMapper.xml" />
 		<mapper resource="mybatis/mapper/accountCenterMapper.xml" />
 		<mapper resource="mybatis/mapper/accountCenterDetailMapper.xml" />
+		<mapper resource="mybatis/mapper/accountDepositMapper.xml" />
 		<mapper resource="mybatis/mapper/cashRecordMapper.xml" />
 		<mapper resource="mybatis/mapper/coinRecordMapper.xml" />
 		<mapper resource="mybatis/mapper/refundApproveMapper.xml" />

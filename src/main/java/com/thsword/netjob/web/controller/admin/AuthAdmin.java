@@ -31,6 +31,7 @@ import com.thsword.netjob.service.ServeService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.annotation.AuthAnnotation;
+import com.thsword.netjob.web.annotation.LogControllerAnnotation;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 /**
@@ -121,6 +122,7 @@ public class AuthAdmin {
 	}
 	@AuthAnnotation(permissions="admin.serve.auth")
 	@RequestMapping("admin/serve/auth")
+	@LogControllerAnnotation(description="服务审核")
 	public void add(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		try {
 			Integer level = (Integer) request.getAttribute("userLevel");
@@ -218,6 +220,7 @@ public class AuthAdmin {
 	}
 	@AuthAnnotation(permissions="admin.brand.auth")
 	@RequestMapping("admin/brand/auth")
+	@LogControllerAnnotation(description="品牌修审核")
 	public void delete(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		try {
 			Integer level = (Integer) request.getAttribute("userLevel");
@@ -315,6 +318,7 @@ public class AuthAdmin {
 	}
 	@AuthAnnotation(permissions="admin.person.auth")
 	@RequestMapping("admin/person/auth")
+	@LogControllerAnnotation(description="身份认证审核")
 	public void authPerson(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		try {
 			Integer level = (Integer) request.getAttribute("userLevel");
@@ -417,6 +421,7 @@ public class AuthAdmin {
 	}
 	@AuthAnnotation(permissions="admin.com.auth")
 	@RequestMapping("admin/company/auth")
+	@LogControllerAnnotation(description="企业认证审核")
 	public void authCompany(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		try {
 			Integer level = (Integer) request.getAttribute("userLevel");

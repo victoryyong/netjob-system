@@ -14,7 +14,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.ITokenDao;
 import com.thsword.netjob.dao.IUserDao;
@@ -54,7 +53,7 @@ public class UserAdmin {
 	* @throws
 	 */
 	@RequestMapping("admin/login")
-	//@LogControllerAnnotation(description="用户登录")
+	@LogControllerAnnotation(description="用户登录")
 	public void login(HttpServletRequest request,HttpServletResponse response,User user) throws Exception{
 		try {
 			String username = user.getName();
@@ -258,10 +257,6 @@ public class UserAdmin {
 			user.setLogins(0);
 			user.setAdmin(false);
 			userService.addEntity(IUserDao.class, user);
-			user.setPassword("");
-			JSONArray array = new JSONArray();
-			array.add(JSONObject.toJSON(user));
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -304,9 +299,6 @@ public class UserAdmin {
 			user.setPassword(null);
 			userService.updateEntity(IUserDao.class, user);
 			user.setName(username);
-			JSONArray array = new JSONArray();
-			array.add(JSONObject.toJSON(user));
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -402,7 +394,6 @@ public class UserAdmin {
 			String userId = (String) request.getAttribute("userId");
 			boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			String userIds = request.getParameter("userIds");
-			JSONArray array = new JSONArray();
 			if(StringUtils.isEmpty(userId)){
 				JsonResponseUtil.codeResponse(ErrorUtil.REQUEST_INVALID_PARAM, response,request);
 				return;
@@ -415,7 +406,6 @@ public class UserAdmin {
 						if(userId.equals(deleteId)||isAdmin){
 							tempUser = (User) userService.queryEntityById(IUserDao.class, deleteId);
 							if(StringUtils.isEmpty(tempUser.isAdmin())||!tempUser.isAdmin()){
-								array.add(JSONObject.toJSON(tempUser));
 								userService.deleteEntityById(IUserDao.class, deleteId);
 								userService.deleteUserRole(deleteId);
 							}
@@ -429,7 +419,6 @@ public class UserAdmin {
 					}
 				}
 			}
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();

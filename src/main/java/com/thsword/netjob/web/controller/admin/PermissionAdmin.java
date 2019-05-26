@@ -129,22 +129,10 @@ public class PermissionAdmin {
 				JsonResponseUtil.codeResponse(ErrorUtil.PERMISSION_NAME_EXSIST, response,request);
 				return;
 			}
-			/*if(!StringUtils.isEmpty(permission.getCode())){
-				temp = new Permission();
-				temp.setCode(permission.getCode());
-				temp = (Permission) userService.queryEntity(IPermissionDao.class, temp);
-				if (null!=temp) {
-					JsonResponseUtil.codeResponse(ErrorUtil.PERMISSION_CODE_EXSIST, response,request);
-					return;
-				}
-			}*/
 			permission.setId(UUIDUtil.get32UUID());
 			permission.setCreateBy(userId);
 			permission.setCreateDate(new Date());
 			userService.addEntity(IPermissionDao.class, permission);
-			JSONArray array = new JSONArray();
-			array.add(JSONObject.toJSON(permission));
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -179,9 +167,6 @@ public class PermissionAdmin {
 				return;
 			}
 			userService.deleteEntityById(IPermissionDao.class, permissionId);
-			JSONArray array = new JSONArray();
-			array.add(JSONObject.toJSON(permission));
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -240,9 +225,6 @@ public class PermissionAdmin {
 				}
 			}*/
 			userService.updateEntity(IPermissionDao.class, permission);
-			JSONArray array = new JSONArray();
-			array.add(JSONObject.toJSON(permission));
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();

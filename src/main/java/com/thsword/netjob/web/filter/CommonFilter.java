@@ -1,14 +1,22 @@
 package com.thsword.netjob.web.filter;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 
@@ -60,7 +68,21 @@ public class CommonFilter extends HttpServlet implements HandlerInterceptor {
 		if (null != logUrls && logUrls.length >= 1) {
 			for (String logUrl : logUrls) {
 				if (url.indexOf(logUrl) >= 0) {
-					log.info("logBegin Request[" + url + "]");
+					Map<String,Object> maps = new HashMap<String, Object>();
+					Enumeration em = request.getParameterNames();
+					 while (em.hasMoreElements()) {
+					    String name = (String) em.nextElement();
+					    String value = request.getParameter(name);
+					    if(name.equals("token")){
+					    	continue;
+					    }
+				    	if(StringUtils.isEmpty(value)){
+				    		maps.put(name, null);
+				    	}else{
+				    		maps.put(name, value);
+				    	}
+					}
+					log.info(">>>>>>> logBegin Request[" + url + "]-->params is["+JSONObject.toJSONString(maps)+"]");
 				}
 			}
 		}

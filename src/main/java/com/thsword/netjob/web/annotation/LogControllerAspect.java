@@ -4,6 +4,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +24,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.ILogDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.Log;
@@ -47,9 +51,6 @@ public class  LogControllerAspect {
     // 前置通知 用于拦截contorller层记录 日志的操作  
     @Before("controllerAspect()")  
     public void doBefore(JoinPoint joinPoint) {  
-    		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder  
-                .getRequestAttributes()).getRequest();
-        	logger.info("=====请求开始====="+request.getRequestURI());  
     }
     
     
@@ -149,21 +150,31 @@ public class  LogControllerAspect {
         	log.setUsername(username);
         	log.setUserId(userId);
             log.setId(UUIDUtil.get32UUID());
-            String params = (String) request.getAttribute("params");
-            JSONArray array = null;
-            if(!StringUtils.isEmpty(params)){
-            	array = JSONArray.parseArray(params);
-            }
+            
+            Map<String,Object> maps = new HashMap<String, Object>();
+			Enumeration em = request.getParameterNames();
+			 while (em.hasMoreElements()) {
+			    String name = (String) em.nextElement();
+			    String value = request.getParameter(name);
+			    if(name.equals("token")){
+			    	continue;
+			    }
+		    	if(StringUtils.isEmpty(value)){
+		    		maps.put(name, null);
+		    	}else{
+		    		maps.put(name, value);
+		    	}
+			}
+			 
             String content ="";
+            String description=getControllerMethodDescription(joinPoint);
             if(status == 1){
-            	content = "管理员: "+username +" "+getControllerMethodDescription(joinPoint)+" 成功!";
+            	content = "管理员: "+username+"->"+description+" 成功!";
             	if(!StringUtils.isEmpty(subject)&&subject.equals(Global.JWT_SUBJECT_ADMIN))
-            	content = "管理员: "+username +" "+getControllerMethodDescription(joinPoint)+" 成功!";
+            	content = "管理员: "+username+"->"+description+" 成功!";
             	if(!StringUtils.isEmpty(subject)&&subject.equals(Global.JWT_SUBJECT_APP))
-        		content = "会员: "+username +" "+getControllerMethodDescription(joinPoint)+" 成功!";
-            	if(null!=array){
-            		content+="params:"+array.toJSONString();
-            	}
+        		content = "会员: "+username+"->"+description+" 成功!";
+            	content+="param is "+JSONObject.toJSONString(maps);
             	log.setContent(content);  
             }else{
             	if(e!=null){
@@ -180,12 +191,10 @@ public class  LogControllerAspect {
         		content = "管理员: "+username +" "+getControllerMethodDescription(joinPoint)+" 失败!";
             	if(!StringUtils.isEmpty(subject)&&subject.equals(Global.JWT_SUBJECT_APP))
             	content = "会员: "+username +" "+getControllerMethodDescription(joinPoint)+" 失败!";
-            	if(null!=array){
-            		content+="params:"+array.toJSONString();
-            	}
+            	content+="param is "+JSONObject.toJSONString(maps);
             	log.setContent(content);  
             }
-            log.setTitle(getControllerMethodDescription(joinPoint));  
+            log.setTitle(description);  
             log.setIp(IPUtil.getRemoteHost(request));  
             log.setCreateDate(new Date());  
             log.setStatus(status);  

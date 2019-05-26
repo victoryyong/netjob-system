@@ -21,6 +21,7 @@ import com.thsword.netjob.service.MenuService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.annotation.AuthAnnotation;
+import com.thsword.netjob.web.annotation.LogControllerAnnotation;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 
@@ -95,6 +96,7 @@ public class MenuAdmin {
 	 */
 	@AuthAnnotation(permissions = "admin.menu.add")
 	@RequestMapping("admin/menu/add")
+	@LogControllerAnnotation(description="添加菜单")
 	public void add(HttpServletRequest request, HttpServletResponse response, Menu menu) throws Exception {
 		try {
 			if (StringUtils.isEmpty(menu.getName())) {
@@ -150,6 +152,7 @@ public class MenuAdmin {
 	 */
 	@AuthAnnotation(permissions = "admin.menu.edit")
 	@RequestMapping("admin/menu/edit")
+	@LogControllerAnnotation(description="编辑菜单")
 	public void edit(HttpServletRequest request, HttpServletResponse response, Menu menu) throws Exception {
 		try {
 			if (StringUtils.isEmpty(menu.getId())) {
@@ -182,6 +185,7 @@ public class MenuAdmin {
 	 * @time:2018年5月10日 下午9:33:16
 	 */
 	@RequestMapping("admin/menu/delete")
+	@LogControllerAnnotation(description="删除菜单")
 	public void delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			String menuId = request.getParameter("menuId");

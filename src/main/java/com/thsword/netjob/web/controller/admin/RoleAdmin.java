@@ -129,9 +129,6 @@ public class RoleAdmin {
 			role.setCreateDate(new Date());
 			role.setId(UUIDUtil.get32UUID());
 			userService.addEntity(IRoleDao.class, role);
-			JSONArray array = new JSONArray();
-			array.add(JSONObject.toJSON(role));
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,9 +171,6 @@ public class RoleAdmin {
 				return;
 			}
 			userService.updateEntity(IRoleDao.class, role);
-			JSONArray array = new JSONArray();
-			array.add(JSONObject.toJSON(role));
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -250,7 +244,6 @@ public class RoleAdmin {
 				userService.deleteRolePermission(roleId);
 				array.add(JSONObject.toJSON(tempRole));
 			}
-			request.setAttribute("params", JSONObject.toJSONString(array));
 			JsonResponseUtil.successCodeResponse(response, request);
 		} catch (Exception e) {
 			e.printStackTrace();

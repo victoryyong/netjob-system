@@ -20,6 +20,7 @@ import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.annotation.AuthAnnotation;
+import com.thsword.netjob.web.annotation.LogControllerAnnotation;
 import com.thsword.utils.page.Page;
 /**
  * 用户管理
@@ -73,6 +74,7 @@ public class MemberAdmin {
 	}
 	@AuthAnnotation(permissions="admin.member.edit")
 	@RequestMapping("admin/member/edit")
+	@LogControllerAnnotation(description="编辑会员")
 	public void changeStatus(HttpServletRequest request,HttpServletResponse response,Member member) throws Exception{
 		try {
 			Integer level = (Integer) request.getAttribute("userLevel");

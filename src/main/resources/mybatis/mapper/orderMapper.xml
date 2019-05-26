@@ -146,6 +146,11 @@
 	<select id="queryAllEntity" resultMap="orderMapper" parameterType="order">
 		 <![CDATA[ SELECT * FROM t_order WHERE 1=1]]>
 		 <if test="null!=citycode and ''!=citycode">and c_status = #{status}</if>
+		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
+		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
+		 <if test="null!=sellerId and ''!=sellerId">and c_sellerId = #{sellerId}</if>
+		 <if test="null!=buyerStatus and ''!=buyerStatus">and c_buyerStatus = #{buyerStatus}</if>
+		 <if test="null!=sellerStatus and ''!=sellerStatus">and sellerStatus = #{sellerStatus}</if>
 		 order by c_createDate asc
 	</select>
 	

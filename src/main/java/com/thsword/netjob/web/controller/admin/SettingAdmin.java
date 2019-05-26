@@ -79,6 +79,7 @@ public class SettingAdmin {
 	@SuppressWarnings("unchecked")
 	@AuthAnnotation(isAdmin=ISADMIN.YES)
 	@RequestMapping("admin/setting/add")
+	@LogControllerAnnotation(description="新增系统配置")
 	public void add(HttpServletRequest request,HttpServletResponse response,Setting setting)throws Exception{
 		try {
 			String userId = (String) request.getAttribute("userId");
@@ -119,6 +120,7 @@ public class SettingAdmin {
 	@SuppressWarnings("unchecked")
 	@AuthAnnotation(isAdmin=ISADMIN.YES)
 	@RequestMapping("admin/setting/edit")
+	@LogControllerAnnotation(description="编辑系统配置")
 	public void edit(HttpServletRequest request,HttpServletResponse response,Setting setting)throws Exception{
 		try {
 			if(StringUtils.isEmpty(setting.getId())||

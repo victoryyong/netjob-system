@@ -19,6 +19,7 @@ import com.thsword.netjob.pojo.Dict;
 import com.thsword.netjob.service.DictService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.web.annotation.LogControllerAnnotation;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 /**
@@ -52,6 +53,7 @@ public class DictAdmin {
 		}
 	}
 	@RequestMapping("admin/dict/add")
+	@LogControllerAnnotation(description="添加字典")
 	public void add(HttpServletRequest request,HttpServletResponse response,Dict dict) throws Exception{
 		try {
 			String userId = request.getAttribute("userId")+"";
@@ -85,6 +87,7 @@ public class DictAdmin {
 	}
 	
 	@RequestMapping("admin/dict/edit")
+	@LogControllerAnnotation(description="编辑字典")
 	public void edit(HttpServletRequest request,HttpServletResponse response,Dict dict) throws Exception{
 		try {
 			if(StringUtils.isEmpty(dict.getId())){
@@ -100,6 +103,7 @@ public class DictAdmin {
 	}
 	
 	@RequestMapping("admin/dict/delete")
+	@LogControllerAnnotation(description="删除字典")
 	public void delete(HttpServletRequest request,HttpServletResponse response,Dict dict) throws Exception{
 		try {
 			if(StringUtils.isEmpty(dict.getId())){

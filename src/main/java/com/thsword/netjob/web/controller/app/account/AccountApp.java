@@ -39,10 +39,11 @@ import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.util.RedisUtils;
 import com.thsword.netjob.util.WxpayAppUtil;
-import com.thsword.netjob.util.alipay.Alipay;
 import com.thsword.netjob.util.alipay.AlipayUtils;
 import com.thsword.netjob.util.wxpay.WXPay;
 import com.thsword.netjob.util.wxpay.WXPayUtil;
+import com.thsword.netjob.web.annotation.AccountCheckAnnotation;
+import com.thsword.netjob.web.annotation.AccountCheckAnnotation.CHECKTYPE;
 import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.ip.IPUtil;
 import com.thsword.utils.object.UUIDUtil;
@@ -515,6 +516,7 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/preSwap")
+	@AccountCheckAnnotation(type=CHECKTYPE.ACTIVE)
 	public void preSwapCoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			String memberId = request.getAttribute("memberId")+"";
@@ -620,6 +622,7 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/preReward")
+	@AccountCheckAnnotation(type=CHECKTYPE.ACTIVE)
 	public void preRewardCoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			String memberId = request.getAttribute("memberId")+"";

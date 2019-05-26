@@ -22,6 +22,7 @@ import com.thsword.netjob.service.BannerService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.annotation.AuthAnnotation;
+import com.thsword.netjob.web.annotation.LogControllerAnnotation;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 /**
@@ -105,6 +106,7 @@ public class BannerAdmin {
 	 */
 	@AuthAnnotation(permissions="admin.banner.add")
 	@RequestMapping("admin/banner/add")
+	@LogControllerAnnotation(description="添加广告")
 	public void add(HttpServletRequest request,HttpServletResponse response,Banner banner) throws Exception{
 		try {
 			String userId = request.getAttribute("userId")+"";
@@ -173,6 +175,7 @@ public class BannerAdmin {
 	 */
 	@AuthAnnotation(permissions="admin.banner.edit")
 	@RequestMapping("admin/banner/edit")
+	@LogControllerAnnotation(description="编辑广告")
 	public void edit(HttpServletRequest request,HttpServletResponse response,Banner banner)throws Exception{
 		try {
 			Integer level = (Integer) request.getAttribute("userLevel");
@@ -200,6 +203,7 @@ public class BannerAdmin {
 	}
 	@AuthAnnotation(permissions="admin.banner.delete")
 	@RequestMapping("admin/banner/delete")
+	@LogControllerAnnotation(description="删除广告")
 	public void delete(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		try {
 			//JSONArray array = new JSONArray();
