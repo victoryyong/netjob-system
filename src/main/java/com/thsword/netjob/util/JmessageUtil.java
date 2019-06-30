@@ -3,29 +3,23 @@ package com.thsword.netjob.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
-
-import com.alibaba.fastjson.JSONObject;
-import com.thsword.netjob.global.Global;
-import com.thsword.netjob.pojo.app.Member;
-import com.thsword.netjob.web.filter.AdminTokenFilter;
-
-import cn.jiguang.common.ServiceHelper;
+import lombok.extern.slf4j.Slf4j;
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jmessage.api.JMessageClient;
 import cn.jmessage.api.common.model.RegisterInfo;
 import cn.jmessage.api.user.UserInfoResult;
 
+import com.thsword.netjob.global.Global;
+import com.thsword.netjob.pojo.app.Member;
+
 /**
  * IM 极光IM
  * @author Lenovo
  *
  */
+@Slf4j
 public class JmessageUtil {
-	private static final Log log = LogFactory.getLog(AdminTokenFilter.class);
 	private static String appId="";
 	private static String secretKey="";
 	static{

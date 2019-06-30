@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,61 +15,76 @@ import java.util.Date;
 * @date 2017年5月13日 下午3:26:16 
 *
  */
+@ApiModel(value="身份认证 ")
 public class AuthPerson implements Serializable {
 
 	private static final long serialVersionUID = -6756090072891967330L;
+	@ApiModelProperty(value="id")
 	private String id;
 	/**
 	 * type(1-身份证 2-其他)
 	 */
+	@ApiModelProperty(value="type(1-身份证 2-其他)")
 	private Integer type;
 	/**
 	 * 真实名称
 	 */
+	 @ApiModelProperty(value="真实名称")
 	private String realName;
 	/**
 	 * 名称
 	 */
+	 @ApiModelProperty(value="名称")
 	private String name;
 	/**
 	 * 认证号码
 	 */
+	 @ApiModelProperty(value="认证号码")
 	private String code;
 	/**
-	 * 
+	 * 城市code
 	 */
+	 @ApiModelProperty(value="城市code")
 	private String citycode;
 	/**
 	 * 用户ID
 	 */
+	 @ApiModelProperty(value="用户ID")
 	private String memberId;
 	/**
 	 * 文件
 	 */
+	 @ApiModelProperty(value="文件")
 	private String links;
 	/**
-	 * 
+	 * 是否公开（0-否 1-是）
 	 */
+	 @ApiModelProperty(value="是否公开（0-否 1-是）")
 	private String isPublic;
 	/**
-	 * 状态（0-未通过 1-审核通过）
+	 * 状态（1-未审核 2-审核通过 3-审核未通过）
 	 */
+	 @ApiModelProperty(value="状态（1-未审核 2-审核通过 3-审核未通过）")
 	private Integer status;
 	/**
 	 * 创建时间
 	 */
+	 @ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 创建人
 	 */
+	 @ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新时间
 	 */
+	 @ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 更新人
 	 */
+	 @ApiModelProperty(value="value")
 	private String updateBy;
 	public String getId() {
 		return id;

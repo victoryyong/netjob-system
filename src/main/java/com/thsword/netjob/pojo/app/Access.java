@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,41 +15,51 @@ import java.util.Date;
 * @date 2017年5月13日 下午3:26:16 
 *
  */
+@ApiModel("认证")
 public class Access implements Serializable {
 
 	private static final long serialVersionUID = -6756090072891967330L;
+	@ApiModelProperty(value="ID")
 	private String id;
 	/**
 	 * 应用名称
 	 */
+	@ApiModelProperty(value="应用名称")
 	private String name;
 	/**
 	 * 应用appid
 	 */
+	 @ApiModelProperty(value="应用appid")
 	private String appId;
 	/**
 	 * 应用secretKey
 	 */
+	 @ApiModelProperty(value="应用appid")
 	private String secretKey;
 	/**
 	 * 应用标志类型 WEB/APP/ADMIN
 	 */
+	 @ApiModelProperty(value="应用标志类型 WEB/APP/ADMIN")
 	private String type;
 	/**
 	 * 创建时间
 	 */
+	 @ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 创建人
 	 */
+	 @ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新时间
 	 */
+	 @ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 更新人
 	 */
+	 @ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;

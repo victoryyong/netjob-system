@@ -1,56 +1,72 @@
 package com.thsword.netjob.pojo.app;
 
-import java.util.Date;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+@ApiModel(value="评论")
 public class Comment {
+	@ApiModelProperty(value="id")
 	private String id;
 	/**
 	 * 业务ID
 	 */
+	@ApiModelProperty(value="业务ID")
 	private String bizId;
 	/**
 	 * 回复数
 	 */
+	@ApiModelProperty(value="回复数")
 	private Integer replys;
 	/**
 	 * 评论人ID
 	 */
+	@ApiModelProperty(value="评论人ID")
 	private String memberId;
 	/**
 	 * 评论人名称
 	 */
+	@ApiModelProperty(value="评论人名称")
 	private String memberName;
 	/**
-	 * 
+	 * 会员图片
 	 */
+	@ApiModelProperty(value="会员图片")
 	private String memberImage;
 	/**
 	 * 评论内容
 	 */
+	@ApiModelProperty(value="评论内容")
 	private String content;
 	/**
 	 * 评论图片
 	 */
+	@ApiModelProperty(value="评论图片")
 	private String image;
 	/**
 	 * 父节点
 	 */
+	@ApiModelProperty(value="父节点")
 	private String parentId;
 	/**
 	 * 创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 创建人
 	 */
+	@ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新时间
 	 */
+	@ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 更新人
 	 */
+	@ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;

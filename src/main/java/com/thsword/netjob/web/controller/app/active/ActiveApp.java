@@ -1,5 +1,10 @@
 package com.thsword.netjob.web.controller.app.active;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -25,6 +31,7 @@ import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 
+@Api(tags="NETJOB-ACTIVE",description="动态接口")
 @Controller
 public class ActiveApp {
 	@Resource(name = "activeService")
@@ -32,18 +39,21 @@ public class ActiveApp {
 
 	
 	@RequestMapping("app/member/active/add")
-	public void add(HttpServletRequest request, HttpServletResponse response,Active active) throws Exception {
+	@ApiOperation(value="添加个人动态",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="title",value="标题",dataType="string", paramType = "query"),
+		@ApiImplicitParam(name="links",value="地址连接集合格式[\"\",\"\"]",dataType="string", paramType = "query")
+	})
+	public void add(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String title,
+			@RequestParam String links
+			) throws Exception {
 		try {
 			String memberId = request.getAttribute("memberId")+"";
 			String citycode = request.getAttribute("citycode")+"";
-			if (StringUtils.isEmpty(active.getTitle())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "标题不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(active.getLinks())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "文件不能为空", response, request);
-				return;
-			}
+			Active active = new Active();
+			active.setTitle(title);
+			active.setLinks(links);
 			active.setId(UUIDUtil.get32UUID());
 			active.setMemberId(memberId);
 			active.setCreateBy(memberId);
@@ -79,8 +89,17 @@ public class ActiveApp {
 	}
 	
 	@RequestMapping("app/visitor/active/list")
-	public void list(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
+	@ApiOperation(value="查询个人动态",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="currentPage",value="当前页",dataType="int", paramType = "query",defaultValue="1"),
+		@ApiImplicitParam(name="pageSize",value="页大小",dataType="int", paramType = "query",defaultValue="10"),
+	})
+	public void list(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required=false,defaultValue="10") int pageSize,
+			@RequestParam(required=false,defaultValue="1") int currentPage
+			) throws Exception {
 		try {
+			Page page = new Page(currentPage,pageSize);
 			String memberId = request.getParameter("memberId");
 			if(StringUtils.isEmpty(memberId)){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "用户ID不能为空", response, request);

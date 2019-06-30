@@ -16,14 +16,13 @@ import com.thsword.netjob.dao.IOrderAccountDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Account;
 import com.thsword.netjob.pojo.app.AccountCoin;
+import com.thsword.netjob.pojo.app.AccountDeposit;
 import com.thsword.netjob.pojo.app.CashRecord;
 import com.thsword.netjob.pojo.app.CoinRecord;
 import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.pojo.app.News;
 import com.thsword.netjob.pojo.app.OrderAccount;
 import com.thsword.netjob.service.AccountService;
-import com.thsword.netjob.util.ErrorUtil;
-import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.object.UUIDUtil;
 @Service(value = "accountService")
@@ -48,7 +47,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 	}
 	@Transactional
 	@Override
-	public void rechargeAccount(String out_trade_no) throws Exception{
+	public void rechargeAccount(String out_trade_no){
 		OrderAccount order = new OrderAccount();
 		order.setTradeNo(out_trade_no);
 		order = (OrderAccount) orderAccountDao.queryEntity(order);
@@ -111,7 +110,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 	
 	@Transactional
 	@Override
-	public void rechargeAccountCoin(String tradeNo) throws Exception{
+	public void rechargeAccountCoin(String tradeNo){
 		OrderAccount order = new OrderAccount();
 		order.setTradeNo(tradeNo);
 		order = (OrderAccount) orderAccountDao.queryEntity(order);
@@ -176,7 +175,66 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 	
 	@Transactional
 	@Override
-	public void swapAccountCoin(String tradeNo) throws Exception{
+	public void rechargeAccountDeposit(String out_trade_no){
+		OrderAccount order = new OrderAccount();
+		order.setTradeNo(out_trade_no);
+		order = (OrderAccount) orderAccountDao.queryEntity(order);
+		if(null==order){
+			throw new ServiceException("订单不存在");
+		}
+		if(order.getStatus()!=Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1){
+			throw new ServiceException("订单已关闭");
+		}
+		String memberId = order.getMemberId();
+		BigDecimal money= order.getTotal_fee();
+		Member member = (Member) memberDao.queryEntityById(order.getMemberId());
+		AccountDeposit ac = new AccountDeposit();
+		ac.setMemberId(memberId);
+		ac = (AccountDeposit) accountDao.queryEntity(ac);
+		if(null!=ac){
+			throw new ServiceException("已缴纳保证金");
+		}
+		ac=new AccountDeposit();
+		ac.setMoney(money);
+		ac.setCreateBy(memberId);
+		ac.setUpdateBy(memberId);
+		ac.setId(UUIDUtil.get32UUID());
+		ac.setMemberId(memberId);
+		accountDao.addEntity(ac);
+		//添加动态
+		News news = new News();
+		news.setId(UUIDUtil.get32UUID());
+		news.setMemberId(memberId);
+		news.setType(Global.SYS_MEMBER_NEWS_TYPE_2);
+		news.setCitycode(member.getCitycode());
+		news.setContent("用户 "+member.getName()+" 充值保证金"+money+"元成功");
+		news.setCreateBy(member.getId());
+		news.setUpdateBy(member.getId());
+		newsDao.addEntity(news);
+		//添加交易记录
+		CashRecord record = new CashRecord();
+		record.setId(UUIDUtil.get32UUID());
+		record.setMemberId(memberId);
+		record.setRecordType(Global.SYS_MEMBER_ACCOUNT_RECORD_TYPE_7);
+		record.setIsIn(Global.SYS_MEMBER_ACCOUNT_ISIN_1);
+		record.setCitycode(member.getCitycode());
+		record.setIncome(money);
+		record.setTradeNo(out_trade_no);
+		record.setOrderId(order.getId());
+		record.setCitycode(member.getCitycode());
+		record.setCreateBy(member.getId());
+		record.setUpdateBy(member.getId());
+		record.setTargetId(memberId);
+		record.setTargetName(member.getName());
+		cashRecordDao.addEntity(record);
+		
+		order.setStatus(Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_2);
+		orderAccountDao.updateEntity(order);
+	}
+	
+	@Transactional
+	@Override
+	public void swapAccountCoin(String tradeNo) {
 		OrderAccount order = new OrderAccount();
 		order.setTradeNo(tradeNo);
 		order = (OrderAccount) orderAccountDao.queryEntity(order);
@@ -263,7 +321,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 	
 	@Override
 	@Transactional
-	public void reward(String tradeNo) throws Exception{
+	public void reward(String tradeNo){
 		OrderAccount order = new OrderAccount();
 		order.setTradeNo(tradeNo);
 		order = (OrderAccount) orderAccountDao.queryEntity(order);
@@ -279,17 +337,17 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		Member member = (Member) memberDao.queryEntityById(memberId);
 		Member targetMember = (Member) memberDao.queryEntityById(targetId);	
 		if(null==targetMember){
-			throw new Exception("收款方不存在");
+			throw new ServiceException("收款方不存在");
 		}
 		//付款方扣减
 		AccountCoin delAcc = new AccountCoin();
 		delAcc.setMemberId(memberId);
 		delAcc = (AccountCoin) accountCoinDao.queryEntity(delAcc);
 		if(null==delAcc){
-			throw new Exception("账户不存在");
+			throw new ServiceException("账户不存在");
 		}
 		if(delAcc.getNum()<numFormat){
-			throw new Exception("余额不足");
+			throw new ServiceException("余额不足");
 		}
 		delAcc.setNum(delAcc.getNum()-numFormat);
 		delAcc.setUpdateBy(memberId);
@@ -352,11 +410,11 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		
 	}
 	@Override
-	public void updatePassword(Account acc) throws Exception{
+	public void updatePassword(Account acc){
 		accountDao.updatePassword(acc);
 	}
 	@Override
-	public Account queryPwdMember(String memberId) throws Exception{
+	public Account queryPwdMember(String memberId){
 		return accountDao.queryPwdMember(memberId);
 	}
 }

@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import java.util.List;
 
@@ -14,67 +17,86 @@ import com.thsword.netjob.global.Global;
 
  * @time:2018年5月7日 下午6:27:12
  */
+@ApiModel(value="服务、需求类型")
 public class Menu {
 	/**
 	 * 主键
 	 */
+	@ApiModelProperty(value="主键")
 	private String id;
 	/**
 	 * 父元素ID 
 	 */
+	@ApiModelProperty(value="父元素ID ")
 	private String parentId;
 	/**
 	 * 类型名称
 	 */
+	@ApiModelProperty(value="类型名称")
 	private String name;
 	/**
 	 * 图标
 	 */
+	@ApiModelProperty(value="图标")
 	private String icon;
+	 /**
+	 * 无用属性
+	 */
+	@ApiModelProperty(value="图标")
 	private String subicon;
 	/**
 	 * 几级菜单
 	 */
+	@ApiModelProperty(value="几级菜单")
 	private Integer level;
 	/**
 	 * 状态
 	 */
+	@ApiModelProperty(value="状态")
 	private Integer status;
 	/**
 	 * 点击数
 	 */
+	@ApiModelProperty(value="点击数")
 	private String clicks;
 	/**
 	 * 是否热门
 	 */
+	@ApiModelProperty(value="是否热门")
 	private Boolean hot;
 	/**
 	 * 是否新加
 	 */
+	@ApiModelProperty(value="是否新加")
 	private Boolean fresh;
 	/**
 	 * 排序号
 	 */
+	@ApiModelProperty(value="排序号")
 	private int sort;
 	/**
 	 * 子集
 	 */
+	@ApiModelProperty(value="子集")
 	private List<Menu> children;
 	/**
 	 * 创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 创建人
 	 */
+	@ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新时间
-	 */
+	 */@ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 更新人
 	 */
+	 @ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;

@@ -7,8 +7,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +25,10 @@ import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.page.Page;
 
 @Controller
+@Log4j2
 public class OrderApp {
 	@Resource(name = "orderService")
 	OrderService orderService;
-	private static final Log log = LogFactory.getLog(OrderApp.class);
 
 	/**
 	 * 买家-下单

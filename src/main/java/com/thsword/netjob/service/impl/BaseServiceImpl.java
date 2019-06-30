@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 import com.thsword.netjob.service.IBaseService;
+import com.thsword.netjob.web.exception.ServiceException;
 
 /**
  * 基本接口
@@ -26,7 +27,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param obj
      * @return
      */
-    public Object addEntity(Class<?> clazz, Object obj) throws Exception{
+    public Object addEntity(Class<?> clazz, Object obj) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -38,8 +39,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-            //e.printStackTrace();
-            throw e;
+            
+        	throw new ServiceException("addEntity exception");
         }
         return null;
     }
@@ -51,7 +52,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param obj
      * @return
      */
-    public boolean deleteEntity(Class<?> clazz, Object obj) throws Exception{
+    public boolean deleteEntity(Class<?> clazz, Object obj) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -64,8 +65,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+        	throw new ServiceException("deleteEntity exception");
         }
         return false;
     }
@@ -77,7 +78,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param entityId
      * @return
      */
-    public boolean deleteEntityById(Class<?> clazz, final String entityId) throws Exception{
+    public boolean deleteEntityById(Class<?> clazz, final String entityId) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -90,8 +91,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+        	throw new ServiceException("deleteEntityById exception");
         }
         return false;
     }
@@ -103,7 +104,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param obj
      * @return
      */
-    public boolean updateEntity(Class<?> clazz, Object obj) throws Exception{
+    public boolean updateEntity(Class<?> clazz, Object obj) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -116,8 +117,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+        	throw new ServiceException("updateEntity exception");
         }
         return false;
     }
@@ -129,7 +130,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param entityId
      * @return
      */
-    public Object queryEntityById(Class<?> clazz, final String entityId) throws Exception{
+    public Object queryEntityById(Class<?> clazz, final String entityId) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -141,8 +142,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+        	throw new ServiceException("queryEntityById exception");
         }
         return null;
     }
@@ -153,7 +154,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param clazz
      * @return
      */
-    public List<?> queryAllEntity(Class<?> clazz,Object object) throws Exception{
+    public List<?> queryAllEntity(Class<?> clazz,Object object) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -164,8 +165,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+        	throw new ServiceException("queryAllEntity exception");
         }
         return null;
     }
@@ -176,7 +177,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param clazz
      * @return
      */
-    public Object queryEntity(Class<?> clazz,Object object) throws Exception{
+    public Object queryEntity(Class<?> clazz,Object object) throws RuntimeException{
     	try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -188,8 +189,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+        	throw new ServiceException("queryEntity exception");
         }
         return null;
     }
@@ -200,7 +201,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param clazz
      * @return
      */
-    public Integer queryCountEntity(Class<?> clazz,Object object) throws Exception{
+    public Integer queryCountEntity(Class<?> clazz,Object object) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -211,8 +212,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+        	throw new ServiceException("queryCountEntity exception");
         }
         return null;
     }
@@ -223,7 +224,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
      * @param clazz
      * @return
      */
-    public List<?> queryPageEntity(Class<?> clazz,Object object) throws Exception{
+    public List<?> queryPageEntity(Class<?> clazz,Object object) throws RuntimeException{
         try {
             context = this.getApplicationContext();
             if (null != context) {
@@ -234,8 +235,8 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 //e.printStackTrace();
-            throw e;
+        	 
+            throw new ServiceException("queryPageEntity exception");
         }
         return null;
     }

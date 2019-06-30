@@ -1,5 +1,12 @@
 package com.thsword.netjob.web.controller.app.account;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -12,12 +19,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Controller;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IAccountCoinDao;
@@ -35,49 +43,42 @@ import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.pojo.app.OrderAccount;
 import com.thsword.netjob.service.AccountService;
 import com.thsword.netjob.service.MemberService;
-import com.thsword.netjob.util.ErrorUtil;
-import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.util.RedisUtils;
 import com.thsword.netjob.util.WxpayAppUtil;
 import com.thsword.netjob.util.alipay.AlipayUtils;
 import com.thsword.netjob.util.wxpay.WXPay;
 import com.thsword.netjob.util.wxpay.WXPayUtil;
-import com.thsword.netjob.web.annotation.AccountCheckAnnotation;
-import com.thsword.netjob.web.annotation.AccountCheckAnnotation.CHECKTYPE;
+import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
+import com.thsword.netjob.web.swagger.SwaggerGlobalKey;
+import com.thsword.netjob.web.swagger.model.ApiJsonObject;
+import com.thsword.netjob.web.swagger.model.ApiJsonProperty;
+import com.thsword.netjob.web.swagger.model.ApiJsonResult;
 import com.thsword.utils.ip.IPUtil;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 
-@Controller
+@RestController
+@Api(tags="NETJOB-ACCOUNT",description="账户接口")
+@Log4j2
 public class AccountApp {
 	@Resource(name = "accountService")
 	AccountService accountService;
 	@Resource(name = "memberService")
 	MemberService memberService;
-	private static final Log log = LogFactory.getLog(AccountApp.class);
 	
 	@RequestMapping("app/member/account/hasPassword")
-	public void hasPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			boolean flag = false;
-			String memberId = request.getAttribute("memberId")+"";
-			Account acc = accountService.queryPwdMember(memberId);
-			if(null!=acc&&!StringUtils.isEmpty(acc.getPassword())){
-				flag = true;
-			}
-			JSONObject obj = new JSONObject();
-			obj.put("hasSetPassword", flag);
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (ServiceException e) {
-			e.printStackTrace();
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			e.printStackTrace();
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询异常",response, request);
+	@ApiOperation(value="是否设置支付密码",httpMethod="POST")
+	public JSONObject hasPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		boolean flag = false;
+		String memberId = request.getAttribute("memberId")+"";
+		Account acc = accountService.queryPwdMember(memberId);
+		if(null!=acc&&!StringUtils.isEmpty(acc.getPassword())){
+			flag = true;
 		}
+		JSONObject obj = new JSONObject();
+		obj.put("hasSetPassword", flag);
+		return obj;
 	}
 	
 	/**
@@ -86,47 +87,37 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/setPassword")
-	public void setPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String password = request.getParameter("password");
-			if(StringUtils.isEmpty(password)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"密码不能为空", response, request);
-				return;
-			}
-			/*if(!memberService.hasPhoneAuth(memberId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请进行手机认证", response, request);
-				return;
-			}*/
-			Account acc = new Account();
+	@ApiOperation(value="设置支付密码",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="password",value="密码",dataType="string", paramType = "query")
+	})
+	@ApiJsonObject(name = "manager-checkManager", value = {
+            @ApiJsonProperty(name=SwaggerGlobalKey.ACCOUNT_NAME_KEY),
+			@ApiJsonProperty(name =SwaggerGlobalKey.ACCOUNT_NAME_KEY_LIST)},
+            result = @ApiJsonResult(name="1212",type="normal",value="1212"))
+    @ApiImplicitParam(name = "params", required = true, dataType = "manager-checkManager")
+    @ApiResponses({@ApiResponse(code = 200, message = "OK", reference = "manager-checkManager")})
+	public Account setPassword(HttpServletRequest request,@RequestParam String password) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
+		Account acc = new Account();
+		acc.setMemberId(memberId);
+		acc = accountService.queryPwdMember(memberId);
+		if(null==acc){
+			acc=new Account();
+			acc.setCreateBy(memberId);
+			acc.setUpdateBy(memberId);
+			acc.setId(UUIDUtil.get32UUID());
 			acc.setMemberId(memberId);
-			acc = accountService.queryPwdMember(memberId);
-			if(null==acc){
-				acc=new Account();
-				acc.setCreateBy(memberId);
-				acc.setUpdateBy(memberId);
-				acc.setId(UUIDUtil.get32UUID());
-				acc.setMemberId(memberId);
-				acc.setMoney(new BigDecimal(0));
-				accountService.addEntity(IAccountDao.class, acc);
-				acc.setPassword(password);
-			}else if(StringUtils.isEmpty(acc.getPassword())){
-				acc.setPassword(password);
-			}else{
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"已设置支付密码", response, request);
-				return;
-			}
-			accountService.updatePassword(acc);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			e.printStackTrace();
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			e.printStackTrace();
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"设置密码异常",response, request);
+			acc.setMoney(new BigDecimal(0));
+			accountService.addEntity(IAccountDao.class, acc);
+			acc.setPassword(password);
+		}else if(StringUtils.isEmpty(acc.getPassword())){
+			acc.setPassword(password);
+		}else{
+			throw new ServiceException("已设置支付密码");
 		}
+		accountService.updatePassword(acc);
+		return acc;
 	}
 	
 	/**
@@ -135,34 +126,26 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/reSetPassword")
-	public void reSetPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String password = request.getParameter("password");
-			String newPassword = request.getParameter("newPassword");
-			if(StringUtils.isEmpty(password)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
-				return;
-			}
-			Account acc = accountService.queryPwdMember(memberId);
-			if(null==acc){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户不存在", response, request);
-				return;
-			}
-			if(!acc.getPassword().equals(password)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码错误", response, request);
-				return;
-			}
-			acc.setPassword(newPassword);
-			accountService.updatePassword(acc);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"重置密码异常",response, request);
+	@ApiOperation(value="重置支付密码",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="password",value="旧密码",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="newPassword",value="新密码",dataType="long", paramType = "query")
+	})
+	public BaseResponse reSetPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String password,
+			@RequestParam String newPassword
+			) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
+		Account acc = accountService.queryPwdMember(memberId);
+		if(null==acc){
+			throw new ServiceException("账户不存在");
 		}
+		if(!acc.getPassword().equals(password)){
+			throw new ServiceException("密码错误");
+		}
+		acc.setPassword(newPassword);
+		accountService.updatePassword(acc);
+		return BaseResponse.success();
 	}
 	
 	/**
@@ -171,47 +154,42 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/account/forgetPwd")
-	public void forgetPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@ApiOperation(value="是否设置支付密码",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="identifyCode",value="验证码",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="phone",value="手机号",dataType="long", paramType = "query"),
+  		@ApiImplicitParam(name="password",value="新密码",dataType="long", paramType = "query")
+	})
+	public BaseResponse forgetPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String password,
+			@RequestParam String identifyCode,
+			@RequestParam String phone
+			) throws Exception {
 		try {
-			String identifyCode = request.getParameter("identifyCode");
-			String phone = request.getParameter("phone");
-			String password = request.getParameter("password");
-			if (StringUtils.isEmpty(phone)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "电话不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(password)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(identifyCode)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码不能为空", response, request);
-				return;
-			}
 			String redisKey = "member:forgetPayPwd:"+phone;
 			String redisValue=RedisUtils.get(redisKey);
 			if(StringUtils.isEmpty(redisValue)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码无效", response, request);
-				return;
+				throw new ServiceException("验证码无效");
+				
 			}
 			JSONObject idenfifyInfo = JSONObject.parseObject(redisValue);
 			
 			String checkPhone = idenfifyInfo.getString("phone");
 			String checkIdentifyCode = idenfifyInfo.getString("identifyCode");
 			if(!checkPhone.equals(phone)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "号码不匹配", response, request);
-				return;
+				throw new ServiceException("号码不匹配");
+				
 			}
 			if(!checkIdentifyCode.equals(identifyCode)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "验证码错误", response, request);
-				return;
+				throw new ServiceException("验证码错误");
+				
 			}
 			Member temp = new Member();
 			temp.setPhone(phone);
 			temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
 			if(null==temp){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户不存在", response, request);
-				return;
+				throw new ServiceException("账户不存在");
+				
 			}
 			Account acc = accountService.queryAccountByMemberId(temp.getId());
 			if(acc==null){
@@ -227,7 +205,7 @@ public class AccountApp {
 			accountService.updatePassword(acc);
 			
 			RedisUtils.del(redisKey);
-			JsonResponseUtil.successCodeResponse(response, request);
+			return BaseResponse.success();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -240,63 +218,48 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/preWxpay")
-	public void rechargeWx(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@ApiOperation(value="微信预付款-生成订单",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="total_fee",value="充值金额（分）",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="type",value="充值类型（1-账户充值，2-充值网币，3-充值保证金）",dataType="long", paramType = "query")
+	})
+	public Map rechargeWx(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String total_fee,
+			@RequestParam String type
+			) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
+		String ip = IPUtil.getRemoteHost(request);
+		if(!type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_3+"")){
+			throw new ServiceException("充值类型异常");
+			
+		}
 		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String total_fee = (String) request.getParameter("total_fee");
-			String type = request.getParameter("type");
-			String ip = IPUtil.getRemoteHost(request);
-			if(StringUtils.isEmpty(total_fee)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额不能为空", response, request);
-				return;
-			}
-			if(StringUtils.isEmpty(type)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值类型不能为空", response, request);
-				return;
-			}
-			if(!type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_3+"")){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值类型异常", response, request);
-				return;
-			}
-			try {
-				Long.parseLong(total_fee);
-			} catch (Exception e) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额格式不正确", response, request);
-				return;
-			}
-			/*if(!memberService.hasPhoneAuth(memberId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请进行手机认证", response, request);
-				return;
-			}*/
-			BigDecimal  formatMoney = new BigDecimal(total_fee).divide(new BigDecimal(100));
-			//生成订单
-			OrderAccount order;
-			if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")){
-				order = buildCashOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_1);
-			}else if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")){
-				order = buildCoinOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_1);
-			}else{
-				order = new OrderAccount();
-			}
-			String orderId = order.getId();
-			accountService.addEntity(IOrderAccountDao.class, order);
-			Map<String, String> map = new HashMap<String, String>();
-			try {
-				map = WxpayAppUtil.doUnifiedOrder(total_fee, order.getTradeNo(), ip);
-				map.put("out_trade_no", order.getTradeNo());
-				JsonResponseUtil.successBodyResponse(map, response, request);
-			} catch (Exception e) {
-				log.info("doUnifiedOrder error the params is "+JSONObject.toJSONString(order));
-				accountService.deleteEntityById(IOrderAccountDao.class, orderId);
-				e.printStackTrace();
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值异常",response, request);
-			}
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"微信支付订单异常",response, request);
+			Long.parseLong(total_fee);
+		} catch (Exception e) {
+			throw new ServiceException("充值金额格式不正确");
+			
+		}
+		BigDecimal  formatMoney = new BigDecimal(total_fee).divide(new BigDecimal(100));
+		//生成订单
+		OrderAccount order;
+		if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")){
+			order = buildCashOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_1);
+		}else if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")){
+			order = buildCoinOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_1);
+		}else{
+			order = buildDepositOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_1);
+		}
+		String orderId = order.getId();
+		accountService.addEntity(IOrderAccountDao.class, order);
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			map = WxpayAppUtil.doUnifiedOrder(total_fee, order.getTradeNo(), ip);
+			map.put("out_trade_no", order.getTradeNo());
+			return map;
+		} catch (Exception e) {
+			log.info("doUnifiedOrder error the params is "+JSONObject.toJSONString(order));
+			accountService.deleteEntityById(IOrderAccountDao.class, orderId);
+			throw new ServiceException("充值异常");
 		}
 	}
 	/**
@@ -305,7 +268,8 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/rechangeWx/callback")
-	public void callback(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@ApiOperation(value="微信支付回调",httpMethod="POST")
+	public BaseResponse callback(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		InputStream inStream=null;
 		ByteArrayOutputStream outSteam=null;
 		try {
@@ -346,8 +310,7 @@ public class AccountApp {
 	        		order.setTradeNo(out_trade_no);
 	        		order = (OrderAccount) accountService.queryEntity(IOrderAccountDao.class, order);
 	        		if(null==order){
-	        			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "支付订单不存在",response, request);
-	        			return;
+	        			throw new ServiceException("支付订单不存在");
 	        		}
 	        		if(order.getType()==Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1){
 	        			accountService.rechargeAccount(out_trade_no);
@@ -356,15 +319,14 @@ public class AccountApp {
 	        		}else{
 	        			
 	        		}
-	        		JsonResponseUtil.successCodeResponse(response, request);
+	        		return BaseResponse.success();
 	        	}
 	        }
 		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
+			throw e;
 		}catch (Exception e) {
 			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"微信支付回调异常",response, request);
+			throw new ServiceException("微信支付回调异常");
 		}finally{
 			if(null!=outSteam){
 				outSteam.close();
@@ -373,6 +335,7 @@ public class AccountApp {
 				inStream.close();
 			}
 		}
+		return BaseResponse.success();
 	}
 	
 	
@@ -382,59 +345,49 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/preAlipay")
-	public void rechargeAlipay(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@ApiOperation(value="支付宝预充值-生成订单",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="total_fee",value="充值金额（分）",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="type",value="充值类型（1-账户充值，2-充值网币，3-充值保证金）",dataType="long", paramType = "query")
+	})
+	public BaseResponse rechargeAlipay(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String total_fee,
+			@RequestParam String type
+			) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
 		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String total_fee = (String) request.getParameter("total_fee");
-			String type = request.getParameter("type");
-			if(StringUtils.isEmpty(total_fee)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额不能为空", response, request);
-				return;
-			}
-			try {
-				Long.parseLong(total_fee);
-			} catch (Exception e) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额格式不正确", response, request);
-				return;
-			}
-			if(!type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_3+"")){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值类型异常", response, request);
-				return;
-			}
-			/*if(!memberService.hasPhoneAuth(memberId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请进行手机认证", response, request);
-				return;
-			}*/
-			BigDecimal formatMoney = new BigDecimal(total_fee).divide(new BigDecimal(100));
-			//生成订单
-			OrderAccount order;
-			if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")){
-				order = buildCashOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_2);
-			}else if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")){
-				order = buildCoinOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_2);
-			}else{
-				order = new OrderAccount();
-			}
-			String orderId = order.getId();
-			accountService.addEntity(IOrderAccountDao.class, order);
-			Map<String, String> map = new HashMap<String, String>();
-			try {
-				String orderString = AlipayUtils.doUnifiedOrder(order.getTradeNo(),formatMoney.toString());
-				map.put("out_trade_no", order.getTradeNo());
-				map.put("orderString", orderString);
-				JsonResponseUtil.successBodyResponse(map, response, request);
-			} catch (Exception e) {
-				log.info("doUnifiedOrder error the params is "+JSONObject.toJSONString(order));
-				accountService.deleteEntityById(IOrderAccountDao.class, orderId);
-				e.printStackTrace();
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值异常",response, request);
-			}
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"支付宝充值订单异常",response, request);
+			Long.parseLong(total_fee);
+		} catch (Exception e) {
+			throw new ServiceException("充值金额格式不正确");
+			
+		}
+		if(!type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")&&type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_3+"")){
+			throw new ServiceException("充值类型异常");
+			
+		}
+		BigDecimal formatMoney = new BigDecimal(total_fee).divide(new BigDecimal(100));
+		//生成订单
+		OrderAccount order;
+		if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1+"")){
+			order = buildCashOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_2);
+		}else if(type.equals(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2+"")){
+			order = buildCoinOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_2);
+		}else{
+			order = buildDepositOrder(memberId, formatMoney,Global.SYS_MEMBER_ACCOUNT_RECHANGE_WAY_2);
+		}
+		String orderId = order.getId();
+		accountService.addEntity(IOrderAccountDao.class, order);
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			String orderString = AlipayUtils.doUnifiedOrder(order.getTradeNo(),formatMoney.toString());
+			map.put("out_trade_no", order.getTradeNo());
+			map.put("orderString", orderString);
+			return BaseResponse.success(map);
+		} catch (Exception e) {
+			log.info("doUnifiedOrder error the params is "+JSONObject.toJSONString(order));
+			accountService.deleteEntityById(IOrderAccountDao.class, orderId);
+			e.printStackTrace();
+			throw new ServiceException("充值异常");
 		}
 	}
 	
@@ -443,71 +396,64 @@ public class AccountApp {
 	 * 2018年5月8日 上午12:07:45
 	 */
 	@SuppressWarnings("unchecked")
+	@ApiOperation(value="支付宝回调",httpMethod="POST")
 	@RequestMapping(value = "app/rechangeAlipay/callback", produces = "application/json;charset=UTF-8", method = {
 			RequestMethod.GET, RequestMethod.POST })
-	public void getAlipayNotify(HttpServletRequest request, HttpServletResponse response) {
+	public BaseResponse getAlipayNotify(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Map<String, String> params = new HashMap<String, String>();
 		Map<String,Object> requestParams = request.getParameterMap();
 		log.info("rechangeAlipay requestParams info is "+JSONObject.toJSONString(requestParams));
 		// 切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
-		try {
-			for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
-				String name = (String) iter.next();
-				String[] values = (String[]) requestParams.get(name);
-				String valueStr = "";
-				for (int i = 0; i < values.length; i++) {
-					valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
-				}
-				// 乱码解决，这段代码在出现乱码时使用。
-				// valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-				params.put(name, valueStr);
+		for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
 			}
-			log.info("alipay callback params is "+JSONObject.toJSONString(params));
-			boolean flag = AlipayUtils.rsaCheck(params);
-			log.info("alipay rsaCheck result is "+flag);
-			if (flag) {
-				String trade_status = params.get("trade_status");
-				String out_trade_no = params.get("out_trade_no");
-				if ("TRADE_SUCCESS".equals(trade_status)) { // 交易支付成功的执行相关业务逻辑
-					log.info("=========支付宝支付结果：付款成功==========");
-					OrderAccount order = new OrderAccount();
-	        		order.setTradeNo(out_trade_no);
-	        		order = (OrderAccount) accountService.queryEntity(IOrderAccountDao.class, order);
-	        		if(null==order){
-	        			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "支付订单不存在",response, request);
-	        			return;
-	        		}
-	        		if(order.getType()==Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1){
-	        			accountService.rechargeAccount(out_trade_no);
-	        		}else if(order.getType()==Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2){
-	        			accountService.rechargeAccountCoin(out_trade_no);
-	        		}else{
-	        			
-	        		}
-	        		JsonResponseUtil.successCodeResponse(response, request);
-					
-				}else{
-					OrderAccount order = new OrderAccount();
-	        		order.setTradeNo(out_trade_no);
-	        		order = (OrderAccount) accountService.queryEntity(IOrderAccountDao.class, order);
-	        		// 支付失败
-	        		if(null!=order){
-	        			//更新充值订单状态
-	        			order.setStatus(Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_4);
-	        			accountService.updateEntity(IOrderAccountDao.class, order);
-	        		}
-					log.info("===============付款失败==============");
-				}
+			// 乱码解决，这段代码在出现乱码时使用。
+			// valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+			params.put(name, valueStr);
+		}
+		log.info("alipay callback params is "+JSONObject.toJSONString(params));
+		boolean flag = AlipayUtils.rsaCheck(params);
+		log.info("alipay rsaCheck result is "+flag);
+		if (flag) {
+			String trade_status = params.get("trade_status");
+			String out_trade_no = params.get("out_trade_no");
+			if ("TRADE_SUCCESS".equals(trade_status)) { // 交易支付成功的执行相关业务逻辑
+				log.info("=========支付宝支付结果：付款成功==========");
+				OrderAccount order = new OrderAccount();
+        		order.setTradeNo(out_trade_no);
+        		order = (OrderAccount) accountService.queryEntity(IOrderAccountDao.class, order);
+        		if(null==order){
+        			throw new ServiceException("支付订单不存在");
+        			
+        		}
+        		if(order.getType()==Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_1){
+        			accountService.rechargeAccount(out_trade_no);
+        		}else if(order.getType()==Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2){
+        			accountService.rechargeAccountCoin(out_trade_no);
+        		}else{
+        			accountService.rechargeAccountDeposit(out_trade_no);
+        		}
+        		return BaseResponse.success();
+			}else{
+				OrderAccount order = new OrderAccount();
+        		order.setTradeNo(out_trade_no);
+        		order = (OrderAccount) accountService.queryEntity(IOrderAccountDao.class, order);
+        		// 支付失败
+        		if(null!=order){
+        			//更新充值订单状态
+        			order.setStatus(Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_4);
+        			accountService.updateEntity(IOrderAccountDao.class, order);
+        		}
+				log.info("===============付款失败==============");
+				throw new ServiceException();
 			}
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"支付宝充值回调异常",response, request);
 		}
 		log.info("===============回调完成==============");
-		JsonResponseUtil.successCodeResponse(response, request);
+		return BaseResponse.success();
 	}
 	
 	/**
@@ -516,59 +462,51 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/preSwap")
-	@AccountCheckAnnotation(type=CHECKTYPE.ACTIVE)
-	public void preSwapCoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@ApiOperation(value="网币兑换预付款-生成订单",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="total_fee",value="兑换金额（元）",dataType="string", paramType = "query")
+	})
+	public Map preSwapCoin(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String total_fee
+			) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
 		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String total_fee = (String) request.getParameter("total_fee");
-			if(StringUtils.isEmpty(total_fee)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额不能为空", response, request);
-				return;
-			}
-			try {
-				Long.parseLong(total_fee);
-			} catch (Exception e) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值金额格式不正确", response, request);
-				return;
-			}
-			/*if(!memberService.hasPhoneAuth(memberId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请进行手机认证", response, request);
-				return;
-			}*/
-			BigDecimal formatMoney = new BigDecimal(total_fee);
-			Account ac=(Account) accountService.queryPwdMember(memberId);
-			if(ac==null){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户未激活", response, request);
-				return;
-			}
-			if(StringUtils.isEmpty(ac.getPassword())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请先设置支付密码", response, request);
-				return;
-			}
-			if(ac.getMoney().compareTo(formatMoney)<0){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户余额不足", response, request);
-				return;
-			}
-			//生成订单
-			OrderAccount order = buildCoinSwapOrder(memberId, formatMoney);
-			String orderId = order.getId();
-			accountService.addEntity(IOrderAccountDao.class, order);
-			Map<String, String> map = new HashMap<String, String>();
-			try {
-				map.put("out_trade_no", order.getTradeNo());
-				JsonResponseUtil.successBodyResponse(map, response, request);
-			} catch (Exception e) {
-				log.info("doUnifiedOrder error the params is "+JSONObject.toJSONString(order));
-				accountService.deleteEntityById(IOrderAccountDao.class, orderId);
-				e.printStackTrace();
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值异常",response, request);
-			}
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"兑换网币订单异常",response, request);
+			Long.parseLong(total_fee);
+		} catch (Exception e) {
+			throw new ServiceException("充值金额格式不正确");
+			
+		}
+		/*if(!memberService.hasPhoneAuth(memberId)){
+			throw new ServiceException("请进行手机认证");
+			
+		}*/
+		BigDecimal formatMoney = new BigDecimal(total_fee);
+		Account ac=(Account) accountService.queryPwdMember(memberId);
+		if(ac==null){
+			throw new ServiceException("账户未激活");
+			
+		}
+		if(StringUtils.isEmpty(ac.getPassword())){
+			throw new ServiceException("请先设置支付密码");
+			
+		}
+		if(ac.getMoney().compareTo(formatMoney)<0){
+			throw new ServiceException("账户余额不足");
+			
+		}
+		//生成订单
+		OrderAccount order = buildCoinSwapOrder(memberId, formatMoney);
+		String orderId = order.getId();
+		accountService.addEntity(IOrderAccountDao.class, order);
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			map.put("out_trade_no", order.getTradeNo());
+			return map;
+		} catch (Exception e) {
+			log.info("doUnifiedOrder error the params is "+JSONObject.toJSONString(order));
+			accountService.deleteEntityById(IOrderAccountDao.class, orderId);
+			e.printStackTrace();
+			throw new ServiceException("充值异常");
 		}
 	}
 	
@@ -578,41 +516,27 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/paySwap")
-	public void paySwapCoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String password = (String) request.getParameter("password");
-			String tradeNo = (String) request.getParameter("tradeNo");
-			if(StringUtils.isEmpty(password)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
-				return;
-			}
-			if(StringUtils.isEmpty(tradeNo)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "交易号不能为空", response, request);
-				return;
-			}
-			/*if(!memberService.hasPhoneAuth(memberId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请进行手机认证", response, request);
-				return;
-			}*/
-			Account ac=(Account) accountService.queryPwdMember(memberId);
-			if(StringUtils.isEmpty(ac.getPassword())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请先设置支付密码", response, request);
-				return;
-			}
-			if(!password.equals(ac.getPassword())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码错误", response, request);
-				return;
-			}
-			accountService.swapAccountCoin(tradeNo);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"支付兑换网币异常",response, request);
+	@ApiOperation(value="支付兑换网币订单",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="password",value="密码",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="tradeNo",value="订单交易号",dataType="long", paramType = "query")
+	})
+	public BaseResponse paySwapCoin(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String password,
+			@RequestParam String tradeNo
+			) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
+		Account ac=(Account) accountService.queryPwdMember(memberId);
+		if(StringUtils.isEmpty(ac.getPassword())){
+			throw new ServiceException("请先设置支付密码");
+			
 		}
+		if(!password.equals(ac.getPassword())){
+			throw new ServiceException("密码错误");
+			
+		}
+		accountService.swapAccountCoin(tradeNo);
+		return BaseResponse.success();
 	}
 	
 	
@@ -622,67 +546,53 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/preReward")
-	@AccountCheckAnnotation(type=CHECKTYPE.ACTIVE)
-	public void preRewardCoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@ApiOperation(value="打赏网币预付款-生成订单",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="num",value="打赏数目（个）",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="targetId",value="用户id",dataType="long", paramType = "query")
+	})
+	public Map preRewardCoin(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String num,
+			@RequestParam String targetId
+			) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
+		long numFormat = 0l;
 		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String num = (String) request.getParameter("num");
-			String targetId = (String) request.getParameter("targetId");
-			long numFormat = 0l;
-			if(StringUtils.isEmpty(targetId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "targetId不能为空", response, request);
-				return;
-			}
-			if(StringUtils.isEmpty(num)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值数目不能为空", response, request);
-				return;
-			}
-			try {
-				numFormat = Long.parseLong(num);
-			} catch (Exception e) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "充值数目格式不正确", response, request);
-				return;
-			}
-			if(!memberService.hasPhoneAuth(targetId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "收款方未进行手机认证", response, request);
-				return;
-			}
-			AccountCoin acc = new AccountCoin();
-			acc.setMemberId(memberId);
-			acc = (AccountCoin) accountService.queryEntity(IAccountCoinDao.class, acc);
-			if(null==acc){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户未激活", response, request);
-				return;
-			}
-			Account ac=(Account) accountService.queryPwdMember(memberId);
-			if(StringUtils.isEmpty(ac.getPassword())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请先设置支付密码", response, request);
-				return;
-			}
-			if(acc.getNum()<numFormat){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "账户余额不足", response, request);
-				return;
-			}
-			//生成订单
-			OrderAccount order = buildCoinRewardOrder(memberId, targetId, numFormat);
-			String orderId = order.getId();
-			accountService.addEntity(IOrderAccountDao.class, order);
-			Map<String, String> map = new HashMap<String, String>();
-			try {
-				map.put("out_trade_no", order.getTradeNo());
-				JsonResponseUtil.successBodyResponse(map, response, request);
-			} catch (Exception e) {
-				log.info("preRewardCoin error the params is "+JSONObject.toJSONString(order));
-				accountService.deleteEntityById(IOrderAccountDao.class, orderId);
-				e.printStackTrace();
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "打赏订单异常",response, request);
-			}
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"打赏订单异常",response, request);
+			numFormat = Long.parseLong(num);
+		} catch (Exception e) {
+			throw new ServiceException("充值数目格式不正确");
+			
+		}
+		if(!memberService.hasPhoneAuth(targetId)){
+			throw new ServiceException("收款方未进行手机认证");
+			
+		}
+		AccountCoin acc = new AccountCoin();
+		acc.setMemberId(memberId);
+		acc = (AccountCoin) accountService.queryEntity(IAccountCoinDao.class, acc);
+		if(null==acc){
+			throw new ServiceException("账户未激活");
+		}
+		Account ac=(Account) accountService.queryPwdMember(memberId);
+		if(StringUtils.isEmpty(ac.getPassword())){
+			throw new ServiceException("请先设置支付密码");
+		}
+		if(acc.getNum()<numFormat){
+			throw new ServiceException("账户余额不足");
+		}
+		//生成订单
+		OrderAccount order = buildCoinRewardOrder(memberId, targetId, numFormat);
+		String orderId = order.getId();
+		accountService.addEntity(IOrderAccountDao.class, order);
+		Map<String, String> map = new HashMap<String, String>();
+		try {
+			map.put("out_trade_no", order.getTradeNo());
+			return map;
+		} catch (Exception e) {
+			log.info("preRewardCoin error the params is "+JSONObject.toJSONString(order));
+			accountService.deleteEntityById(IOrderAccountDao.class, orderId);
+			e.printStackTrace();
+			throw new ServiceException("打赏订单异常");
 		}
 	}
 	
@@ -692,41 +602,27 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/payReward")
-	public void rewardCoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String password = (String) request.getParameter("password");
-			String tradeNo = (String) request.getParameter("tradeNo");
-			if(StringUtils.isEmpty(password)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
-				return;
-			}
-			if(StringUtils.isEmpty(tradeNo)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "交易号不能为空", response, request);
-				return;
-			}
-			/*if(!memberService.hasPhoneAuth(memberId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请进行手机认证", response, request);
-				return;
-			}*/
-			Account ac=(Account) accountService.queryPwdMember(memberId);
-			if(StringUtils.isEmpty(ac.getPassword())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请先设置支付密码", response, request);
-				return;
-			}
-			if(!password.equals(ac.getPassword())){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码错误", response, request);
-				return;
-			}
-			accountService.reward(tradeNo);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"支付打赏异常",response, request);
+	@ApiOperation(value="是否设置支付密码",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="password",value="支付密码",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="tradeNo",value="订单交易号",dataType="long", paramType = "query")
+	})
+	public BaseResponse rewardCoin(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String password,
+			@RequestParam String tradeNo
+			) throws Exception {
+		String memberId = request.getAttribute("memberId")+"";
+		Account ac=(Account) accountService.queryPwdMember(memberId);
+		if(StringUtils.isEmpty(ac.getPassword())){
+			throw new ServiceException("请先设置支付密码");
+			
 		}
+		if(!password.equals(ac.getPassword())){
+			throw new ServiceException("密码错误");
+			
+		}
+		accountService.reward(tradeNo);
+		return BaseResponse.success();
 	}
 	
 	
@@ -743,19 +639,15 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/queryWxPayInfo")
-	public void queryWxPayInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String out_trade_no = (String) request.getParameter("out_trade_no");
-			if(StringUtils.isEmpty(out_trade_no)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "out_trade_no不能为空", response, request);
-				return;
-			}
-			Map<String, String> map = WxpayAppUtil.doOrderQuery(out_trade_no);
-			JsonResponseUtil.successBodyResponse(map, response, request);
-		} catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询支付宝支付信息异常",response, request);
-		}
+	@ApiOperation(value="查询微信支付信息",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="out_trade_no",value="订单交易号",dataType="string", paramType = "query")
+	})
+	public Map queryWxPayInfo(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String out_trade_no
+			) throws Exception {
+		Map<String, String> map = WxpayAppUtil.doOrderQuery(out_trade_no);
+		return map;
 	}
 	
 	/**
@@ -764,36 +656,20 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/queryAlipayInfo")
-	public void queryAlipayInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String out_trade_no = (String) request.getParameter("out_trade_no");
-			if(StringUtils.isEmpty(out_trade_no)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "out_trade_no不能为空", response, request);
-				return;
-			}
-			String result = AlipayUtils.orderQuery(out_trade_no);
-			JsonResponseUtil.successBodyResponse(result, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询支付宝支付信息异常",response, request);
-		}
+	@ApiOperation(value="是否设置支付密码",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="out_trade_no",value="订单交易号",dataType="string", paramType = "query")
+	})
+	public String queryAlipayInfo(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String out_trade_no
+			) throws Exception {
+		return AlipayUtils.orderQuery(out_trade_no);
 	}
 	
 	@RequestMapping("app/member/account/wxPay/getSandKey")
-	public void getSandKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String key = WxpayAppUtil.doGetSandboxSignKey();
-			JsonResponseUtil.successBodyResponse(key, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"获取沙箱key异常",response, request);
-		}
+	@ApiOperation(value="获取沙箱KEY",httpMethod="POST")
+	public String getSandKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		return WxpayAppUtil.doGetSandboxSignKey();
 	}
 	
 	/**
@@ -808,20 +684,13 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/info")
-	public void info(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = (String) request.getAttribute("memberId");
-			Account ac=new Account();
-			ac.setMemberId(memberId);
-			ac = (Account) accountService.queryEntity(IAccountDao.class,ac);
-			JsonResponseUtil.successBodyResponse(ac, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询账户异常",response, request);
-		}
+	@ApiOperation(value="查询个人账户信息",httpMethod="POST")
+	public Account info(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String memberId = (String) request.getAttribute("memberId");
+		Account ac=new Account();
+		ac.setMemberId(memberId);
+		ac = (Account) accountService.queryEntity(IAccountDao.class,ac);
+		return ac;
 	}
 	
 	/**
@@ -836,20 +705,13 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/coinInfo")
-	public void coinInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = (String) request.getAttribute("memberId");
-			AccountCoin ac=new AccountCoin();
-			ac.setMemberId(memberId);
-			ac = (AccountCoin) accountService.queryEntity(IAccountCoinDao.class,ac);
-			JsonResponseUtil.successBodyResponse(ac, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询网币账户异常",response, request);
-		}
+	@ApiOperation(value="查询个人网币账户信息",httpMethod="POST")
+	public AccountCoin coinInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String memberId = (String) request.getAttribute("memberId");
+		AccountCoin ac=new AccountCoin();
+		ac.setMemberId(memberId);
+		ac = (AccountCoin) accountService.queryEntity(IAccountCoinDao.class,ac);
+		return ac;
 	}
 	
 	/**
@@ -865,35 +727,38 @@ public class AccountApp {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("app/member/account/records")
-	public void records(HttpServletRequest request, HttpServletResponse response,Page page,CashRecord record) throws Exception {
-		try {
-			String accountType = request.getParameter("accountType");
-			String recordType = request.getParameter("recordType");
-			String memberId = (String) request.getAttribute("memberId");
-			Map<String, Object> map = new HashMap<>();
-			map.put("page", page);
-			map.put("recordType", recordType);
-			map.put("memberId",memberId);
-			if(StringUtils.isEmpty(accountType)){
-				accountType = Global.SYS_MEMBER_ACCOUNT_TYPE_1+"";
-			}
-			JSONObject obj = new JSONObject();
-			if(accountType.equals(Global.SYS_MEMBER_ACCOUNT_TYPE_1+"")){
-				List<CashRecord> records = (List<CashRecord>) accountService.queryPageEntity(ICashRecordDao.class, map);
-				obj.put("list", records);
-			}else{
-				List<CoinRecord> records = (List<CoinRecord>) accountService.queryPageEntity(ICoinRecordDao.class, map);
-				obj.put("list", records);
-			}
-			obj.put("page", page);
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询交易记录异常",response, request);
+	@ApiOperation(value="查询交易记录列表",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="currentPage",value="当前页",dataType="int", paramType = "query",defaultValue="1"),
+		@ApiImplicitParam(name="pageSize",value="页大小",dataType="int", paramType = "query",defaultValue="10"),
+		@ApiImplicitParam(name="accountType",value="账户类型（1-现金账户 2-网币账户）",dataType="string", paramType = "query"),
+  		@ApiImplicitParam(name="recordType",value="交易类型（1-充值 2-支付订单 3-退款 4-账户提现 5-兑换网币 6-网币提现 7-充值保证金）",dataType="long", paramType = "query")
+	})
+	public JSONObject records(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required=false,defaultValue="10") int pageSize,
+			@RequestParam(required=false,defaultValue="1") int currentPage,
+			@RequestParam String accountType,
+			@RequestParam String recordType
+			) throws Exception {
+		Page page = new Page(currentPage,pageSize);
+		String memberId = (String) request.getAttribute("memberId");
+		Map<String, Object> map = new HashMap<>();
+		map.put("page", page);
+		map.put("recordType", recordType);
+		map.put("memberId",memberId);
+		if(StringUtils.isEmpty(accountType)){
+			accountType = Global.SYS_MEMBER_ACCOUNT_TYPE_1+"";
 		}
+		JSONObject obj = new JSONObject();
+		if(accountType.equals(Global.SYS_MEMBER_ACCOUNT_TYPE_1+"")){
+			List<CashRecord> records = (List<CashRecord>) accountService.queryPageEntity(ICashRecordDao.class, map);
+			obj.put("list", records);
+		}else{
+			List<CoinRecord> records = (List<CoinRecord>) accountService.queryPageEntity(ICoinRecordDao.class, map);
+			obj.put("list", records);
+		}
+		obj.put("page", page);
+		return obj;
 	}
 	
 	/**
@@ -908,24 +773,17 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/recordInfo")
-	public void recordInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String tradeNo = request.getParameter("tradeNo");
-			if(StringUtils.isEmpty(tradeNo)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "tradeNo不能为空", response, request);
-				return;
-			}
-			CashRecord record = new CashRecord();
-			record.setTradeNo(tradeNo);
-			record = (CashRecord) accountService.queryEntity(ICashRecordDao.class, record);
-			JsonResponseUtil.successBodyResponse(record, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询交易明细异常",response, request);
-		}
+	@ApiOperation(value="查看账户交易明细",httpMethod="POST")
+	@ApiImplicitParams({
+  		@ApiImplicitParam(name="tradeNo",value="订单交易号",dataType="long", paramType = "query")
+	})
+	public CashRecord recordInfo(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String tradeNo
+			) throws Exception {
+		CashRecord record = new CashRecord();
+		record.setTradeNo(tradeNo);
+		record = (CashRecord) accountService.queryEntity(ICashRecordDao.class, record);
+		return record;
 	}
 	
 	/**
@@ -940,24 +798,17 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/coinRecordInfo")
-	public void coinRecordInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String tradeNo = request.getParameter("tradeNo");
-			if(StringUtils.isEmpty(tradeNo)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "tradeNo不能为空", response, request);
-				return;
-			}
-			CoinRecord record = new CoinRecord();
-			record.setTradeNo(tradeNo);
-			record = (CoinRecord) accountService.queryEntity(ICoinRecordDao.class, record);
-			JsonResponseUtil.successBodyResponse(record, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询网币记录详情异常",response, request);
-		}
+	@ApiOperation(value="查询网币交易明细",httpMethod="POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="tradeNo",value="订单交易号",dataType="long", paramType = "query")
+	})
+	public CoinRecord coinRecordInfo(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String tradeNo
+			) throws Exception {
+		CoinRecord record = new CoinRecord();
+		record.setTradeNo(tradeNo);
+		record = (CoinRecord) accountService.queryEntity(ICoinRecordDao.class, record);
+		return record;
 	}
 	
 	
@@ -1000,6 +851,28 @@ public class AccountApp {
 		order.setUpdateBy(memberId);
 		order.setTotal_fee(formatMoney);
 		order.setType(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_2);
+		order.setWay(way);
+		order.setStatus(Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1);
+		return order;
+	}
+	
+	/**
+	 * 生成充值保证金订单
+	 * @param memberId 
+	 * @param total_fee
+	 * @param type
+	 * @param way
+	 * @return
+	 */
+	private OrderAccount buildDepositOrder(String memberId,BigDecimal formatMoney,int way){
+		OrderAccount order = new OrderAccount();
+		order.setTradeNo(UUIDUtil.get32TradeNo());
+		order.setMemberId(memberId);
+		order.setId(UUIDUtil.get32UUID());
+		order.setCreateBy(memberId);
+		order.setUpdateBy(memberId);
+		order.setTotal_fee(formatMoney);
+		order.setType(Global.SYS_MEMBER_ACCOUNT_RECHANGE_TYPE_3);
 		order.setWay(way);
 		order.setStatus(Global.SYS_MEMBER_ACCOUNT_RECHANGE_ORDER_STATUS_1);
 		return order;

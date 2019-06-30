@@ -2,8 +2,8 @@ package com.thsword.netjob.service.impl;
 
 import javax.transaction.Transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +15,8 @@ import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.netjob.web.quartz.DynamicJobFactory;
 import com.thsword.utils.object.UUIDUtil;
 @Service(value = "jobTaskService")
+@Slf4j
 public class JobTaskServiceImpl extends BaseServiceImpl implements JobTaskService{
-	private static final Log log = LogFactory.getLog(JobTaskServiceImpl.class);
 	@Autowired
 	DynamicJobFactory dynamicJobFactory;
 	@Autowired

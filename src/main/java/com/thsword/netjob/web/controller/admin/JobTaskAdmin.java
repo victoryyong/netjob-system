@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -25,8 +25,8 @@ import com.thsword.netjob.web.annotation.LogControllerAnnotation;
 import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.page.Page;
 @Controller
+@Log4j2
 public class JobTaskAdmin {
-	private static final Log log = LogFactory.getLog(JobTaskAdmin.class);
 	@Autowired
 	JobTaskService jobTaskService;
 	@AuthAnnotation(permissions="admin.task.list")

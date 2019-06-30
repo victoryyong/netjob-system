@@ -2,9 +2,9 @@ package com.thsword.netjob.web.quartz.task;
 
 import java.util.List;
 
+import lombok.extern.log4j.Log4j2;
+
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -22,9 +22,9 @@ import com.thsword.netjob.service.OrderService;
  * @author Lenovo
  *
  */
+@Log4j2
 public class CancelOrderTask extends QuartzJobBean{
 	
-	private static final Log log = LogFactory.getLog(CancelOrderTask.class);
 	
 	@Autowired
 	OrderService orderService;

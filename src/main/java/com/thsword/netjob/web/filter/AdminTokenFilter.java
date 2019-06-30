@@ -1,5 +1,8 @@
 package com.thsword.netjob.web.filter;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,15 +30,12 @@ import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.util.TokenUtil;
 import com.thsword.utils.object.JWTUtil;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-
 /***
  * token和权限认证拦截
  */
+@Log4j2
 public class AdminTokenFilter extends HttpServlet implements HandlerInterceptor {
 	private static final long serialVersionUID = 5836290769748648967L;
-	private static final Log log = LogFactory.getLog(AdminTokenFilter.class);
 	@Resource(name = "tokenService")
 	private TokenService tokenService;
 	@Resource(name = "userService")

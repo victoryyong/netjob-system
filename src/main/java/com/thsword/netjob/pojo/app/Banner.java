@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 import com.thsword.netjob.global.Global;
@@ -13,81 +16,103 @@ import com.thsword.netjob.global.Global;
 
  * @time:2018年5月7日 下午5:47:41
  */
+@ApiModel(value="广告 ")
 public class Banner {
+	@ApiModelProperty(value="id")
 	private String id;
 	/**
 	 * 广告名称
 	 */
+	@ApiModelProperty(value="广告名称")
 	private String name;
 	/**
 	 * 广告类型
 	 */
+	@ApiModelProperty(value="广告类型")
 	private String type;
 	/**
 	 * 链接
 	 */
+	@ApiModelProperty(value="链接")
 	private String link;
 	/**
 	 * 广告缩略图
 	 * */
+	@ApiModelProperty(value="广告缩略图")
 	private String image;
 	/**
-	 * 
+	 * 无用属性
 	 */
+	@ApiModelProperty(value="无用属性")
 	private String subimg;
 	/**
-	 * 
+	 * 省代码
 	 */
+	@ApiModelProperty(value="省代码")
 	private String province;
 	/**
 	 * 省份名称
 	 */
+	@ApiModelProperty(value="省份名称")
 	private String provinceName;
 	/**
 	 * 城市名称
 	 */
+	@ApiModelProperty(value="城市名称")
 	private String cityName;
 	/**
 	 * 城市编码
 	 */
+	@ApiModelProperty(value="城市编码")
 	private String citycode;
 	/**
 	 * 一级菜单ID
 	 */
+	@ApiModelProperty(value="一级菜单ID")
 	private String firstMenuId;
 	/**
 	 * 二级菜单ID
 	 */
+	@ApiModelProperty(value="二级菜单ID")
 	private String secondMenuId;
 	/**
 	 * 二级菜单名称
 	 */
+	@ApiModelProperty(value="二级菜单名称")
 	private String secondMenuName;
-	
+	 /**
+	 * 二级菜单
+	 */
+	@ApiModelProperty(value="二级菜单")
 	private Menu secondMenu;
 	/**
 	 * 状态
 	 */
+	@ApiModelProperty(value="状态")
 	private Integer status;
 	/**
 	 * 排序号
-	 */
+	 */@ApiModelProperty(value="排序号")
 	private Integer sort;
 	/**
 	 * 创建时间
 	 */
+	 @ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 更新时间
 	 */
+	 @ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 创建人
 	 */
+	 @ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新人
 	 */
+	 @ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;

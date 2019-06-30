@@ -29,7 +29,6 @@ public class ExportUtil {
 			// 生成一个样式
 			HSSFCellStyle style = wb.createCellStyle();
 			// 样式字体居中
-			style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 			HSSFRow row = null;
 			HSSFCell cell = null;
 			for (int j = 0; j < array.size() + 1; j++) {

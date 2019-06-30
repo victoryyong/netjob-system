@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,37 +15,45 @@ import java.util.Date;
 * @date 2017年5月13日 下午3:26:16 
 *
  */
+@ApiModel(value="点赞")
 public class Agree implements Serializable {
 
 	private static final long serialVersionUID = -6756090072891967330L;
+	@ApiModelProperty(value="id")
 	private String id;
 	/**
 	 * 用户名
-	 */
+	 */@ApiModelProperty(value="用户名")
 	private String memberId;
 	/**
 	 * 点赞对象ID
 	 */
+	 @ApiModelProperty(value="点赞对象ID")
 	private String agreeId;
 	/**
 	 * 对象类型 
 	 */
+	 @ApiModelProperty(value="对象类型 ")
 	private Integer type;
 	/**
 	 * 创建时间
 	 */
+	 @ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 创建人
 	 */
+	 @ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新时间
 	 */
+	 @ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 更新人
 	 */
+	 @ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;

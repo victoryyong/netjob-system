@@ -96,7 +96,8 @@ public class AccessFilter extends HttpServlet implements HandlerInterceptor {
 			//防止重复请求
 			if(!StringUtils.isEmpty(old_sign)){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "重复请求!",response,request);
-				return false;
+				//return false;
+				return true;
 			}
 			Map<String,Object> maps = new HashMap<String, Object>();
 			Enumeration em = request.getParameterNames();

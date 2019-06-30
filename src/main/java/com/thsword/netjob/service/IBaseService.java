@@ -19,7 +19,7 @@ public interface IBaseService {
 	 * @param obj
 	 * @return
 	 */
-	public Object addEntity(Class<?> clazz, Object obj) throws Exception;
+	public Object addEntity(Class<?> clazz, Object obj) throws RuntimeException;
 
 	/**
 	 * 删除
@@ -28,7 +28,7 @@ public interface IBaseService {
 	 * @param obj
 	 * @return
 	 */
-	public boolean deleteEntity(Class<?> clazz, Object obj) throws Exception;
+	public boolean deleteEntity(Class<?> clazz, Object obj) throws RuntimeException;
 
 	/**
 	 * 删除通过ID
@@ -37,7 +37,7 @@ public interface IBaseService {
 	 * @param entityId
 	 * @return
 	 */
-	public boolean deleteEntityById(Class<?> clazz, final String entityId) throws Exception;
+	public boolean deleteEntityById(Class<?> clazz, final String entityId) throws RuntimeException;
 
 	/**
 	 * 更新
@@ -46,7 +46,7 @@ public interface IBaseService {
 	 * @param obj
 	 * @return
 	 */
-	public boolean updateEntity(Class<?> clazz, Object obj) throws Exception;
+	public boolean updateEntity(Class<?> clazz, Object obj) throws RuntimeException;
 
 	/**
 	 * 查询对象
@@ -55,7 +55,7 @@ public interface IBaseService {
 	 * @param string
 	 * @return
 	 */
-	public Object queryEntityById(Class<?> clazz, final String string) throws Exception;
+	public Object queryEntityById(Class<?> clazz, final String string) throws RuntimeException;
 
 	
 	/**
@@ -64,7 +64,7 @@ public interface IBaseService {
 	 * @param clazz
 	 * @return
 	 */
-	public List<?> queryAllEntity(Class<?> clazz,Object object) throws Exception;
+	public List<?> queryAllEntity(Class<?> clazz,Object object) throws RuntimeException;
 	
 	/**
 	 * 查询对象
@@ -72,7 +72,7 @@ public interface IBaseService {
 	 * @param clazz
 	 * @return
 	 */
-	public Object queryEntity(Class<?> clazz,Object object) throws Exception;
+	public Object queryEntity(Class<?> clazz,Object object) throws RuntimeException;
 	
 	/**
 	 * 查询分页列表
@@ -80,7 +80,7 @@ public interface IBaseService {
 	 * @param clazz
 	 * @return
 	 */
-	public List<?> queryPageEntity(Class<?> clazz, Object object) throws Exception;
+	public List<?> queryPageEntity(Class<?> clazz, Object object) throws RuntimeException;
 	
 	/**
 	 * 查询计数
@@ -88,6 +88,6 @@ public interface IBaseService {
 	 * @param clazz
 	 * @return
 	 */
-	public Integer queryCountEntity(Class<?> clazz, Object object) throws Exception;
+	public Integer queryCountEntity(Class<?> clazz, Object object) throws RuntimeException;
 
 }

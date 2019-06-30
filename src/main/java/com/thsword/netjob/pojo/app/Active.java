@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,50 +10,61 @@ import java.util.Date;
 /**
  * 
 * @ClassName: Active 
-* @Description: TODO(动态) 
+* @Description: TODO(个人动态) 
 * @author yong
 * @date 2017年5月13日 下午3:26:16 
 *
  */
+@ApiModel(value="个人动态")
 public class Active implements Serializable {
 
 	private static final long serialVersionUID = -6756090072891967330L;
+	@ApiModelProperty(value="ID")
 	private String id;
 	/**
-	 * 应用名称
+	 * 标题
 	 */
+	@ApiModelProperty(value="标题")
 	private String title;
 	/**
-	 * 应用appid
+	 * 文件地址[\"\",\"\"]
 	 */
+	 @ApiModelProperty(value="文件地址[\"\",\"\"]")
 	private String links;
 	/**
 	 * 点赞数
 	 */
+	 @ApiModelProperty(value="点赞数")
 	private Integer agrees;
 	/**
-	 * 
+	 * 用户id
 	 */
+	 @ApiModelProperty(value="用户ID")
 	private String memberId;
 	/**
 	 *评论数 
 	 */
+	 @ApiModelProperty(value="评论数 ")
 	private Integer comments;
 	/**
 	 * 创建时间
 	 */
+	 @ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 创建人
 	 */
+	 @ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新时间
 	 */
+	 @ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 更新人
 	 */
+	 @ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;

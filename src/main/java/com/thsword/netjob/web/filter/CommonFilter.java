@@ -2,16 +2,14 @@ package com.thsword.netjob.web.filter;
 
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,9 +22,9 @@ import com.thsword.netjob.util.JsonResponseUtil;
 /***
  * token和权限认证拦截
  */
+@Log4j2
 public class CommonFilter extends HttpServlet implements HandlerInterceptor {
 	private static final long serialVersionUID = 5836290769748648967L;
-	private static final Log log = LogFactory.getLog(CommonFilter.class);
 
 	public String[] logUrls;
 

@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
@@ -11,80 +14,104 @@ import java.util.Date;
 
  * @time:2018年5月7日 下午5:47:41
  */
+@ApiModel(value="品牌秀 ")
 public class Brand {
+	@ApiModelProperty(value="id")
 	private String id;
 	/**
 	 * 用户ID
 	 */
+	@ApiModelProperty(value="用户ID")
 	private String memberId;
+	 /**
+	 * 用户名称
+	 */
+	@ApiModelProperty(value="用户名称")
 	private String memberName;
 	/**
 	 *转载ID 
 	 */
+	@ApiModelProperty(value="转载ID ")
 	private String brandId;
 	/**
 	 * 标题
 	 */
+	@ApiModelProperty(value="标题")
 	private String title;
 	/**
 	 * 类型（1原创 2转载）
 	 */
+	@ApiModelProperty(value="类型（1原创 2转载）")
 	private Integer type;
 	/**
 	 *点赞数
 	 */
+	@ApiModelProperty(value="点赞数")
 	private Integer agrees;
 	/**
 	 *打赏数
 	 */
+	@ApiModelProperty(value="打赏数")
 	private Integer tips;
 	/**
 	 * 作者
 	 */
+	@ApiModelProperty(value="作者")
 	private String author;
 	/**
 	 * 作者ID
 	 */
+	@ApiModelProperty(value="作者ID")
 	private String authorId;
 	/**
-	 * 作者
+	 * 城市编码
 	 */
+	@ApiModelProperty(value="城市编码")
 	private String citycode;
 	/**
-	 * 作者
+	 * 市名
 	 */
+	@ApiModelProperty(value="市名")
 	private String cityName;
 	/**
-	 * 作者
+	 * 省名
 	 */
+	@ApiModelProperty(value="省名")
 	private String provinceName;
 	/**
 	 * 图文视频连接
 	 * */
+	@ApiModelProperty(value="图文视频连接")
 	private String links;
 	/**
 	 * 正文
 	 */
+	@ApiModelProperty(value="正文")
 	private String content;
 	/**
 	 * 审核状态
 	 */
+	@ApiModelProperty(value="审核状态")
 	private Integer status;
 	/**
 	 * 创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 更新时间
 	 */
+	@ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 创建人
 	 */
+	@ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新人
 	 */
+	@ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;

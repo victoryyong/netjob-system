@@ -336,6 +336,8 @@ public class Global{
 	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_5=5;
 	/** 网币提现*/
 	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_6=6;
+	/** 充值保证金*/
+	public static final int SYS_MEMBER_ACCOUNT_RECORD_TYPE_7=7;
 	
 	
 	//网币账户记录类型

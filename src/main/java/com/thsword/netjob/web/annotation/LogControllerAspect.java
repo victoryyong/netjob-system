@@ -11,7 +11,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -23,7 +24,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.ILogDao;
 import com.thsword.netjob.global.Global;
@@ -35,13 +35,12 @@ import com.thsword.utils.object.UUIDUtil;
 
 @Aspect
 @Component 
+@Log4j2
 public class  LogControllerAspect {
 	// 注入service 用于把热值保存数据库  
     @Resource  
     private LogService logService; 
     // 本地异常日志记录对象  
-    private static final Logger logger = Logger.getLogger(LogControllerAspect.class);  
-  
   
     // Contorller层切点  
     @Pointcut("@annotation(com.thsword.netjob.web.annotation.LogControllerAnnotation)")  
@@ -60,7 +59,7 @@ public class  LogControllerAspect {
                 .getRequestAttributes()).getRequest();  
     	try {
 			addLog(joinPoint, null, 1);
-			logger.info("=====请求结束====="+request.getRequestURI());
+			log.info("=====请求结束====="+request.getRequestURI());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -79,12 +78,12 @@ public class  LogControllerAspect {
                 .getRequestAttributes()).getRequest();  
         try {
         	addLog(joinPoint, e, 0);
-            logger.info("=====请求结束====="+request.getRequestURI());  
+            log.info("=====请求结束====="+request.getRequestURI());  
         } catch (Exception ex) {  
         	System.out.println(ex.getMessage());
             // 记录本地异常日志  
-            logger.error("异常信息:{}");  
-            logger.error(ex.getMessage());  
+            log.error("异常信息:{}");  
+            log.error(ex.getMessage());  
         }  
         /* ==========记录本地异常日志========== */  
     }  
@@ -143,7 +142,7 @@ public class  LogControllerAspect {
     				return;
     			}
     		}
-            logger.info("请求方法:"  
+            log.info("请求方法:"  
                     + (joinPoint.getTarget().getClass().getName() + "."  
                             + joinPoint.getSignature().getName() + "()"));  
             Log log = new Log();  
@@ -203,8 +202,8 @@ public class  LogControllerAspect {
         } catch (Exception ex) {  
         	ex.printStackTrace();
             // 记录本地异常日志  
-            logger.error("==前置通知异常==异常信息:{}");  
-            logger.error(e.getMessage());  
+            log.error("==前置通知异常==异常信息:{}");  
+            log.error(e.getMessage());  
         } 
     }
 }  

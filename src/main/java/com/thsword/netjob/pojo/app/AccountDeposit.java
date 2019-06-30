@@ -1,5 +1,9 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -11,31 +15,39 @@ import java.util.Date;
 
  * @time:2018年5月7日 下午5:47:41
  */
+@ApiModel(value="押金账户")
 public class AccountDeposit {
+	@ApiModelProperty(value="ID")
 	private String id;
 	/**
 	 * 用户ID
 	 */
+	@ApiModelProperty(value="用户ID")
 	private String memberId;
 	/**
 	 * 账户余额
 	 * */
-	private Double money;
+	@ApiModelProperty(value="账户余额")
+	private BigDecimal money;
 	/**
 	 * 创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
 	private Date createDate;
 	/**
 	 * 更新时间
 	 */
+	@ApiModelProperty(value="更新时间")
 	private Date updateDate;
 	/**
 	 * 创建人
 	 */
+	@ApiModelProperty(value="创建人")
 	private String createBy;
 	/**
 	 * 更新人
 	 */
+	@ApiModelProperty(value="更新人")
 	private String updateBy;
 	public String getId() {
 		return id;
@@ -49,10 +61,10 @@ public class AccountDeposit {
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	public Double getMoney() {
+	public BigDecimal getMoney() {
 		return money;
 	}
-	public void setMoney(Double money) {
+	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
 	public Date getCreateDate() {

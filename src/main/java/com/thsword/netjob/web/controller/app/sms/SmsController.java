@@ -1,14 +1,13 @@
 package com.thsword.netjob.web.controller.app.sms;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.log4j.Log4j2;
+
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -30,8 +29,8 @@ import com.thsword.utils.object.RandomUtil;
  *
  */
 @Controller
+@Log4j2
 public class SmsController {
-	private static final Log log = LogFactory.getLog(SmsController.class);
 	@RequestMapping("app/visitor/getIdentifyCode")
 	public void list(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value="phone",required=true)String phone,

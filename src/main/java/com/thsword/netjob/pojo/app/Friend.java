@@ -1,5 +1,8 @@
 package com.thsword.netjob.pojo.app;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,29 +15,36 @@ import java.util.Date;
 * @date 2017年5月13日 下午3:26:16 
 *
  */
+@ApiModel(value="好友")
 public class Friend implements Serializable {
 
 	private static final long serialVersionUID = -6756090072891967330L;
+	@ApiModelProperty(value="id")
 	private String id;
 	/**
 	 * 名称
 	 */
+	@ApiModelProperty(value="名称")
 	private String name;
 	/**
-	 * 
+	 * 图片
 	 */
+	@ApiModelProperty(value=" 图片")
 	private String image;
 	/**
-	 * memberId
+	 * 会员ID
 	 */
+	@ApiModelProperty(value="会员ID")
 	private String memberId;
 	/**
-	 * friendId
+	 * 好友ID
 	 */
+	@ApiModelProperty(value="好友ID")
 	private String friendId;
 	/**
 	 * 创建时间
 	 */
+	@ApiModelProperty(value="创建时间")
 	private Date createDate;
 	public String getId() {
 		return id;
