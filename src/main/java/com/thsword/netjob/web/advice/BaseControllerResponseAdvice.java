@@ -1,4 +1,4 @@
-package com.thsword.netjob.web.controller.advice;
+package com.thsword.netjob.web.advice;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

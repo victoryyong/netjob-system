@@ -1,4 +1,4 @@
-package com.thsword.netjob.web.controller.advice;
+package com.thsword.netjob.web.advice;
 
 import java.util.ArrayList;
 import java.util.List;
