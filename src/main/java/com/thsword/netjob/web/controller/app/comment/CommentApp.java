@@ -1,5 +1,10 @@
 package com.thsword.netjob.web.controller.app.comment;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,16 +13,16 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.ICommentDao;
 import com.thsword.netjob.pojo.app.Comment;
 import com.thsword.netjob.service.CommentService;
-import com.thsword.netjob.util.ErrorUtil;
-import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.web.controller.base.BaseResponse;
+import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
 /**
@@ -29,7 +34,8 @@ import com.thsword.utils.page.Page;
 
  * @time:2018年5月10日 下午8:52:49
  */
-@Controller
+@RestController
+@Api(tags = "NETJOB-COMMENT", description = "评论接口")
 public class CommentApp {
 	@Resource(name = "commentService")
 	CommentService commentService;
@@ -44,23 +50,25 @@ public class CommentApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/comment/add")
-	public void add(HttpServletRequest request, HttpServletResponse response,Comment comment) throws Exception {
+	@ApiOperation(value = "添加评论", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "type", value = "类型（1-会员 2-服务 3-需求）", dataType = "string", paramType = "query"),
+			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query") })
+	public BaseResponse add(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String bizId,
+			@RequestParam String content
+			) throws Exception {
 		try {
 			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(comment.getBizId())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "业务ID不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(comment.getContent())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "评论内容不能为空", response, request);
-				return;
-			}
+			Comment comment = new Comment();
+			comment.setBizId(bizId);
+			comment.setContent(content);
 			comment.setId(UUIDUtil.get32UUID());
 			comment.setMemberId(memberId);
 			comment.setCreateBy(memberId);
 			comment.setUpdateBy(memberId);
 			commentService.addEntity(ICommentDao.class, comment);
-			JsonResponseUtil.successCodeResponse(response, request);
+			return BaseResponse.success();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -77,13 +85,17 @@ public class CommentApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/comment/list")
-	public void list(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
-		try {
-			String bizId = request.getParameter("bizId");
-			if (StringUtils.isEmpty(bizId)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "ID不能为空", response, request);
-				return;
-			}
+	@ApiOperation(value = "查看评论列表", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
+			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"),
+			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query"), })
+	public JSONObject list(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,
+			@RequestParam(required = false, defaultValue = "1") int currentPage,
+			@RequestParam String bizId
+			) throws Exception {
+			Page page = new Page(currentPage, pageSize);
 			Map<String, Object> map = new HashMap<String, Object>();
 			page.setSort("t.c_createDate");
 			page.setDir(Page.DIR_TYPE_DESC);
@@ -94,11 +106,7 @@ public class CommentApp {
 			JSONObject result = new JSONObject();
 			result.put("list", comments);
 			result.put("page", page);
-			JsonResponseUtil.successBodyResponse(result, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+			return result;
 	}
 	
 	/**
@@ -111,13 +119,17 @@ public class CommentApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/comment/getReplys")
-	public void getReplys(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
-		try {
-			String parentId = request.getParameter("parentId");
-			if (StringUtils.isEmpty(parentId)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "父ID不能为空", response, request);
-				return;
-			}
+	@ApiOperation(value = "查看回复列表", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
+			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"),
+			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query"), })
+	public JSONObject getReplys(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,
+			@RequestParam(required = false, defaultValue = "1") int currentPage,
+			@RequestParam String parentId
+			) throws Exception {
+			Page page = new Page(currentPage, pageSize);
 			Map<String, Object> map = new HashMap<String, Object>();
 			page.setSort("t.c_createDate");
 			page.setDir(Page.DIR_TYPE_DESC);
@@ -128,11 +140,7 @@ public class CommentApp {
 			JSONObject result = new JSONObject();
 			result.put("list", comments);
 			result.put("page", page);
-			JsonResponseUtil.successBodyResponse(result, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+			return result;
 	}
 	
 	/**
@@ -145,32 +153,25 @@ public class CommentApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/comment/reply")
-	public void reply(HttpServletRequest request, HttpServletResponse response,Comment comment) throws Exception {
-		try {
+	@ApiOperation(value = "回复", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "parentId", value = "评论ID", dataType = "string", paramType = "query"),
+			@ApiImplicitParam(name = "content", value = "内容", dataType = "string", paramType = "query")})
+	public BaseResponse reply(HttpServletRequest request, HttpServletResponse response,@RequestParam String parentId,@RequestParam String content) throws Exception {
 			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(comment.getParentId())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "父ID不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(comment.getContent())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "内容不能为空", response, request);
-				return;
-			}
-			Comment temp = (Comment) commentService.queryEntityById(ICommentDao.class, comment.getParentId());
+			Comment temp = (Comment) commentService.queryEntityById(ICommentDao.class, parentId);
 			if(null==temp){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "该评论不存在", response, request);
-				return;
+				throw new ServiceException("该评论不存在");
 			}
+			Comment comment = new Comment();
+			comment.setParentId(parentId);
+			comment.setContent(content);
 			comment.setMemberId(memberId);
 			comment.setCreateBy(memberId);
 			comment.setUpdateBy(memberId);
 			comment.setId(UUIDUtil.get32UUID());
 			commentService.addEntity(ICommentDao.class, comment);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+			return BaseResponse.success();
 	}
 	
 	/**
@@ -183,17 +184,10 @@ public class CommentApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/comment/counts")
-	public void counts(HttpServletRequest request, HttpServletResponse response,Comment comment) throws Exception {
-		try {
-			if (StringUtils.isEmpty(comment.getBizId())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "ID不能为空", response, request);
-				return;
-			}
-			int count =  commentService.queryCountEntity(ICommentDao.class, comment);
-			JsonResponseUtil.successBodyResponse(count, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "评论数", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "bizId", value = "ID", dataType = "string", paramType = "query")})
+	public int counts(HttpServletRequest request, HttpServletResponse response,@RequestParam String bizId) throws Exception {
+			return commentService.queryCountEntity(ICommentDao.class, bizId);
 	}
 }

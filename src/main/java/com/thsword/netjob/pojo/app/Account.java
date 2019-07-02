@@ -15,7 +15,7 @@ import java.util.Date;
 
  * @time:2018年5月7日 下午5:47:41
  */
-@ApiModel("应用名称")
+@ApiModel("现金账户")
 public class Account {
 	@ApiModelProperty(value="id")
 	private String id;

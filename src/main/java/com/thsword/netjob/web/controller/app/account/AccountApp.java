@@ -154,7 +154,7 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/account/forgetPwd")
-	@ApiOperation(value="是否设置支付密码",httpMethod="POST")
+	@ApiOperation(value="忘记密码",httpMethod="POST")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="identifyCode",value="验证码",dataType="string", paramType = "query"),
   		@ApiImplicitParam(name="phone",value="手机号",dataType="long", paramType = "query"),
@@ -165,7 +165,6 @@ public class AccountApp {
 			@RequestParam String identifyCode,
 			@RequestParam String phone
 			) throws Exception {
-		try {
 			String redisKey = "member:forgetPayPwd:"+phone;
 			String redisValue=RedisUtils.get(redisKey);
 			if(StringUtils.isEmpty(redisValue)){
@@ -206,10 +205,6 @@ public class AccountApp {
 			
 			RedisUtils.del(redisKey);
 			return BaseResponse.success();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
 	}
 	
 	/**
@@ -602,7 +597,7 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/payReward")
-	@ApiOperation(value="是否设置支付密码",httpMethod="POST")
+	@ApiOperation(value="付款打赏网币",httpMethod="POST")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="password",value="支付密码",dataType="string", paramType = "query"),
   		@ApiImplicitParam(name="tradeNo",value="订单交易号",dataType="long", paramType = "query")
@@ -656,7 +651,7 @@ public class AccountApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/account/queryAlipayInfo")
-	@ApiOperation(value="是否设置支付密码",httpMethod="POST")
+	@ApiOperation(value="查询支付结果",httpMethod="POST")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="out_trade_no",value="订单交易号",dataType="string", paramType = "query")
 	})

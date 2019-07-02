@@ -11,9 +11,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IAddressDao;
@@ -21,9 +21,10 @@ import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Address;
 import com.thsword.netjob.service.IBaseService;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.utils.object.UUIDUtil;
 
-@Controller
+@RestController
 @Api(tags="NETJOB-ADDRESS",description="地址接口")
 public class AddressApp {
 	@Resource(name = "baseService")
@@ -31,7 +32,7 @@ public class AddressApp {
 
 	@RequestMapping("app/member/address/list")
 	@ApiOperation(value="地址列表",httpMethod="POST")
-	public void list(HttpServletRequest request, HttpServletResponse response){
+	public JSONObject list(HttpServletRequest request, HttpServletResponse response){
 		String memberId = (String) request.getAttribute("memberId");
 		Address address = new Address();
 		address.setMemberId(memberId);
@@ -40,7 +41,7 @@ public class AddressApp {
 		List<Address> addresses = (List<Address>) baseService.queryAllEntity(IAddressDao.class, address);
 		JSONObject obj = new JSONObject();
 		obj.put("list", addresses);
-		JsonResponseUtil.successBodyResponse(addresses, response, request);
+		return obj;
 	}
 	
 	@RequestMapping("app/member/address/add")
@@ -109,7 +110,7 @@ public class AddressApp {
 		@ApiImplicitParam(name="phone",value="收件电话",dataType="string", paramType = "query"),
 		@ApiImplicitParam(name="isDefault",value="是否默认地址（0-否，1-是）",dataType="int", paramType = "query")
 	})
-	public void edit(HttpServletRequest request, HttpServletResponse response,
+	public BaseResponse edit(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(required =false)String province,
 			@RequestParam(required =false)String citycode,
 			@RequestParam(required =false)String provinceName,
@@ -147,7 +148,7 @@ public class AddressApp {
 		address.setCreateBy(memberId);
 		address.setUpdateBy(memberId);
 		baseService.updateEntity(IAddressDao.class,address);
-		JsonResponseUtil.successCodeResponse(response, request);
+		return BaseResponse.success();
 	}
 	
 	@RequestMapping("app/member/address/delete")
@@ -155,10 +156,10 @@ public class AddressApp {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name="id",value="地址ID",dataType="String", paramType = "query")
 	})
-	public void delete(HttpServletRequest request, HttpServletResponse response,
+	public BaseResponse delete(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam String id
 			){
 		baseService.deleteEntityById(IAddressDao.class,id);
-		JsonResponseUtil.successCodeResponse(response, request);
+		return BaseResponse.success();
 	}
 }

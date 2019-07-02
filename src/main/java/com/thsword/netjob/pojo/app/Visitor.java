@@ -24,9 +24,9 @@ public class Visitor {
 	@ApiModelProperty(value = "认证会员ID")
 	private String memeberId;
 	/**
-	 * 认证类型
+	 * 访客ID
 	 */
-	@ApiModelProperty(value = "认证类型")
+	@ApiModelProperty(value = "访客ID")
 	private String viewerId;
 	/**
 	 * 创建时间

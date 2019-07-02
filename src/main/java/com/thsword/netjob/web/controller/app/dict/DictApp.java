@@ -1,22 +1,25 @@
 package com.thsword.netjob.web.controller.app.dict;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IDictDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.Dict;
 import com.thsword.netjob.service.DictService;
-import com.thsword.netjob.util.JsonResponseUtil;
 
-@Controller
+@RestController
+@Api(tags = "NETJOB-DICT", description = "配置接口")
 public class DictApp {
 	@Resource(name = "dictService")
 	DictService dictService;
@@ -27,15 +30,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getDistanceRange")
-	public void getDistanceRange(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
+	@ApiOperation(value = "距离范围", httpMethod = "POST")
+	public JSONObject getDistanceRange(HttpServletRequest request, HttpServletResponse response) throws Exception {
 			JSONObject obj = new JSONObject();
 			obj.put("list", getChildren(Global.SYS_DICT_DISTANCE_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+			return obj;
 	}
 	
 	/**
@@ -44,15 +43,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getAgeRange")
-	public void getAgeRange(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("list", getChildren(Global.SYS_DICT_AGE_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "年龄范围", httpMethod = "POST")
+	public JSONObject getAgeRange(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("list", getChildren(Global.SYS_DICT_AGE_TYPE));
+		return obj;
 	}
 	
 	/**
@@ -61,15 +56,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getSkillDegree")
-	public void getSkillDegree(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("list", getChildren(Global.SYS_DICT_SKILL_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "技能等级", httpMethod = "POST")
+	public JSONObject getSkillDegree(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("list", getChildren(Global.SYS_DICT_SKILL_TYPE));
+		return obj;
 	}
 	
 	/**
@@ -78,15 +69,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getCreditDegree")
-	public void getCreditDegree(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("list", getChildren(Global.SYS_DICT_CREDIT_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "诚信等级", httpMethod = "POST")
+	public JSONObject getCreditDegree(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("list", getChildren(Global.SYS_DICT_CREDIT_TYPE));
+		return obj;
 	}
 	/**
 	 * @Description:服务类型
@@ -94,15 +81,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getServeType")
-	public void getServeType(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("list", getChildren(Global.SYS_DICT_SERVE_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "服务类型", httpMethod = "POST")
+	public JSONObject getServeType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("list", getChildren(Global.SYS_DICT_SERVE_TYPE));
+		return obj;
 	}
 	/**
 	 * @Description:性别类型
@@ -110,15 +93,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getGenderType")
-	public void getGenderType(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("list", getChildren(Global.SYS_DICT_GENDER_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "性别类型", httpMethod = "POST")
+	public JSONObject getGenderType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("list", getChildren(Global.SYS_DICT_GENDER_TYPE));
+		return obj;
 	}
 	
 	/**
@@ -127,15 +106,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getMemberType")
-	public void getMemberType(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("list", getChildren(Global.SYS_DICT_MEMBER_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "用户类型", httpMethod = "POST")
+	public JSONObject getMemberType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("list", getChildren(Global.SYS_DICT_MEMBER_TYPE));
+		return obj;
 	}
 	
 	/**
@@ -144,15 +119,11 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getBannerType")
-	public void getBannerType(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("list", getChildren(Global.SYS_DICT_BANNER_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "广告类型", httpMethod = "POST")
+	public JSONObject getBannerType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("list", getChildren(Global.SYS_DICT_BANNER_TYPE));
+		return obj;
 	}
 	
 	/**
@@ -161,20 +132,16 @@ public class DictApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/visitor/dict/getSelectCondition")
-	public void getSelectCondition(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("creditDegrees", getChildren(Global.SYS_DICT_CREDIT_TYPE));
-			obj.put("skillDegrees", getChildren(Global.SYS_DICT_SKILL_TYPE));
-			obj.put("ageRanges", getChildren(Global.SYS_DICT_AGE_TYPE));
-			obj.put("distanceRanges", getChildren(Global.SYS_DICT_DISTANCE_TYPE));
-			obj.put("serveTypes", getChildren(Global.SYS_DICT_SERVE_TYPE));
-			obj.put("genderTypes", getChildren(Global.SYS_DICT_GENDER_TYPE));
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	@ApiOperation(value = "获取搜索条件", httpMethod = "POST")
+	public JSONObject getSelectCondition(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject obj = new JSONObject();
+		obj.put("creditDegrees", getChildren(Global.SYS_DICT_CREDIT_TYPE));
+		obj.put("skillDegrees", getChildren(Global.SYS_DICT_SKILL_TYPE));
+		obj.put("ageRanges", getChildren(Global.SYS_DICT_AGE_TYPE));
+		obj.put("distanceRanges", getChildren(Global.SYS_DICT_DISTANCE_TYPE));
+		obj.put("serveTypes", getChildren(Global.SYS_DICT_SERVE_TYPE));
+		obj.put("genderTypes", getChildren(Global.SYS_DICT_GENDER_TYPE));
+		return obj;
 	}
 	
 	
