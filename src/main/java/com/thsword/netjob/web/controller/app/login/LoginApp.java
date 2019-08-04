@@ -61,7 +61,7 @@ public class LoginApp {
 	@RequestMapping("app/login")
 	@ApiOperation(value = "登陆", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "type", value = "登录类型（phone、qq、wx）", dataType = "string", paramType = "query"),
+			@ApiImplicitParam(name = "type", value = "登录类型（phone、qq、wx）", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "phone", value = "手机账号", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "password", value = "密码", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "qqId", value = "qq登录Id", dataType = "string", paramType = "query"),
@@ -218,13 +218,13 @@ public class LoginApp {
 	@RequestMapping("app/register")
 	@ApiOperation(value = "注册", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "gender", value = "性别", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "name", value = "名称", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "citycode", value = "城市代码", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "cityName", value = "城市名称", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "provinceName", value = "省名称", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "phone", value = "手机号码", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "password", value = "密码", dataType = "string", paramType = "query") })
+			@ApiImplicitParam(name = "gender", value = "性别", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "name", value = "名称", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "citycode", value = "城市代码", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "cityName", value = "城市名称", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "provinceName", value = "省名称", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "phone", value = "手机号码", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "password", value = "密码", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse register(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String name,
 			@RequestParam Integer gender, @RequestParam String citycode,

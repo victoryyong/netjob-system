@@ -47,9 +47,9 @@ public class BrandApp {
 	@RequestMapping("app/member/brand/add")
 	@ApiOperation(value = "新增品牌秀", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "title", value = "标题", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "content", value = "内容", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "links", value = "连接", dataType = "string", paramType = "query") })
+			@ApiImplicitParam(name = "title", value = "标题", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "content", value = "内容", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "links", value = "连接", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse query(HttpServletRequest request,
 			@RequestParam String title, @RequestParam String content,
 			@RequestParam String links) throws Exception {
@@ -101,7 +101,7 @@ public class BrandApp {
 	 */
 	@RequestMapping("app/member/brand/reproduce")
 	@ApiOperation(value = "转载品牌秀", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "brandId", value = "标题", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "brandId", value = "标题", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse query(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String brandId)
 			throws Exception {

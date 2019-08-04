@@ -51,8 +51,8 @@ public class CollectApp {
 	@RequestMapping("app/member/collect")
 	@ApiOperation(value = "收藏", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "type", value = "类型（1-会员 2-服务 3-需求）", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query") })
+			@ApiImplicitParam(name = "type", value = "类型（1-会员 2-服务 3-需求）", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse collect(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam int type,
 			@RequestParam String bizId) throws Exception {
@@ -109,7 +109,7 @@ public class CollectApp {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"),
-			@ApiImplicitParam(name = "type", value = "收藏类型（1-会员 2-服务 3-需求）", dataType = "string", paramType = "query"), })
+			@ApiImplicitParam(name = "type", value = "收藏类型（1-会员 2-服务 3-需求）", dataType = "string", paramType = "query", required = true), })
 	public JSONObject collects(
 			HttpServletRequest request,
 			HttpServletResponse response,
@@ -151,7 +151,7 @@ public class CollectApp {
 	 */
 	@RequestMapping("app/member/isCollected")
 	@ApiOperation(value = "是否已收藏", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true) })
 	public JSONObject isCollected(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String bizId)
 			throws Exception {
@@ -183,7 +183,7 @@ public class CollectApp {
 	 */
 	@RequestMapping("app/member/unCollect")
 	@ApiOperation(value = "取消收藏", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse unCollect(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String bizId)
 			throws Exception {

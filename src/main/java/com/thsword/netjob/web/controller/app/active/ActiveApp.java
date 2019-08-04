@@ -40,8 +40,8 @@ public class ActiveApp {
 	@RequestMapping("app/member/active/add")
 	@ApiOperation(value = "添加个人动态", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "title", value = "标题", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "links", value = "地址连接集合格式[\"\",\"\"]", dataType = "string", paramType = "query") })
+			@ApiImplicitParam(name = "title", value = "标题", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "links", value = "地址连接集合格式[\"\",\"\"]", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse add(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String title,
 			@RequestParam String links) throws Exception {

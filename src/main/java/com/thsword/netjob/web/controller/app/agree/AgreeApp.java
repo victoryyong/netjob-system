@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,8 +41,8 @@ public class AgreeApp {
 	@RequestMapping("app/member/agree")
 	@ApiOperation(value = "点赞", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "agreeId", value = "点赞对象ID", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "type", value = "点赞类型（1-会员 2-品牌秀 3-服务&需求 4-动态 5-媒体文件（热播视频/图片））", dataType = "int", paramType = "query") })
+			@ApiImplicitParam(name = "agreeId", value = "点赞对象ID", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "type", value = "点赞类型（1-会员 2-品牌秀 3-服务&需求 4-动态 5-媒体文件（热播视频/图片））", dataType = "int", paramType = "query", required = true) })
 	public BaseResponse agree(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String agreeId,
 			@RequestParam int type) throws Exception {
@@ -114,7 +113,7 @@ public class AgreeApp {
 
 	@RequestMapping("app/member/unAgree")
 	@ApiOperation(value = "取消点赞", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "agreeId", value = "点赞对象ID（会员/品牌秀/服务&需求/动态/媒体文件）", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "agreeId", value = "点赞对象ID（会员/品牌秀/服务&需求/动态/媒体文件）", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse unAgree(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String agreeId)
 			throws Exception {
@@ -167,7 +166,7 @@ public class AgreeApp {
 
 	@RequestMapping("app/member/isAgreed")
 	@ApiOperation(value = "查询是否已点赞", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "agreeId", value = "点赞对象ID（会员/品牌秀/服务&需求/动态/媒体文件）", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "agreeId", value = "点赞对象ID（会员/品牌秀/服务&需求/动态/媒体文件）", dataType = "string", paramType = "query", required = true) })
 	public JSONObject isAgreed(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String agreeId)
 			throws Exception {

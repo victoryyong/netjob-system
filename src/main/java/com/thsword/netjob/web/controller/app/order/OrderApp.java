@@ -1,5 +1,10 @@
 package com.thsword.netjob.web.controller.app.order;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -7,409 +12,357 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import lombok.extern.log4j.Log4j2;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IOrderDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Order;
 import com.thsword.netjob.service.OrderService;
-import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.page.Page;
 
-@Controller
-@Log4j2
+@RestController
+@Api(tags = "NETJOB-ORDER", description = "订单接口")
 public class OrderApp {
 	@Resource(name = "orderService")
 	OrderService orderService;
 
 	/**
 	 * 买家-下单
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
+	@ApiOperation(value = "买家-下单", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "serveId", value = "菜单ID", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "price", value = "菜单ID", dataType = "int", paramType = "query", required = true),
+			@ApiImplicitParam(name = "count", value = "菜单ID", dataType = "int", paramType = "query", required = true) })
 	@RequestMapping("app/member/order/doOrder")
-	public void doOrder(HttpServletRequest request, HttpServletResponse response,Order order) throws Exception {
-		try {
-			String citycode=request.getAttribute("citycode")+"";
-			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(order.getServeId())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "服务id不能为空", response, request);
-				return;
-			}
-			/*if (StringUtils.isEmpty(order.getAddressId())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "地址ID不能为空", response, request);
-				return;
-			}*/
-			if (StringUtils.isEmpty(order.getPrice())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单单价不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(order.getCount())) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单数目不能为空", response, request);
-				return;
-			}
-			order.setCitycode(citycode);
-			order.setMemberId(memberId);
-			Order buildOrder = orderService.doServeOrder(order);
-			JsonResponseUtil.successBodyResponse(buildOrder,response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"下单异常",response, request);
-		}
+	public Order doOrder(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String serveId,
+			@RequestParam BigDecimal price, Integer count) throws Exception {
+		String citycode = request.getAttribute("citycode") + "";
+		String memberId = request.getAttribute("memberId") + "";
+		Order order = new Order();
+		order.setServeId(serveId);
+		order.setPrice(price);
+		order.setCount(count);
+		order.setCitycode(citycode);
+		order.setMemberId(memberId);
+		Order buildOrder = orderService.doServeOrder(order);
+		return buildOrder;
 	}
-	
+
 	/**
-	 * 买家-下单
+	 * 买家-删除订单
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/deleteOrder")
-	public void deleteOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String orderId = request.getParameter("orderId");
-			if(StringUtils.isEmpty(orderId)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单id不能为空", response, request);
-				return;
-			}
-			Order order = (Order) orderService.queryEntityById(IOrderDao.class, orderId);
-			if(null==order){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单不存在", response, request);
-				return;
-			}
-			if(order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_PAYING){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "禁止删除", response, request);
-				return;
-			}
-			orderService.deleteEntityById(IOrderDao.class, orderId);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"删除顶顶那异常",response, request);
+	@ApiOperation(value = "买家-删除订单", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderId", value = "订单ID", dataType = "string", paramType = "query", required = true) })
+	public BaseResponse deleteOrder(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String orderId)
+			throws Exception {
+		if (StringUtils.isEmpty(orderId)) {
+			throw new ServiceException("订单id不能为空");
 		}
+		Order order = (Order) orderService.queryEntityById(IOrderDao.class,
+				orderId);
+		if (null == order) {
+			throw new ServiceException("订单不存在");
+		}
+		if (order.getBuyerStatus() != Global.SYS_ORDER_BUYER_STATUS_PAYING) {
+			throw new ServiceException("禁止删除");
+		}
+		orderService.deleteEntityById(IOrderDao.class, orderId);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 买家-支付订单
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/payOrders")
-	public void payOrders(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String orderIds = request.getParameter("orderIds");
-			String password = request.getParameter("password");
-			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(orderIds)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单id不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(password)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "密码不能为空", response, request);
-				return;
-			}
-			orderService.payOrders(memberId,orderIds,password);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"支付订单异常",response, request);
+	@ApiOperation(value = "买家-支付订单", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "orderIds", value = "订单IDS", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "password", value = "密码", dataType = "string", paramType = "query", required = true) })
+	public BaseResponse payOrders(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String orderIds,
+			@RequestParam String password) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		if (StringUtils.isEmpty(orderIds)) {
+			throw new ServiceException("订单id不能为空");
 		}
+		if (StringUtils.isEmpty(password)) {
+			throw new ServiceException("密码不能为空");
+		}
+		orderService.payOrders(memberId, orderIds, password);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 买家-签单
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/signOrders")
-	public void signOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String orderIds = request.getParameter("orderIds");
-			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(orderIds)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "订单id不能为空", response, request);
-				return;
-			}
-			orderService.signOrders(memberId,orderIds);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"支付订单异常",response, request);
+	@ApiOperation(value = "买家-签单", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderIds", value = "订单IDS", dataType = "string", paramType = "query", required = true), })
+	public BaseResponse signOrder(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String orderIds)
+			throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		if (StringUtils.isEmpty(orderIds)) {
+			throw new ServiceException("订单id不能为空");
 		}
+		orderService.signOrders(memberId, orderIds);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 买家-申请退款
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/applyRefund")
-	public void applyRefund(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String tradeNo = request.getParameter("tradeNo");
-			String money = request.getParameter("money");
-			String reason = request.getParameter("reason");
-			String links = request.getParameter("links");
-			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(tradeNo)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "业务单号不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(money)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "金额不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(reason)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "原因不能为空", response, request);
-				return;
-			}
-			orderService.applyRefund(memberId,tradeNo,new BigDecimal(money),reason,links);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"申请退款异常",response, request);
+	@ApiOperation(value = "买家-申请退款", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "tradeNo", value = "交易号", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "money", value = "订单金额", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "reason", value = "原因", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "links", value = "文件链接", dataType = "string", paramType = "query"), })
+	public BaseResponse applyRefund(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String tradeNo,
+			@RequestParam String money, @RequestParam String reason,
+			@RequestParam(required = false) String links) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		if (StringUtils.isEmpty(tradeNo)) {
+			throw new ServiceException("业务单号不能为空");
 		}
+		if (StringUtils.isEmpty(money)) {
+			throw new ServiceException("金额不能为空");
+		}
+		if (StringUtils.isEmpty(reason)) {
+			throw new ServiceException("原因不能为空");
+		}
+		orderService.applyRefund(memberId, tradeNo, new BigDecimal(money),
+				reason, links);
+		JsonResponseUtil.successCodeResponse(response, request);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 买家-申请维权
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/applyRight")
-	public void applyRight(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String tradeNo = request.getParameter("tradeNo");
-			String money = request.getParameter("money");
-			String reason = request.getParameter("reason");
-			String links = request.getParameter("links");
-			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(tradeNo)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "业务单号不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(money)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "金额不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(reason)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "原因不能为空", response, request);
-				return;
-			}
-			orderService.applyRight(memberId,tradeNo,new BigDecimal(money),reason,links);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"申请维权异常",response, request);
+	@ApiOperation(value = "买家-申请维权", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "tradeNo", value = "交易号", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "money", value = "订单金额", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "reason", value = "原因", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "links", value = "文件链接", dataType = "string", paramType = "query"), })
+	public BaseResponse applyRight(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String tradeNo,
+			@RequestParam String money, @RequestParam String reason,
+			@RequestParam(required = false) String links) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		if (StringUtils.isEmpty(tradeNo)) {
+			throw new ServiceException("业务单号不能为空");
 		}
+		if (StringUtils.isEmpty(money)) {
+			throw new ServiceException("金额不能为空");
+		}
+		if (StringUtils.isEmpty(reason)) {
+			throw new ServiceException("原因不能为空");
+		}
+		orderService.applyRight(memberId, tradeNo, new BigDecimal(money),
+				reason, links);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 商家-我的接单列表
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/bizOrderList")
-	public void bizOrderList(HttpServletRequest request, HttpServletResponse response,Page page,@RequestParam(required=false,value="status") Integer status) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			List<Order> orders = orderService.orderList(null,memberId,null,status,page);
-			JSONObject obj = new JSONObject();
-			obj.put("page", page);
-			obj.put("list", orders);
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询业务订单异常",response, request);
-		}
+	@ApiOperation(value = "商家-我的接单列表", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "status", value = "状态", dataType = "int", paramType = "query"), })
+	public JSONObject bizOrderList(HttpServletRequest request,
+			HttpServletResponse response, Page page,
+			@RequestParam(required = false, value = "status") Integer status)
+			throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		List<Order> orders = orderService.orderList(null, memberId, null,
+				status, page);
+		JSONObject obj = new JSONObject();
+		obj.put("page", page);
+		obj.put("list", orders);
+		return obj;
 	}
+
 	/**
 	 * 商家-接单
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/acceptOrders")
-	public void acceptOrder(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="orderIds") String orderIds) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			orderService.acceptOrders(memberId,orderIds);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"接单异常",response, request);
-		}
+	@ApiOperation(value = "商家-接单", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderIds", value = "订单IDS", dataType = "String", paramType = "query", required = true), })
+	public BaseResponse acceptOrder(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "orderIds") String orderIds) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		orderService.acceptOrders(memberId, orderIds);
+		JsonResponseUtil.successCodeResponse(response, request);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 商家-拒单
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/cancelOrders")
-	public void cancelOrder(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="orderIds") String orderIds) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			orderService.cancelOrders(memberId,orderIds);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"拒单异常",response, request);
-		}
+	@ApiOperation(value = "商家-拒单", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderIds", value = "订单IDS", dataType = "String", paramType = "query", required = true), })
+	public BaseResponse cancelOrder(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "orderIds") String orderIds) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		orderService.cancelOrders(memberId, orderIds);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 商家-拒绝退款
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/rejectRefund")
-	public void rejectRefund(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="orderId") String orderId) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			orderService.rejectRefund(memberId,orderId);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"拒绝退款异常",response, request);
-		}
+	@ApiOperation(value = "商家-拒单", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderId", value = "订单ID", dataType = "String", paramType = "query", required = true), })
+	public BaseResponse rejectRefund(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "orderId") String orderId) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		orderService.rejectRefund(memberId, orderId);
+		return BaseResponse.success();
 	}
+
 	/**
 	 * 商家-接受退款
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/acceptRefund")
-	public void acceptRefund(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="orderId") String orderId) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			orderService.acceptRefund(memberId,orderId);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"接受退款异常",response, request);
-		}
+	@ApiOperation(value = "商家-接受退款", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderId", value = "订单ID", dataType = "String", paramType = "query", required = true), })
+	public BaseResponse acceptRefund(HttpServletRequest request,
+			@RequestParam(value = "orderId") String orderId) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		orderService.acceptRefund(memberId, orderId);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 商家-完成订单
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/finishOrder")
-	public void finishOrder(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="orderId") String orderId) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			orderService.finishOrder(memberId,orderId);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"完成订单异常",response, request);
-		}
+	@ApiOperation(value = "商家-完成订单", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderId", value = "订单ID", dataType = "String", paramType = "query", required = true), })
+	public BaseResponse finishOrder(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String orderId)
+			throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		orderService.finishOrder(memberId, orderId);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 商家-举证
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/applyApprove")
-	public void applyApprove(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String tradeNo = request.getParameter("tradeNo");
-			String money = request.getParameter("money");
-			String reason = request.getParameter("reason");
-			String links = request.getParameter("links");
-			String memberId = request.getAttribute("memberId")+"";
-			if (StringUtils.isEmpty(tradeNo)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "业务单号不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(money)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "金额不能为空", response, request);
-				return;
-			}
-			if (StringUtils.isEmpty(reason)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "原因不能为空", response, request);
-				return;
-			}
-			orderService.applyApprove(memberId,tradeNo,new BigDecimal(money),reason,links);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"举证异常",response, request);
+	@ApiOperation(value = "商家-举证", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "tradeNo", value = "交易号", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "money", value = "订单金额", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "reason", value = "原因", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "links", value = "文件链接", dataType = "string", paramType = "query"), })
+	public BaseResponse applyApprove(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String tradeNo,
+			@RequestParam String money, @RequestParam String reason,
+			@RequestParam(required = false) String links) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		if (StringUtils.isEmpty(tradeNo)) {
+			throw new ServiceException("业务单号不能为空");
 		}
+		if (StringUtils.isEmpty(money)) {
+			throw new ServiceException("金额不能为空");
+		}
+		if (StringUtils.isEmpty(reason)) {
+			throw new ServiceException("原因不能为空");
+		}
+		orderService.applyApprove(memberId, tradeNo, new BigDecimal(money),
+				reason, links);
+		return BaseResponse.success();
 	}
-	
-	
+
 	/**
 	 * 我的-订单列表
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/orderList")
-	public void orderList(HttpServletRequest request, HttpServletResponse response,Page page,@RequestParam(required=false,value="status") Integer status) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			List<Order> orders = orderService.orderList(memberId,null,status,null,page);
-			JSONObject obj = new JSONObject();
-			obj.put("page", page);
-			obj.put("list", orders);
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询订单列表异常",response, request);
-		}
+	@ApiOperation(value = "订单详情", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "status", value = "状态", dataType = "String", paramType = "query", required = false),
+			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query"),
+			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query"), })
+	public JSONObject orderList(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(required = false, value = "status") Integer status,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,
+			@RequestParam(required = false, defaultValue = "1") int currentPage)
+			throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		Page page = new Page(currentPage, pageSize);
+		List<Order> orders = orderService.orderList(memberId, null, status,
+				null, page);
+		JSONObject obj = new JSONObject();
+		obj.put("page", page);
+		obj.put("list", orders);
+		return obj;
 	}
-	
+
 	/**
 	 * 订单详情
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/orderDetail")
-	public void orderDetail(HttpServletRequest request, HttpServletResponse response,Page page,@RequestParam(value="orderId") String orderId) throws Exception {
-		try {
-			Order order = (Order) orderService.queryEntityById(IOrderDao.class, orderId);
-			JsonResponseUtil.successBodyResponse(order, response, request);
-		} catch (ServiceException e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,e.getMessage(),response, request);
-		}catch (Exception e) {
-			log.info(e.getMessage(),e);
-			JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL,"查询订单详情异常",response, request);
-		}
+	@ApiOperation(value = "订单详情", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orderId", value = "订单ID", dataType = "String", paramType = "query", required = true), })
+	public Order orderDetail(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "orderId") String orderId) throws Exception {
+		Order order = (Order) orderService.queryEntityById(IOrderDao.class,
+				orderId);
+		return order;
 	}
 }

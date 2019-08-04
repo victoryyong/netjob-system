@@ -1,5 +1,10 @@
 package com.thsword.netjob.web.controller.app.menu;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +14,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -22,399 +28,250 @@ import com.thsword.netjob.pojo.app.Menu;
 import com.thsword.netjob.service.MenuService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
+import com.thsword.netjob.web.controller.base.BaseResponse;
+import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.object.UUIDUtil;
 import com.thsword.utils.page.Page;
+
 /**
  * 菜单
-
+ * 
  * @Description:TODO
-
+ * 
  * @author:yong
-
+ * 
  * @time:2018年5月10日 下午8:52:49
  */
-@Controller
+@RestController
+@Api(tags = "NETJOB-MENU", description = "菜单接口")
 public class MenuApp {
 	@Resource(name = "menuService")
 	MenuService menuService;
 
 	/**
-	 * 
-	
 	 * 个性化定制
-	
-	 * @param request
-	 * @param response
-	 * @param member
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/menu/order")
-	public void list(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String menuId = request.getParameter("menuId");
-			if (StringUtils.isEmpty(menuId)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "类型ID不能为空", response, request);
-				return;
+	@ApiOperation(value = "个性化定制", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "menuId", value = "菜单ID", dataType = "string", paramType = "query", required = true) })
+	public BaseResponse list(HttpServletRequest request,
+			@RequestParam String menuId) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		Menu menu = (Menu) menuService.queryEntityById(IMenuDao.class, menuId);
+		if (null == menu) {
+			throw new ServiceException("类型不存在");
+		}
+		if (!menu.getLevel().equals(Global.SYS_MENU_LEVEL_TYPE_2)) {
+			throw new ServiceException(ErrorUtil.REQUEST_INVALID_PARAM);
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("menuId", menuId);
+		List<Menu> menus = menuService.queryPrivateMenus(map);
+		if (null != menus && menus.size() > 0) {
+			throw new ServiceException("请勿重复定制");
+
+		}
+		menuService.orderPrivateMenu(UUIDUtil.get32UUID(), memberId, menuId);
+		return BaseResponse.success();
+	}
+
+	/**
+	 * 批量化定制
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@ApiOperation(value = "个性化定制", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "idArray", value = "菜单ID数组", dataType = "string", paramType = "query", required = true) })
+	@RequestMapping("app/member/menu/batchOrder")
+	public BaseResponse orders(HttpServletRequest request,
+			@RequestParam String idArray) {
+		String memberId = request.getAttribute("memberId") + "";
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		List<Menu> menus = menuService.queryPrivateMenus(map);
+		if (!CollectionUtils.isEmpty(menus)) {
+			for (Menu menu : menus) {
+				menuService.deletePrivateMenu(memberId, menu.getId());
 			}
-			Menu menu = (Menu) menuService.queryEntityById(IMenuDao.class, menuId);
-			if(null==menu){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "类型不存在", response, request);
-				return;
+		}
+		JSONArray idJsons = JSONArray.parseArray(idArray);
+		for (Object menuJson : idJsons) {
+			String menuId = menuJson.toString();
+			Menu menu = (Menu) menuService.queryEntityById(IMenuDao.class,
+					menuId);
+			if (null == menu) {
+				throw new ServiceException(menuId + "-类型不存在");
 			}
-			if(!menu.getLevel().equals(Global.SYS_MENU_LEVEL_TYPE_2)){
-				JsonResponseUtil.codeResponse(ErrorUtil.REQUEST_INVALID_PARAM, response, request);
-				return;
+			if (!menu.getLevel().equals(Global.SYS_MENU_LEVEL_TYPE_2)) {
+				throw new ServiceException(menuId + "-只能收藏二级菜单");
 			}
-			Map<String, Object> map = new HashMap<>();
+			map.clear();
 			map.put("memberId", memberId);
 			map.put("menuId", menuId);
-			List<Menu> menus = menuService.queryPrivateMenus(map);
-			if(null!=menus&&menus.size()>0){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "请勿重复定制", response, request);
-				return;
-			}
-			menuService.orderPrivateMenu(UUIDUtil.get32UUID(),memberId,menuId);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			menuService
+					.orderPrivateMenu(UUIDUtil.get32UUID(), memberId, menuId);
 		}
+		return BaseResponse.success();
 	}
-	
+
 	/**
-	 * 
-	
-	 * 批量化定制
-	
-	 * @param request
-	 * @param response
-	 * @param member
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
+	 * 删除定制
 	 * @time:2018年5月8日 上午12:07:45
 	 */
-	@RequestMapping("app/member/menu/batchOrder")
-	public void orders(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			Map<String, Object> map = new HashMap<>();
-			map.put("memberId", memberId);
-			List<Menu> menus = menuService.queryPrivateMenus(map);
-			if(!CollectionUtils.isEmpty(menus)){
-				for (Menu menu : menus) {
-					menuService.deletePrivateMenu(memberId,menu.getId());
-				}
-			}
-			String idArray = request.getParameter("idArray");
-			JSONArray idJsons = JSONArray.parseArray(idArray);
-			for (Object menuJson : idJsons) {
-				String menuId = menuJson.toString();
-				/*if (StringUtils.isEmpty(menuId)) {
-					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, menuId+"-为空", response, request);
-					return;
-				}*/
-				Menu menu = (Menu) menuService.queryEntityById(IMenuDao.class, menuId);
-				if(null==menu){
-					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, menuId+"-类型不存在", response, request);
-					return;
-				}
-				if(!menu.getLevel().equals(Global.SYS_MENU_LEVEL_TYPE_2)){
-					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, menuId+"-只能收藏二级菜单", response, request);
-					return;
-				}
-				map.clear();
-				map.put("memberId", memberId);
-				map.put("menuId", menuId);
-				/*List<Menu> menus = menuService.queryPrivateMenus(map);
-				if(null!=menus&&menus.size()>0){
-					JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, menuId+"-重复定制", response, request);
-					return;
-				}*/
-				menuService.orderPrivateMenu(UUIDUtil.get32UUID(),memberId,menuId);
-			}
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
-	/**
-	 * 
-	
-	 * 个性化定制
-	
-	 * @param request
-	 * @param response
-	 * @param member
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
-	 * @time:2018年5月8日 上午12:07:45
-	 */
+	@ApiOperation(value = "删除定制", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "menuId", value = "菜单ID", dataType = "string", paramType = "query",required = true) })
 	@RequestMapping("app/member/menu/deleteOrder")
-	public void deleteOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			String menuId = request.getParameter("menuId");
-			if (StringUtils.isEmpty(menuId)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "类型ID不能为空", response, request);
-				return;
-			}
-			menuService.deletePrivateMenu(memberId,menuId);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+	public BaseResponse deleteOrder(HttpServletRequest request,
+			HttpServletResponse response,@RequestParam String menuId) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		if (StringUtils.isEmpty(menuId)) {
+			throw new ServiceException("类型ID不能为空");
 		}
+		menuService.deletePrivateMenu(memberId, menuId);
+		return BaseResponse.success();
 	}
-	
+
 	/**
 	 * 默认菜单
+	 * 
 	 * @time:2018年5月10日 下午9:33:16
 	 */
+	@ApiOperation(value = "默认菜单", httpMethod = "POST")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "city", value = "城市", dataType = "string", paramType = "query",required = true),
+			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
+			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
 	@RequestMapping("app/visitor/menu/defaults")
-	public void defaults(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
-		try {
-			String userId = request.getParameter("userId");
-			page.setSort("c_clicks");
-			page.setDir(Page.DIR_TYPE_DESC);
-			page.setPageSize(9);
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("page", page);
-			@SuppressWarnings("unchecked")
-			List<Menu> menus = (List<Menu>) menuService.queryPageEntity(IMenuDao.class, map);
-			
-			Map<String, Object> orderMap = new HashMap<>();
-			orderMap.put("memberId", userId);
-			List<Menu> orderMenus = menuService.queryPrivateMenus(orderMap);
-			
-			List<Menu> results = new ArrayList<Menu>();
-			int i=0;
-			if(!CollectionUtils.isEmpty(orderMenus)){
-				i=orderMenus.size();
-				results.addAll(orderMenus);
-				for (Menu menu : menus) {
-					if(i==9){
+	public JSONObject defaults(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,
+			@RequestParam(required = false, defaultValue = "1") int currentPage)
+			throws Exception {
+		String userId = request.getAttribute("memberId") + "";
+		Page page = new Page(currentPage, pageSize);
+		page.setSort("c_clicks");
+		page.setDir(Page.DIR_TYPE_DESC);
+		page.setPageSize(9);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("page", page);
+		@SuppressWarnings("unchecked")
+		List<Menu> menus = (List<Menu>) menuService.queryPageEntity(
+				IMenuDao.class, map);
+
+		Map<String, Object> orderMap = new HashMap<>();
+		orderMap.put("memberId", userId);
+		List<Menu> orderMenus = menuService.queryPrivateMenus(orderMap);
+
+		List<Menu> results = new ArrayList<Menu>();
+		int i = 0;
+		if (!CollectionUtils.isEmpty(orderMenus)) {
+			i = orderMenus.size();
+			results.addAll(orderMenus);
+			for (Menu menu : menus) {
+				if (i == 9) {
+					break;
+				}
+				boolean find = false;
+				for (Menu orderMenu : orderMenus) {
+					if (orderMenu.getId().equals(menu.getId())) {
+						find = true;
 						break;
 					}
-					boolean find = false;
-					for (Menu orderMenu : orderMenus) {
-						if(orderMenu.getId().equals(menu.getId())){
-							find=true;
-							break;
-						}
-					}
-					if(!find){
-						results.add(menu);
-						i++;
-					}
 				}
-			}else{
-				results=menus;
+				if (!find) {
+					results.add(menu);
+					i++;
+				}
 			}
-			JSONObject obj = new JSONObject();
-			obj.put("list", results);
-			
-			JsonResponseUtil.successBodyResponse(obj,response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+		} else {
+			results = menus;
 		}
+		JSONObject obj = new JSONObject();
+		obj.put("list", results);
+
+		return obj;
 	}
-	
+
 	/**
 	 * 查询个性化定制
-	
-	 * @Description:TODO
-	
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
 	 * @time:2018年5月10日 下午9:33:16
 	 */
+	@ApiOperation(value = "查询个性化定制", httpMethod = "POST")
 	@RequestMapping("app/member/menu/orders")
-	public void privateMenus(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String memberId = request.getAttribute("memberId")+"";
-			Map<String, Object> map = new HashMap<>();
-			map.put("memberId", memberId);
-			List<Menu> menus = menuService.queryPrivateMenus(map);
-			JSONObject obj = new JSONObject();
-			obj.put("list", menus);
-			JsonResponseUtil.successBodyResponse(obj,response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	public JSONObject privateMenus(HttpServletRequest request) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		List<Menu> menus = menuService.queryPrivateMenus(map);
+		JSONObject obj = new JSONObject();
+		obj.put("list", menus);
+		return obj;
 	}
-	
+
 	/**
 	 * 查询个性化定制
-	
-	 * @Description:TODO
-	
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
 	 * @time:2018年5月10日 下午9:33:16
 	 */
 	@SuppressWarnings("unchecked")
+	@ApiOperation(value = "查询一级菜单列表", httpMethod = "POST")
 	@RequestMapping("app/visitor/menu/firstMenus")
-	public void firstMenus(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void firstMenus(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		try {
 			Menu menu = new Menu();
 			menu.setLevel(Global.SYS_MENU_LEVEL_TYPE_1);
-			List<Menu> menus = (List<Menu>) menuService.queryAllEntity(IMenuDao.class, menu);
-			//for (Menu temp : menus) {
-			//	temp.setIcon(Global.getSetting(Global.SYSTEM_ADMIN_DOMAIN)+temp.getIcon());
-			//}
+			List<Menu> menus = (List<Menu>) menuService.queryAllEntity(
+					IMenuDao.class, menu);
 			JSONObject obj = new JSONObject();
 			obj.put("list", menus);
-			JsonResponseUtil.successBodyResponse(obj,response, request);
+			JsonResponseUtil.successBodyResponse(obj, response, request);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * 查询个性化定制
-	
-	 * @Description:TODO
-	
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
 	 * @time:2018年5月10日 下午9:33:16
 	 */
+	@ApiOperation(value = "查询二级菜单列表", httpMethod = "POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "parentId", value = "当前页", dataType = "int", paramType = "query",required = true)})
 	@RequestMapping("app/visitor/menu/secondMenus")
-	public void secondMenus(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String parentId = request.getParameter("parentId");
-			if (StringUtils.isEmpty(parentId)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "父ID不能为空", response, request);
-				return;
-			}
-			List<Menu> menus = (List<Menu>) menuService.queryChilds(parentId);
-			//for (Menu temp : menus) {
-			//	temp.setIcon(Global.getSetting(Global.SYSTEM_ADMIN_DOMAIN)+temp.getIcon());
-			//}
-			JSONObject obj = new JSONObject();
-			obj.put("list", menus);
-			JsonResponseUtil.successBodyResponse(obj,response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	public JSONObject secondMenus(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam String parentId)
+			throws Exception {
+		List<Menu> menus = (List<Menu>) menuService.queryChilds(parentId);
+		JSONObject obj = new JSONObject();
+		obj.put("list", menus);
+		return obj;
 	}
-	
-	
+
 	/**
 	 * 查询所有菜单
-	
-	 * @Description:TODO
-	
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
 	 * @time:2018年5月10日 下午9:33:16
 	 */
+	@ApiOperation(value = "查询所有菜单", httpMethod = "POST")
 	@RequestMapping("app/visitor/menu/allMenus")
-	public void menus(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			List<Menu> menus = (List<Menu>) menuService.queryAllMenus();
-			//for (Menu temp : menus) {
-			//	temp.setIcon(Global.getSetting(Global.SYSTEM_ADMIN_DOMAIN)+temp.getIcon());
-			//}
-			JSONObject obj = new JSONObject();
-			obj.put("list", menus);
-			JsonResponseUtil.successBodyResponse(obj,response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	public JSONObject menus() {
+		List<Menu> menus = (List<Menu>) menuService.queryAllMenus();
+		JSONObject obj = new JSONObject();
+		obj.put("list", menus);
+		return obj;
 	}
-	
+
 	/**
 	 * 点击计数
-	
-	 * @Description:TODO
-	
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	
-	 * void
-	
-	 * @exception:
-	
-	 * @author: yong
-	
 	 * @time:2018年5月10日 下午9:33:16
 	 */
+	@ApiOperation(value = "查询所有菜单", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "menuId", value = "菜单ID", dataType = "string", paramType = "query",required = true) })
 	@RequestMapping("app/visitor/menu/click")
-	public void click(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			String menuId = request.getParameter("menuId");
-			if (StringUtils.isEmpty(menuId)) {
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "menuId不能为空", response, request);
-				return;
-			}
-			menuService.updateClicks(menuId);
-			JsonResponseUtil.successCodeResponse(response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+	public BaseResponse click(@RequestParam String menuId) throws Exception {
+		menuService.updateClicks(menuId);
+		return BaseResponse.success();
 	}
-	
+
 }

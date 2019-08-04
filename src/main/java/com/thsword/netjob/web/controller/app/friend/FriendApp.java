@@ -83,7 +83,7 @@ public class FriendApp {
 	 */
 	@RequestMapping("app/member/addFriend")
 	@ApiOperation(value = "添加好友", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "friendId", value = "好友ID", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "friendId", value = "好友ID", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse addFriend(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String friendId)
 			throws Exception {
@@ -127,7 +127,7 @@ public class FriendApp {
 	 */
 	@RequestMapping("app/member/deleteFriend")
 	@ApiOperation(value = "删除好友", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "friendId", value = "好友ID", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "friendId", value = "好友ID", dataType = "string", paramType = "query", required = true) })
 	public BaseResponse deleteFriend(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String friendId)
 			throws Exception {
@@ -157,7 +157,7 @@ public class FriendApp {
 	 */
 	@RequestMapping("app/member/isFriend")
 	@ApiOperation(value = "是否是好友", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "friendId", value = "好友ID", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "friendId", value = "好友ID", dataType = "string", paramType = "query", required = true) })
 	public JSONObject isFriend(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String friendId)
 			throws Exception {

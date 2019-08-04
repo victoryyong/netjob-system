@@ -1,5 +1,10 @@
 package com.thsword.netjob.web.controller.app.media;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +13,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IMediaDao;
@@ -19,10 +25,10 @@ import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Media;
 import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.service.MemberService;
-import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.utils.page.Page;
 
-@Controller
+@RestController
+@Api(tags = "NETJOB-MEDIA", description = "媒体文件")
 public class MediaApp {
 	@Resource(name = "memberService")
 	MemberService memberService;
@@ -30,7 +36,7 @@ public class MediaApp {
 	/**
 	 * 
 	
-	 * @Description:广告
+	 * @Description:热播视频
 	
 	 * @param request
 	 * @param response
@@ -46,11 +52,18 @@ public class MediaApp {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("app/visitor/index/videos")
-	public void list(HttpServletRequest request, HttpServletResponse response,Page page) throws Exception {
-		try {
+	@ApiOperation(value = "热播视频", httpMethod = "POST")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
+		@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
+	public JSONObject list(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required = false) String longitude,
+			@RequestParam(required = false) String latitude,
+			@RequestParam(required = false, defaultValue = "10") int pageSize,
+			@RequestParam(required = false, defaultValue = "1") int currentPage
+			) throws Exception {
+			Page page = new Page(currentPage, pageSize);
 			String userId = request.getAttribute("userId")+"";
-			String longitude = request.getParameter("longitude");
-			String latitude = request.getParameter("latitude");
 			if(!StringUtils.isEmpty(latitude)&&!StringUtils.isEmpty(latitude)){
 				Member member = new Member();
 				member.setId(userId);
@@ -71,10 +84,6 @@ public class MediaApp {
 			JSONObject obj = new JSONObject();
 			obj.put("list", medias);
 			obj.put("page", page);
-			JsonResponseUtil.successBodyResponse(obj, response, request);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+			return obj;
 	}
 }

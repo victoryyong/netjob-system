@@ -29,47 +29,48 @@ public class IntroduceApp {
 
 	/**
 	 * 
-	
+	 * 
 	 * @Description:查询个人介绍
-	
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws Exception
-	
-	 * void
-	
+	 * 
+	 *             void
+	 * 
 	 * @exception:
-	
+	 * 
 	 * @author: yong
-	
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/introduce/info")
 	@ApiOperation(value = "查询个人介绍", httpMethod = "POST")
-	public Introduce query(HttpServletRequest request, HttpServletResponse response) throws Exception {
-			String memberId = request.getAttribute("memberId")+"";
-			Introduce introduce = new Introduce();
-			introduce.setMemberId(memberId);
-			introduce = (Introduce) introduceService.queryEntity(IIntroduceDao.class, introduce);
-			return introduce;
+	public Introduce query(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		Introduce introduce = new Introduce();
+		introduce.setMemberId(memberId);
+		introduce = (Introduce) introduceService.queryEntity(
+				IIntroduceDao.class, introduce);
+		return introduce;
 	}
-	
-	
+
 	/**
 	 * 
-	
+	 * 
 	 * @Description:新增或编辑个人介绍
-	
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws Exception
-	
-	 * void
-	
+	 * 
+	 *             void
+	 * 
 	 * @exception:
-	
+	 * 
 	 * @author: yong
-	
+	 * 
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/introduce/addOrEdit")
@@ -77,36 +78,35 @@ public class IntroduceApp {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "motto", value = "格言", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "advantage", value = "擅长", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "experience", value = "资历", dataType = "string", paramType = "query")
-	})
-	public BaseResponse edit(HttpServletRequest request, HttpServletResponse response,
+			@ApiImplicitParam(name = "experience", value = "资历", dataType = "string", paramType = "query") })
+	public BaseResponse edit(HttpServletRequest request,
+			HttpServletResponse response,
 			@RequestParam(required = false) String motto,
 			@RequestParam(required = false) String advantage,
-			@RequestParam(required = false) String experience
-			) throws Exception {
-			String memberId = request.getAttribute("memberId")+"";
-			if(StringUtils.isEmpty(motto)&&
-					StringUtils.isEmpty(advantage)&&
-							StringUtils.isEmpty(experience)){
-				throw new ServiceException("内容不能为空");
-			}
-			Introduce temp = new Introduce();
-			temp.setMemberId(memberId);
-			temp = (Introduce) introduceService.queryEntity(IIntroduceDao.class, temp);
-			Introduce introduce = new Introduce();
+			@RequestParam(required = false) String experience) throws Exception {
+		String memberId = request.getAttribute("memberId") + "";
+		if (StringUtils.isEmpty(motto) && StringUtils.isEmpty(advantage)
+				&& StringUtils.isEmpty(experience)) {
+			throw new ServiceException("内容不能为空");
+		}
+		Introduce temp = new Introduce();
+		temp.setMemberId(memberId);
+		temp = (Introduce) introduceService.queryEntity(IIntroduceDao.class,
+				temp);
+		Introduce introduce = new Introduce();
+		introduce.setMemberId(memberId);
+		introduce.setMotto(motto);
+		introduce.setAdvantage(advantage);
+		introduce.setExperience(experience);
+		if (null != temp) {
+			introduceService.updateEntity(IIntroduceDao.class, introduce);
+		} else {
+			introduce.setId(UUIDUtil.get32UUID());
 			introduce.setMemberId(memberId);
-			introduce.setMotto(motto);
-			introduce.setAdvantage(advantage);
-			introduce.setExperience(experience);
-			if(null!=temp){
-				introduceService.updateEntity(IIntroduceDao.class, introduce);
-			}else{
-				introduce.setId(UUIDUtil.get32UUID());
-				introduce.setMemberId(memberId);
-				introduce.setCreateBy(memberId);
-				introduce.setUpdateBy(memberId);
-				introduceService.addEntity(IIntroduceDao.class, introduce);
-			}
-			return BaseResponse.success();
+			introduce.setCreateBy(memberId);
+			introduce.setUpdateBy(memberId);
+			introduceService.addEntity(IIntroduceDao.class, introduce);
+		}
+		return BaseResponse.success();
 	}
 }

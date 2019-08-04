@@ -54,7 +54,7 @@ public class AuthApp {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("app/visitor/auth/person/list")
 	@ApiOperation(value = "查询个人认证列表", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "memberId", value = "会员ID", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "memberId", value = "会员ID", dataType = "string", paramType = "query", required = true) })
 	public JSONObject list(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String memberId)
 			throws Exception {
@@ -81,11 +81,11 @@ public class AuthApp {
 	@RequestMapping("app/member/auth/person/add")
 	@ApiOperation(value = "添加个人认证", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "name", value = "认证名称", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "realName", value = "真实姓名", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "type", value = "认证类型（1-身份认证 2-其他）", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "links", value = "文件地址", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "code", value = "证件号码", dataType = "string", paramType = "query"), })
+			@ApiImplicitParam(name = "name", value = "认证名称", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "realName", value = "真实姓名", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "type", value = "认证类型（1-身份认证 2-其他）", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "links", value = "文件地址", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "code", value = "证件号码", dataType = "string", paramType = "query", required = true), })
 	public BaseResponse add(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String name,
 			@RequestParam String realName, @RequestParam int type,
@@ -221,7 +221,7 @@ public class AuthApp {
 			@ApiImplicitParam(name = "type", value = "认证类型（1-身份认证 2-其他）", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "links", value = "文件地址", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "code", value = "证件号码", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "id", value = "认证ID", dataType = "string", paramType = "query"), })
+			@ApiImplicitParam(name = "id", value = "认证ID", dataType = "string", paramType = "query", required = true), })
 	public BaseResponse edit(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false) String name,
@@ -270,10 +270,10 @@ public class AuthApp {
 	@RequestMapping("app/member/auth/company/add")
 	@ApiOperation(value = "添加企业认证", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "name", value = "认证名称", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "realName", value = "真实姓名", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "type", value = "认证类型（1-身份认证 2-其他）", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "links", value = "文件地址", dataType = "string", paramType = "query"),
+			@ApiImplicitParam(name = "name", value = "认证名称", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "realName", value = "真实姓名", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "type", value = "认证类型（1-身份认证 2-其他）", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "links", value = "文件地址", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "code", value = "证件号码", dataType = "string", paramType = "query"), })
 	public BaseResponse addCompany(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String name,
@@ -411,7 +411,7 @@ public class AuthApp {
 			@ApiImplicitParam(name = "type", value = "认证类型（1-身份认证 2-其他）", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "links", value = "文件地址", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "code", value = "证件号码", dataType = "string", paramType = "query"),
-			@ApiImplicitParam(name = "id", value = "认证ID", dataType = "string", paramType = "query"), })
+			@ApiImplicitParam(name = "id", value = "认证ID", dataType = "string", paramType = "query", required = true), })
 	public BaseResponse editCompany(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false) String name,
@@ -449,7 +449,7 @@ public class AuthApp {
 	 */
 	@RequestMapping("app/visitor/auth/company/list")
 	@ApiOperation(value = "查询企业认证列表", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "memberId", value = "会员ID", dataType = "string", paramType = "query") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "memberId", value = "会员ID", dataType = "string", paramType = "query", required = true) })
 	public JSONObject info(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String memberId)
 			throws Exception {
