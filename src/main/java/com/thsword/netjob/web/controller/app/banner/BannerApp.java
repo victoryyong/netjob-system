@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IBannerDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Banner;
+import com.thsword.netjob.pojo.resp.banner.BannerListResp;
 import com.thsword.netjob.service.BannerService;
 import com.thsword.utils.page.Page;
 
@@ -56,7 +57,7 @@ public class BannerApp {
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"),
 			@ApiImplicitParam(name = "menuId", value = "菜单ID", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "citycode", value = "城市", dataType = "string", paramType = "query") })
-	public JSONObject list(
+	public BannerListResp list(
 			HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -89,7 +90,6 @@ public class BannerApp {
 					.queryPageEntity(IBannerDao.class, map);
 			banners.addAll(countryBanners);
 		}
-		obj.put("list", banners);
-		return obj;
+		return BannerListResp.builder().list(banners).page(page).build();
 	}
 }

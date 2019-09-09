@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.INewsDao;
 import com.thsword.netjob.pojo.app.News;
+import com.thsword.netjob.pojo.resp.news.NewsListResp;
 import com.thsword.netjob.service.NewsService;
 import com.thsword.utils.page.Page;
 
@@ -51,7 +51,7 @@ public class NewsApp {
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
 	@RequestMapping("app/visitor/news/list")
-	public JSONObject list(@RequestParam String city,
+	public NewsListResp list(@RequestParam String city,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
 			throws Exception {
@@ -61,9 +61,6 @@ public class NewsApp {
 		map.put("page", page);
 		List<News> news = (List<News>) newsService.queryPageEntity(
 				INewsDao.class, map);
-		JSONObject obj = new JSONObject();
-		obj.put("list", news);
-		obj.put("page", page);
-		return obj;
+		return NewsListResp.builder().list(news).page(page).build();
 	}
 }

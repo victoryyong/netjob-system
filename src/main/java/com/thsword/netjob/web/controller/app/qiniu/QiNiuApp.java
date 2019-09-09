@@ -14,6 +14,7 @@ import com.thsword.netjob.dao.IAccessDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Access;
 import com.thsword.netjob.service.AccessService;
+import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
 
 /**
@@ -51,7 +52,7 @@ public class QiNiuApp {
 	 */
 	@ApiOperation(value = "获取上传token", httpMethod = "POST")
 	@RequestMapping("app/visitor/getUpToken")
-	public String getUpToken() throws Exception {
+	public BaseResponse getUpToken() throws Exception {
 		Access access = new Access();
 		access.setAppId(Global.getSetting(Global.QINIU_UPLOAD_ACCESS_KEY));
 		access = (Access) accessService.queryEntity(IAccessDao.class, access);
@@ -68,6 +69,6 @@ public class QiNiuApp {
 		long expireSeconds = 3600;
 		String upToken = auth.uploadToken(Global.QINIU_UPLOAD_BOCKET_NAME,
 				null, expireSeconds, putPolicy);
-		return upToken;
+		return BaseResponse.success(upToken);
 	}
 }

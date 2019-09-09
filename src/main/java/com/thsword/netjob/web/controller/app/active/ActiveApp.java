@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IActiveDao;
 import com.thsword.netjob.dao.IMediaDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Active;
 import com.thsword.netjob.pojo.app.Media;
+import com.thsword.netjob.pojo.resp.active.ActiveListResp;
 import com.thsword.netjob.service.ActiveService;
 import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
@@ -81,7 +81,7 @@ public class ActiveApp {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"), })
-	public JSONObject list(HttpServletRequest request,
+	public ActiveListResp list(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
@@ -97,9 +97,7 @@ public class ActiveApp {
 		@SuppressWarnings("unchecked")
 		List<Active> actives = (List<Active>) activeService.queryPageEntity(
 				IActiveDao.class, map);
-		JSONObject obj = new JSONObject();
-		obj.put("page", page);
-		obj.put("list", actives);
-		return obj;
+		
+		return ActiveListResp.builder().list(actives).page(page).build();
 	}
 }

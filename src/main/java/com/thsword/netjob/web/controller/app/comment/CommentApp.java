@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.ICommentDao;
 import com.thsword.netjob.pojo.app.Comment;
+import com.thsword.netjob.pojo.resp.comment.CommentListResp;
+import com.thsword.netjob.pojo.resp.comment.ReplayListResp;
 import com.thsword.netjob.service.CommentService;
+import com.thsword.netjob.service.OrderService;
 import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
 import com.thsword.utils.object.UUIDUtil;
@@ -40,7 +42,8 @@ import com.thsword.utils.page.Page;
 public class CommentApp {
 	@Resource(name = "commentService")
 	CommentService commentService;
-
+	@Resource(name = "orderService")
+	OrderService orderService;
 	/**
 	 * 
 	 * 
@@ -53,10 +56,12 @@ public class CommentApp {
 	@RequestMapping("app/member/comment/add")
 	@ApiOperation(value = "添加评论", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "type", value = "类型（1-会员 2-服务 3-需求）", dataType = "string", paramType = "query", required = true),
-			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true) })
+			@ApiImplicitParam(name = "type", value = "类型（1-会员 2-服务 3-需求 4-订单）", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "content", value = "评论内容", dataType = "string", paramType = "query", required = true)	
+	})
 	public BaseResponse add(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam String bizId,
+			HttpServletResponse response, @RequestParam String bizId,@RequestParam Integer type,
 			@RequestParam String content) throws Exception {
 		try {
 			String memberId = request.getAttribute("memberId") + "";
@@ -67,6 +72,9 @@ public class CommentApp {
 			comment.setMemberId(memberId);
 			comment.setCreateBy(memberId);
 			comment.setUpdateBy(memberId);
+			if(type==4){
+				orderService.commentOrder(memberId,bizId);
+			}
 			commentService.addEntity(ICommentDao.class, comment);
 			return BaseResponse.success();
 		} catch (Exception e) {
@@ -90,7 +98,7 @@ public class CommentApp {
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"),
 			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true), })
-	public JSONObject list(
+	public CommentListResp list(
 			HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -105,10 +113,7 @@ public class CommentApp {
 		@SuppressWarnings("unchecked")
 		List<Comment> comments = (List<Comment>) commentService
 				.queryPageEntity(ICommentDao.class, map);
-		JSONObject result = new JSONObject();
-		result.put("list", comments);
-		result.put("page", page);
-		return result;
+		return CommentListResp.builder().list(comments).build();
 	}
 
 	/**
@@ -126,7 +131,7 @@ public class CommentApp {
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"),
 			@ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true), })
-	public JSONObject getReplys(
+	public ReplayListResp getReplys(
 			HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -141,10 +146,7 @@ public class CommentApp {
 		@SuppressWarnings("unchecked")
 		List<Comment> comments = (List<Comment>) commentService
 				.queryPageEntity(ICommentDao.class, map);
-		JSONObject result = new JSONObject();
-		result.put("list", comments);
-		result.put("page", page);
-		return result;
+		return ReplayListResp.builder().list(comments).build();
 	}
 
 	/**

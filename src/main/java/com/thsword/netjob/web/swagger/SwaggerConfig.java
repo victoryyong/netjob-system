@@ -20,14 +20,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 	@Bean
 	public Docket createAppApi() {
-		ModelCache.getInstance().setParamClass(SwaggerGlobalKey.class);
 		return new Docket(DocumentationType.SWAGGER_2)
 				.apiInfo(appInfo())
 				.select()
 				
 				.apis(RequestHandlerSelectors
 						.basePackage("com.thsword.netjob.web.controller.app")) 
-				.paths(PathSelectors.any()).build().groupName("移动端");
+				.paths(PathSelectors.any()).build().groupName("APP");
 	}
 	
 	@Bean
@@ -37,18 +36,18 @@ public class SwaggerConfig {
 				.select()
 				.apis(RequestHandlerSelectors
 						.basePackage("com.thsword.netjob.web.controller.admin")) 
-				.paths(PathSelectors.any()).build().groupName("管理端");
+				.paths(PathSelectors.any()).build().groupName("ADMIN");
 	}
 
 	private ApiInfo appInfo() {
 		return new ApiInfoBuilder().title("网约移动端接口列表 v1.1.0") 
-				.termsOfServiceUrl("http://wy-168.com/swagger-ui.html") 
+				.termsOfServiceUrl("http://wy-168.com/netjob/swagger-ui.html") 
 				.version("1.1.0").build();
 	}
 	
 	private ApiInfo adminInfo() {
 		return new ApiInfoBuilder().title("网约管理端接口列表 v1.1.0") 
-				.termsOfServiceUrl("http://wy-168.com/swagger-ui.html")
+				.termsOfServiceUrl("http://wy-168.com/netjob/swagger-ui.html")
 				.version("1.1.0").build();
 	}
 }

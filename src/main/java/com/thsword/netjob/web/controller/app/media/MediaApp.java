@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IMediaDao;
 import com.thsword.netjob.dao.IMemberDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Media;
 import com.thsword.netjob.pojo.app.Member;
+import com.thsword.netjob.pojo.resp.media.MediaListResp;
 import com.thsword.netjob.service.MemberService;
 import com.thsword.utils.page.Page;
 
@@ -56,7 +56,7 @@ public class MediaApp {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 		@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
-	public JSONObject list(HttpServletRequest request, HttpServletResponse response,
+	public MediaListResp list(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(required = false) String longitude,
 			@RequestParam(required = false) String latitude,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -81,9 +81,6 @@ public class MediaApp {
 				map.remove("citycode");
 				medias = (List<Media>) memberService.queryPageEntity(IMediaDao.class, map);
 			}
-			JSONObject obj = new JSONObject();
-			obj.put("list", medias);
-			obj.put("page", page);
-			return obj;
+			return MediaListResp.builder().list(medias).page(page).build();
 	}
 }

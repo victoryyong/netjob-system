@@ -29,6 +29,7 @@ import com.thsword.netjob.pojo.Dict;
 import com.thsword.netjob.pojo.app.Media;
 import com.thsword.netjob.pojo.app.Menu;
 import com.thsword.netjob.pojo.app.Serve;
+import com.thsword.netjob.pojo.resp.serve.ServeListResp;
 import com.thsword.netjob.service.ServeService;
 import com.thsword.netjob.util.AmapUtil;
 import com.thsword.netjob.web.controller.base.BaseResponse;
@@ -165,7 +166,7 @@ public class ServeApp {
 			@ApiImplicitParam(name = "timeRange", value = "付款方式", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query"),
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query"), })
-	public JSONObject list(HttpServletRequest request,
+	public ServeListResp list(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false) String type,
 			@RequestParam(required = false) String gender,
@@ -331,10 +332,7 @@ public class ServeApp {
 		@SuppressWarnings("unchecked")
 		List<Serve> serves = (List<Serve>) serveService.queryPageEntity(
 				IServeDao.class, map);
-		JSONObject result = new JSONObject();
-		result.put("list", serves);
-		result.put("page", page);
-		return result;
+		return ServeListResp.builder().list(serves).page(page).build();
 	}
 
 	/**
@@ -352,7 +350,7 @@ public class ServeApp {
 			@ApiImplicitParam(name = "citycode", value = "城市码", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query"),
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query"), })
-	public JSONObject recommend(HttpServletRequest request,
+	public ServeListResp recommend(HttpServletRequest request,
 			@RequestParam String citycode,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
@@ -366,10 +364,7 @@ public class ServeApp {
 		@SuppressWarnings("unchecked")
 		List<Serve> serves = (List<Serve>) serveService.queryPageEntity(
 				IServeDao.class, map);
-		JSONObject result = new JSONObject();
-		result.put("list", serves);
-		result.put("page", page);
-		return result;
+		return ServeListResp.builder().list(serves).page(page).build();
 	}
 
 	/**

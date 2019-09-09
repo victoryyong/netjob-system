@@ -25,6 +25,7 @@ import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Collect;
 import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.pojo.app.Serve;
+import com.thsword.netjob.pojo.resp.collect.IsCollectResp;
 import com.thsword.netjob.service.CollectService;
 import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
@@ -152,21 +153,21 @@ public class CollectApp {
 	@RequestMapping("app/member/isCollected")
 	@ApiOperation(value = "是否已收藏", httpMethod = "POST")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "bizId", value = "业务ID", dataType = "string", paramType = "query", required = true) })
-	public JSONObject isCollected(HttpServletRequest request,
+	public IsCollectResp isCollected(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String bizId)
 			throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
-		JSONObject obj = new JSONObject();
 		Collect temp = new Collect();
 		temp.setBizId(bizId);
 		temp.setMemberId(memberId);
 		temp = (Collect) collectService.queryEntity(ICollectDao.class, temp);
+		boolean isCollected = false;
 		if (null != temp) {
-			obj.put("isCollected", true);
+			isCollected = true;
 		} else {
-			obj.put("isCollected", false);
+			isCollected = false;
 		}
-		return obj;
+		return IsCollectResp.builder().isCollected(isCollected).build();
 	}
 
 	/**

@@ -22,6 +22,8 @@ import com.thsword.netjob.dao.IFriendDao;
 import com.thsword.netjob.dao.IMemberDao;
 import com.thsword.netjob.pojo.app.Friend;
 import com.thsword.netjob.pojo.app.Member;
+import com.thsword.netjob.pojo.resp.friend.FriendListResp;
+import com.thsword.netjob.pojo.resp.friend.IsFriendResp;
 import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
@@ -50,7 +52,7 @@ public class FriendApp {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
-	public JSONObject friends(HttpServletRequest request,
+	public FriendListResp friends(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
@@ -64,10 +66,7 @@ public class FriendApp {
 		@SuppressWarnings("unchecked")
 		List<Friend> friends = (List<Friend>) memberService.queryPageEntity(
 				IFriendDao.class, map);
-		JSONObject obj = new JSONObject();
-		obj.put("list", friends);
-		obj.put("page", page);
-		return obj;
+		return FriendListResp.builder().list(friends).page(page).build();
 	}
 
 	/**
@@ -158,7 +157,7 @@ public class FriendApp {
 	@RequestMapping("app/member/isFriend")
 	@ApiOperation(value = "是否是好友", httpMethod = "POST")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "friendId", value = "好友ID", dataType = "string", paramType = "query", required = true) })
-	public JSONObject isFriend(HttpServletRequest request,
+	public IsFriendResp isFriend(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String friendId)
 			throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
@@ -170,9 +169,7 @@ public class FriendApp {
 		if (temp != null) {
 			flag = true;
 		}
-		JSONObject obj = new JSONObject();
-		obj.put("isFriend", flag);
-		return obj;
+		return IsFriendResp.builder().isFriend(flag).build();
 	}
 
 }

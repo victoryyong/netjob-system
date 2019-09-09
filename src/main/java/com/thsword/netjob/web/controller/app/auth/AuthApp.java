@@ -32,6 +32,7 @@ import com.thsword.netjob.pojo.Auth;
 import com.thsword.netjob.pojo.app.AuthCompany;
 import com.thsword.netjob.pojo.app.AuthPerson;
 import com.thsword.netjob.pojo.app.Member;
+import com.thsword.netjob.pojo.resp.auth.AuthPersonListResp;
 import com.thsword.netjob.service.AuthService;
 import com.thsword.netjob.util.httpclient.HttpClientUtils;
 import com.thsword.netjob.util.juhe.AuthType;
@@ -55,7 +56,7 @@ public class AuthApp {
 	@RequestMapping("app/visitor/auth/person/list")
 	@ApiOperation(value = "查询个人认证列表", httpMethod = "POST")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "memberId", value = "会员ID", dataType = "string", paramType = "query", required = true) })
-	public JSONObject list(HttpServletRequest request,
+	public AuthPersonListResp list(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String memberId)
 			throws Exception {
 		String hostId = request.getAttribute("memberId") + "";
@@ -68,9 +69,7 @@ public class AuthApp {
 		}
 		List<AuthPerson> auths = (List<AuthPerson>) authService.queryAllEntity(
 				IAuthPersonDao.class, person);
-		JSONObject obj = new JSONObject();
-		obj.put("list", auths);
-		return obj;
+		return AuthPersonListResp.builder().list(auths).build();
 	}
 
 	/**

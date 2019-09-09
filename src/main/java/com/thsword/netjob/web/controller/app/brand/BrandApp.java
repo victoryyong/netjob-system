@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IBrandDao;
 import com.thsword.netjob.dao.IMediaDao;
 import com.thsword.netjob.dao.IMemberDao;
@@ -27,6 +26,7 @@ import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Brand;
 import com.thsword.netjob.pojo.app.Media;
 import com.thsword.netjob.pojo.app.Member;
+import com.thsword.netjob.pojo.resp.brand.BrandListResp;
 import com.thsword.netjob.service.BrandService;
 import com.thsword.netjob.web.controller.base.BaseResponse;
 import com.thsword.netjob.web.exception.ServiceException;
@@ -165,7 +165,7 @@ public class BrandApp {
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10"),
 			@ApiImplicitParam(name = "memberId", value = "会员ID", dataType = "string", paramType = "query"), })
-	public JSONObject list(
+	public BrandListResp list(
 			HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -182,9 +182,6 @@ public class BrandApp {
 		@SuppressWarnings("unchecked")
 		List<Brand> brands = (List<Brand>) brandService.queryPageEntity(
 				IBrandDao.class, map);
-		JSONObject obj = new JSONObject();
-		obj.put("list", brands);
-		obj.put("page", page);
-		return obj;
+		return BrandListResp.builder().list(brands).page(page).build();
 	}
 }

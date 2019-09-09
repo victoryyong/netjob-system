@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IMemberDao;
 import com.thsword.netjob.dao.INewsDao;
 import com.thsword.netjob.dao.ITokenDao;
@@ -22,6 +21,7 @@ import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.Token;
 import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.pojo.app.News;
+import com.thsword.netjob.pojo.resp.login.LoginSuccessResp;
 import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.service.TokenService;
 import com.thsword.netjob.util.ErrorUtil;
@@ -68,7 +68,7 @@ public class LoginApp {
 			@ApiImplicitParam(name = "wxId", value = "wx登录Id", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "name", value = "名称", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "gender", value = "性别", dataType = "string", paramType = "query") })
-	public JSONObject login(HttpServletRequest request,
+	public LoginSuccessResp login(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String type,
 			@RequestParam(required = false) String phone,
 			@RequestParam(required = false) String password,
@@ -169,7 +169,6 @@ public class LoginApp {
 		token.setUsername(member.getName());
 		token.setSubject(Global.JWT_SUBJECT_APP);
 		token = (Token) tokenService.queryEntity(ITokenDao.class, token);
-		JSONObject obj = new JSONObject();
 		if (null == token) {
 			token = TokenUtil.getToken(member.getId(), member.getName(),
 					Global.JWT_SUBJECT_APP,
@@ -182,7 +181,6 @@ public class LoginApp {
 					Global.getSetting(Global.JWT_SECRET_APP_KEY));
 			tokenService.addEntity(ITokenDao.class, token);
 		}
-		obj.put("token", token.getAccess_token());
 		if (type.equals(Global.SYS_MEMBER_TYPE_PHONE)) {
 			String imId = JmessageUtil.getUserInfo(member);
 			member.setPassword(Md5Util.getMd5Str(member.getId()));
@@ -193,8 +191,7 @@ public class LoginApp {
 			member.setImId(imId);
 			member.setPassword(null);
 		}
-		obj.put("member", member);
-		return obj;
+		return LoginSuccessResp.builder().member(member).token(token.getAccess_token()).build();
 	}
 
 	/**

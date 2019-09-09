@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IAddressDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Address;
+import com.thsword.netjob.pojo.resp.address.AddressListResp;
 import com.thsword.netjob.service.IBaseService;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.controller.base.BaseResponse;
@@ -32,7 +32,7 @@ public class AddressApp {
 
 	@RequestMapping("app/member/address/list")
 	@ApiOperation(value = "地址列表", httpMethod = "POST")
-	public JSONObject list(HttpServletRequest request,
+	public AddressListResp list(HttpServletRequest request,
 			HttpServletResponse response) {
 		String memberId = (String) request.getAttribute("memberId");
 		Address address = new Address();
@@ -41,9 +41,7 @@ public class AddressApp {
 		@SuppressWarnings("unchecked")
 		List<Address> addresses = (List<Address>) baseService.queryAllEntity(
 				IAddressDao.class, address);
-		JSONObject obj = new JSONObject();
-		obj.put("list", addresses);
-		return obj;
+		return AddressListResp.builder().list(addresses).build();
 	}
 
 	@RequestMapping("app/member/address/add")

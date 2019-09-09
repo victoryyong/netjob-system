@@ -39,6 +39,7 @@ import com.thsword.netjob.pojo.app.CashRecord;
 import com.thsword.netjob.pojo.app.CoinRecord;
 import com.thsword.netjob.pojo.app.Member;
 import com.thsword.netjob.pojo.app.OrderAccount;
+import com.thsword.netjob.pojo.resp.account.HasPasswordResp;
 import com.thsword.netjob.service.AccountService;
 import com.thsword.netjob.service.MemberService;
 import com.thsword.netjob.util.RedisUtils;
@@ -63,7 +64,7 @@ public class AccountApp {
 
 	@RequestMapping("app/member/account/hasPassword")
 	@ApiOperation(value = "是否设置支付密码", httpMethod = "POST")
-	public JSONObject hasPassword(HttpServletRequest request,
+	public HasPasswordResp hasPassword(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		boolean flag = false;
 		String memberId = request.getAttribute("memberId") + "";
@@ -71,9 +72,7 @@ public class AccountApp {
 		if (null != acc && !StringUtils.isEmpty(acc.getPassword())) {
 			flag = true;
 		}
-		JSONObject obj = new JSONObject();
-		obj.put("hasSetPassword", flag);
-		return obj;
+		return HasPasswordResp.builder().hasPassword(flag).build();
 	}
 
 	/**

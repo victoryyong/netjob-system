@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IOrderDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Order;
+import com.thsword.netjob.pojo.resp.order.OrderListResp;
 import com.thsword.netjob.service.OrderService;
 import com.thsword.netjob.util.JsonResponseUtil;
 import com.thsword.netjob.web.controller.base.BaseResponse;
@@ -199,17 +199,14 @@ public class OrderApp {
 	@RequestMapping("app/member/order/bizOrderList")
 	@ApiOperation(value = "商家-我的接单列表", httpMethod = "POST")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "status", value = "状态", dataType = "int", paramType = "query"), })
-	public JSONObject bizOrderList(HttpServletRequest request,
+	public OrderListResp bizOrderList(HttpServletRequest request,
 			HttpServletResponse response, Page page,
 			@RequestParam(required = false, value = "status") Integer status)
 			throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
 		List<Order> orders = orderService.orderList(null, memberId, null,
 				status, page);
-		JSONObject obj = new JSONObject();
-		obj.put("page", page);
-		obj.put("list", orders);
-		return obj;
+		return OrderListResp.builder().list(orders).page(page).build();
 	}
 
 	/**
@@ -225,7 +222,6 @@ public class OrderApp {
 			@RequestParam(value = "orderIds") String orderIds) throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
 		orderService.acceptOrders(memberId, orderIds);
-		JsonResponseUtil.successCodeResponse(response, request);
 		return BaseResponse.success();
 	}
 
@@ -334,7 +330,7 @@ public class OrderApp {
 			@ApiImplicitParam(name = "status", value = "状态", dataType = "String", paramType = "query", required = false),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query"),
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query"), })
-	public JSONObject orderList(HttpServletRequest request,
+	public OrderListResp orderList(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, value = "status") Integer status,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -344,10 +340,7 @@ public class OrderApp {
 		Page page = new Page(currentPage, pageSize);
 		List<Order> orders = orderService.orderList(memberId, null, status,
 				null, page);
-		JSONObject obj = new JSONObject();
-		obj.put("page", page);
-		obj.put("list", orders);
-		return obj;
+		return OrderListResp.builder().list(orders).page(page).build();
 	}
 
 	/**

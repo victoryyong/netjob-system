@@ -577,4 +577,26 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 		
 	}
 
+
+	@Override
+	public void commentOrder(String memberId, String bizId) {
+		Order order = (Order) orderDao.queryEntityById(bizId);
+		if(null==order){
+			throw new ServiceException("订单不存在");
+		}
+		if(!memberId.equals(order.getMemberId())){
+			throw new ServiceException("评价用户与订单用户不一致");
+		}
+		//订单状态都为已接单可完成订单
+		if(order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_COMMENTING
+				){
+			throw new ServiceException("订单状态异常,不能评论订单");
+		}
+		order.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_CLOSED);
+		order.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_CLOSED);
+		orderDao.updateEntity(order);
+	}
+	
+	
+
 }

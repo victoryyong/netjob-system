@@ -95,5 +95,12 @@ public interface OrderService extends IBaseService{
 	 * @throws Exception
 	 */
 	public List<Order> orderList(String memberId,String sellerId,Integer buyerStatus,Integer sellerStatus,Page page)throws Exception;
+	
+	/**
+	 * 评论订单
+	 * @param memberId
+	 * @param bizId
+	 */
+	public void commentOrder(String memberId, String bizId);
 
 }

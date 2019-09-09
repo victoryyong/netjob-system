@@ -25,13 +25,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.ICollectDao;
 import com.thsword.netjob.dao.IFriendDao;
 import com.thsword.netjob.dao.IMemberDao;
+import com.thsword.netjob.dao.IOrderDao;
 import com.thsword.netjob.dao.ITokenDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.Token;
 import com.thsword.netjob.pojo.app.Collect;
 import com.thsword.netjob.pojo.app.Friend;
 import com.thsword.netjob.pojo.app.Member;
+import com.thsword.netjob.pojo.app.Order;
+import com.thsword.netjob.pojo.resp.member.BindPhoneResp;
+import com.thsword.netjob.pojo.resp.member.FamousListResp;
+import com.thsword.netjob.pojo.resp.member.OrderInfoResp;
 import com.thsword.netjob.service.MemberService;
+import com.thsword.netjob.service.OrderService;
 import com.thsword.netjob.util.AmapUtil;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.RedisUtils;
@@ -47,7 +53,8 @@ import com.thsword.utils.page.Page;
 public class MemberApp {
 	@Resource(name = "memberService")
 	MemberService memberService;
-
+	@Resource(name="orderService")
+	OrderService orderService;
 	/**
 	 * 绑定电话号码
 	 * 
@@ -67,13 +74,12 @@ public class MemberApp {
 			@ApiImplicitParam(name = "citycode", value = "城市编码", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "cityName", value = "城市名称", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "provinceName", value = "省名", dataType = "string", paramType = "query", required = true) })
-	public JSONObject bindPhone(HttpServletRequest request,
+	public BindPhoneResp bindPhone(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String phone,
 			@RequestParam String citycode, @RequestParam String cityName,
 			@RequestParam String provinceName) throws Exception {
 		Member member = (Member) request.getAttribute("member");
 		String memberId = (String) request.getAttribute("memberId");
-		JSONObject obj = new JSONObject();
 		if (!StringUtils.isEmpty(member.getPhone()) || member.getPhoneAuth()
 				|| member.getType() == Global.SYS_MEMBER_TYPE_PHONE) {
 			throw new ServiceException("已绑定手机");
@@ -81,6 +87,7 @@ public class MemberApp {
 		Member temp = new Member();
 		temp.setPhone(phone);
 		temp = (Member) memberService.queryEntity(IMemberDao.class, temp);
+		String tokenStr = null;
 		// 手机未被注册
 		if (null == temp) {
 			temp = new Member();
@@ -90,7 +97,6 @@ public class MemberApp {
 			temp.setCityName(cityName);
 			temp.setProvinceName(provinceName);
 			memberService.updateEntity(IMemberDao.class, temp);
-			obj.put("token", null);
 		} else {
 			String existId = temp.getId();
 			String existName = temp.getName();
@@ -118,9 +124,9 @@ public class MemberApp {
 					Global.JWT_SUBJECT_APP,
 					Global.getSetting(Global.JWT_SECRET_APP_KEY));
 			memberService.addEntity(ITokenDao.class, token);
-			obj.put("token", token.getAccess_token());
+			tokenStr = token.getAccess_token();
 		}
-		return obj;
+		return BindPhoneResp.builder().token(tokenStr).build();
 	}
 
 	/**
@@ -143,7 +149,7 @@ public class MemberApp {
 	@RequestMapping("app/visitor/memberInfo")
 	@ApiOperation(value = "查询用户信息", httpMethod = "POST")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "memberId", value = "查询的用户ID", dataType = "string", paramType = "query", required = true) })
-	public BaseResponse visit(HttpServletRequest request,
+	public Member memberInfo(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String memberId)
 			throws Exception {
 		String friendId = memberId;
@@ -209,7 +215,7 @@ public class MemberApp {
 				member.setDistance(distance);
 			}
 		}
-		return BaseResponse.success();
+		return member;
 	}
 
 	/**
@@ -235,7 +241,7 @@ public class MemberApp {
 			@ApiImplicitParam(name = "citycode", value = "城市编码", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
-	public BaseResponse recommend(HttpServletRequest request,
+	public FamousListResp recommend(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String citycode,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
@@ -244,6 +250,7 @@ public class MemberApp {
 		Member temp = new Member();
 		temp.setCitycode(citycode);
 		int count = memberService.queryCountEntity(IMemberDao.class, temp);
+		FamousListResp resp = FamousListResp.builder().build();
 		if (count < 50) {
 			@SuppressWarnings("unchecked")
 			List<Member> members = (List<Member>) memberService.queryAllEntity(
@@ -278,7 +285,7 @@ public class MemberApp {
 					}
 				}
 			}
-			return BaseResponse.success(resultMembers);
+			resp.setList(resultMembers);
 		} else {
 			Map<String, Object> map = new HashMap<>();
 			map.put("citycode", citycode);
@@ -288,8 +295,10 @@ public class MemberApp {
 			JSONObject obj = new JSONObject();
 			obj.put("list", members);
 			obj.put("page", page);
-			return BaseResponse.success(obj);
+			resp.setList(members);
+			resp.setPage(page);
 		}
+		return resp;
 	}
 
 	/**
@@ -326,6 +335,37 @@ public class MemberApp {
 		temp.setBackground(background);
 		memberService.updateEntity(IMemberDao.class, temp);
 		return BaseResponse.success();
+	}
+	
+	/**
+	 * 
+	 * @Description:查询用户订单信息
+	 * @author: yong
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@RequestMapping("app/member/orderInfos")
+	@ApiOperation(value = "用户订单信息", httpMethod = "POST")
+	public OrderInfoResp orderInfos(HttpServletRequest request) {
+		String memberId = request.getAttribute("memberId") + "";
+		Order temp = new Order();
+		temp.setMemberId(memberId);
+		
+		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_PAYING);
+		Integer payingNums = orderService.queryCountEntity(IOrderDao.class, temp);
+		
+		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_SIGNING);
+		Integer signingNums = orderService.queryCountEntity(IOrderDao.class, temp);
+		
+		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_COMMENTING);
+		Integer commentingNums = orderService.queryCountEntity(IOrderDao.class, temp);
+		
+		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_RIGHTING);
+		Integer rightingNums = orderService.queryCountEntity(IOrderDao.class, temp);
+		
+		temp.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_ACCEPTED);
+		Integer serveingNums = orderService.queryCountEntity(IOrderDao.class, temp);
+		
+		return OrderInfoResp.builder().payingNums(payingNums).signingNums(signingNums).commentingNums(commentingNums).rightingNums(rightingNums).serveingNums(serveingNums).build();
 	}
 
 	/**

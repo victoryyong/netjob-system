@@ -25,6 +25,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IMenuDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Menu;
+import com.thsword.netjob.pojo.resp.menu.MenuListResp;
 import com.thsword.netjob.service.MenuService;
 import com.thsword.netjob.util.ErrorUtil;
 import com.thsword.netjob.util.JsonResponseUtil;
@@ -143,7 +144,7 @@ public class MenuApp {
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
 	@RequestMapping("app/visitor/menu/defaults")
-	public JSONObject defaults(HttpServletRequest request,
+	public MenuListResp defaults(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
@@ -187,10 +188,7 @@ public class MenuApp {
 		} else {
 			results = menus;
 		}
-		JSONObject obj = new JSONObject();
-		obj.put("list", results);
-
-		return obj;
+		return MenuListResp.builder().list(menus).build();
 	}
 
 	/**
@@ -199,14 +197,12 @@ public class MenuApp {
 	 */
 	@ApiOperation(value = "查询个性化定制", httpMethod = "POST")
 	@RequestMapping("app/member/menu/orders")
-	public JSONObject privateMenus(HttpServletRequest request) throws Exception {
+	public MenuListResp privateMenus(HttpServletRequest request) throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberId", memberId);
 		List<Menu> menus = menuService.queryPrivateMenus(map);
-		JSONObject obj = new JSONObject();
-		obj.put("list", menus);
-		return obj;
+		return MenuListResp.builder().list(menus).build();
 	}
 
 	/**
@@ -240,13 +236,11 @@ public class MenuApp {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "parentId", value = "当前页", dataType = "int", paramType = "query",required = true)})
 	@RequestMapping("app/visitor/menu/secondMenus")
-	public JSONObject secondMenus(HttpServletRequest request,
+	public MenuListResp secondMenus(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String parentId)
 			throws Exception {
 		List<Menu> menus = (List<Menu>) menuService.queryChilds(parentId);
-		JSONObject obj = new JSONObject();
-		obj.put("list", menus);
-		return obj;
+		return MenuListResp.builder().list(menus).build();
 	}
 
 	/**
@@ -255,11 +249,9 @@ public class MenuApp {
 	 */
 	@ApiOperation(value = "查询所有菜单", httpMethod = "POST")
 	@RequestMapping("app/visitor/menu/allMenus")
-	public JSONObject menus() {
+	public MenuListResp menus() {
 		List<Menu> menus = (List<Menu>) menuService.queryAllMenus();
-		JSONObject obj = new JSONObject();
-		obj.put("list", menus);
-		return obj;
+		return MenuListResp.builder().list(menus).build();
 	}
 
 	/**
