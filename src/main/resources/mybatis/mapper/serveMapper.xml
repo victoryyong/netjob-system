@@ -54,6 +54,8 @@
 		<result property="memberId" column="c_member_id" />
 		<!-- 会员名称 -->
 		<result property="memberName" column="memberName" />
+		<!-- 会员名称 -->
+		<result property="memberImage" column="memberImage" />
 		<!-- 经度 -->
 		<result property="longitude" column="c_longitude" />
 		<!-- 纬度 -->
@@ -214,23 +216,25 @@
 		 SELECT t.*,
 		 m.c_name as menuName,
 		 fm.c_name as firstMenuName,
-		 me.c_name as memberName
 		 <if test="null!=dis_sort and 'c_distance'==dis_sort and null!=latitude and ''!=latitude
 		 and null!=longitude and ''!=longitude">
 		 ,ROUND(
 		 	6378.138*2*ASIN(SQRT(POW(SIN((#{latitude}*PI()/180-c_latitude*PI()/180)/2),2)
 		 	+COS(#{latitude}*PI()/180)*COS(c_latitude*PI()/180)*POW(SIN((#{longitude}*PI()/180-c_longitude*PI()/180)/2),2)))*1000)
 		 AS
- 		 c_distance
+ 		 c_distance,
 		 </if>
+		 me.c_name as memberName,
+		 me.c_image as memberImage
 		 FROM t_serve t
-		 left join t_menu m on m.pk_id = t.c_menu_id 
+		 left join t_menu m on m.pk_id = t.c_menu_id
 		 left join t_member me on me.pk_id = t.c_member_id
 		 left join t_menu fm on fm.pk_id = t.c_first_menu_id 
 		 WHERE 
 		 1=1
 		 <if test="null!=type and ''!=type">and t.c_type = #{type}</if>
-		 
+		 <if test="null!=title and ''!=title">and t.c_title like "%"#{title}"%"</if>
+		 <if test="null!=keywords and ''!=keywords">and t.c_keywords like "%"#{keywords}"%"</if>
 		 <if test="null!=maxAge and ''!=maxAge"><![CDATA[and me.c_age <= #{maxAge}]]></if>
 		 <if test="null!=minAge and ''!=minAge"><![CDATA[and me.c_age >= #{minAge}]]></if>
 		 

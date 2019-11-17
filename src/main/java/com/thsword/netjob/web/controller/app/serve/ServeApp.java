@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.thsword.netjob.dao.IDictDao;
 import com.thsword.netjob.dao.IMediaDao;
 import com.thsword.netjob.dao.IMenuDao;
@@ -81,18 +80,19 @@ public class ServeApp {
 			@ApiImplicitParam(name = "provinceName", value = "省份名", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "citycode", value = "市区代码", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "cityName", value = "市区名", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "area", value = "区域", dataType = "string", paramType = "query", required = false),
 			@ApiImplicitParam(name = "detailAddress", value = "详细地址", dataType = "string", paramType = "query", required = true), })
 	public BaseResponse add(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String title,
 			@RequestParam String longitude, @RequestParam String latitude,
-			@RequestParam String type, @RequestParam String image,
-			@RequestParam String workType, @RequestParam String payType,
-			@RequestParam String priceType, @RequestParam String price,
-			@RequestParam String validity, @RequestParam String serveTime,
+			@RequestParam Integer type, @RequestParam String image,
+			@RequestParam Integer workType, @RequestParam Integer payType,
+			@RequestParam Integer priceType, @RequestParam(required=false) Double price,
+			@RequestParam Integer validity, @RequestParam String serveTime,
 			@RequestParam String menuId, @RequestParam String firstMenuId,
 			@RequestParam String links, @RequestParam String provinceName,
 			@RequestParam String citycode, @RequestParam String cityName,
-			@RequestParam String area, @RequestParam String detailAddress)
+			@RequestParam(required=false) String area, @RequestParam String detailAddress)
 			throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
 		if (!type.equals(Global.SYS_MEMBER_SERVE_TYPE_1)
@@ -115,6 +115,25 @@ public class ServeApp {
 			throw new ServiceException("定价方式参数错误");
 		}
 		Serve serve = new Serve();
+		serve.setTitle(title);
+		serve.setLongitude(longitude);
+		serve.setLatitude(latitude);
+		serve.setType(type);
+		serve.setImage(image);
+		serve.setWorkType(workType);
+		serve.setPayType(payType);
+		serve.setPriceType(priceType);
+		serve.setPrice(price);
+		serve.setValidity(validity);
+		serve.setServeTime(serveTime);
+		serve.setMenuId(menuId);
+		serve.setFirstMenuId(firstMenuId);
+		serve.setLinks(links);
+		serve.setProvinceName(provinceName);
+		serve.setCitycode(citycode);
+		serve.setCityName(cityName);
+		serve.setArea(area);
+		serve.setDetailAddress(detailAddress);
 		serve.setId(UUIDUtil.get32UUID());
 		serve.setMemberId(memberId);
 		serve.setCreateBy(memberId);
@@ -157,7 +176,9 @@ public class ServeApp {
 	@RequestMapping("app/visitor/serve/list")
 	@ApiOperation(value = "需求/服务列表", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "type", value = "标题", dataType = "string", paramType = "query"),
+			@ApiImplicitParam(name = "title", value = "标题", dataType = "string", paramType = "query"),
+			@ApiImplicitParam(name = "type", value = "类型", dataType = "string", paramType = "query"),
+			@ApiImplicitParam(name = "keywords", value = "关键字", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "gender", value = "经度", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "menuId", value = "纬度", dataType = "string", paramType = "query"),
 			@ApiImplicitParam(name = "citycode", value = "类型", dataType = "string", paramType = "query"),
@@ -168,7 +189,9 @@ public class ServeApp {
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query"), })
 	public ServeListResp list(HttpServletRequest request,
 			HttpServletResponse response,
+			@RequestParam(required = false) String title,
 			@RequestParam(required = false) String type,
+			@RequestParam(required = false) String keywords,
 			@RequestParam(required = false) String gender,
 			@RequestParam(required = false) String menuId,
 			@RequestParam(required = false) String citycode,
@@ -325,6 +348,8 @@ public class ServeApp {
 		} else {
 			map.put("menuId", menuId);
 		}
+		map.put("keywords", keywords);
+		map.put("title", title);
 		map.put("memberId", memberId);
 		map.put("citycode", citycode);
 		map.put("startDate", startDate);
@@ -383,3 +408,4 @@ public class ServeApp {
 		return BaseResponse.success();
 	}
 }
+

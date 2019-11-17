@@ -566,7 +566,7 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Order> orderList(String memberId,String sellerId,Integer buyerStatus,Integer sellerStatus,Page page)throws Exception{
+	public List<Order> orderList(String memberId,String sellerId,List<Integer> buyerStatus,List<Integer> sellerStatus,Page page)throws Exception{
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("memberId", memberId);
 			map.put("sellerId", sellerId);

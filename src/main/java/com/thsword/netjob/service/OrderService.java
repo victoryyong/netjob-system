@@ -94,7 +94,7 @@ public interface OrderService extends IBaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Order> orderList(String memberId,String sellerId,Integer buyerStatus,Integer sellerStatus,Page page)throws Exception;
+	public List<Order> orderList(String memberId,String sellerId,List<Integer> buyerStatus,List<Integer> sellerStatus,Page page)throws Exception;
 	
 	/**
 	 * 评论订单

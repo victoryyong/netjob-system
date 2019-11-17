@@ -151,6 +151,12 @@ public class Serve {
 	 */
 	@ApiModelProperty(value = "会员名称")
 	private String memberName;
+	
+	/**
+	 * 会员图像
+	 */
+	@ApiModelProperty(value = "会员图像")
+	private String memberImage;
 	/**
 	 * 审核状态
 	 */

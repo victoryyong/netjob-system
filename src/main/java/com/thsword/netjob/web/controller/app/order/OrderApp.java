@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
 import com.thsword.netjob.dao.IOrderDao;
 import com.thsword.netjob.global.Global;
 import com.thsword.netjob.pojo.app.Order;
@@ -198,14 +199,21 @@ public class OrderApp {
 	 */
 	@RequestMapping("app/member/order/bizOrderList")
 	@ApiOperation(value = "商家-我的接单列表", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "status", value = "状态", dataType = "int", paramType = "query"), })
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(name = "status", value = "状态", dataType = "int", paramType = "query"),
+		@ApiImplicitParam(name = "statusList", value = "状态列表", dataType = "String", paramType = "query"),
+		})
 	public OrderListResp bizOrderList(HttpServletRequest request,
 			HttpServletResponse response, Page page,
-			@RequestParam(required = false, value = "status") Integer status)
+			@RequestParam(required = false, value = "status") Integer status,
+			@RequestParam(required = false, value = "status") List<Integer> statusList)
 			throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
+		if(null!=status && 0!=status){
+			statusList.add(status);
+		}
 		List<Order> orders = orderService.orderList(null, memberId, null,
-				status, page);
+				statusList, page);
 		return OrderListResp.builder().list(orders).page(page).build();
 	}
 
@@ -328,17 +336,22 @@ public class OrderApp {
 	@ApiOperation(value = "订单详情", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "status", value = "状态", dataType = "String", paramType = "query", required = false),
+			@ApiImplicitParam(name = "statusList", value = "状态列表", dataType = "String", paramType = "query", required = false),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query"),
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query"), })
 	public OrderListResp orderList(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = false, value = "status") Integer status,
+			@RequestParam(required = false, value = "statusList") List<Integer> statusList,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
 			throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
 		Page page = new Page(currentPage, pageSize);
-		List<Order> orders = orderService.orderList(memberId, null, status,
+		if(null!=status&&0!=status){
+			statusList.add(status);
+		}
+		List<Order> orders = orderService.orderList(memberId, null, statusList,
 				null, page);
 		return OrderListResp.builder().list(orders).page(page).build();
 	}

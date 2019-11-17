@@ -17,6 +17,8 @@
 	<resultMap id="collectMemberMapper" type="member">
 		<!-- 名称 -->
 		<result property="name" column="c_name" />
+		<!-- 名称 -->
+		<result property="id" column="pk_id" />
 		<!-- 类型 -->
 		<result property="image" column="c_image" />
 	</resultMap>
@@ -24,6 +26,8 @@
 	<resultMap id="collectServeMapper" type="serve">
 		<!-- 名称 -->
 		<result property="title" column="c_title" />
+		<!-- 名称 -->
+		<result property="id" column="pk_id" />
 		<!-- 类型 -->
 		<result property="image" column="c_image" />
 	</resultMap>
@@ -117,7 +121,7 @@
 	
 	<!-- 查询分页列表(分页) -->
 	<select id="queryPageMembers" resultMap="collectMemberMapper" parameterType="java.util.Map">
-		 <![CDATA[ SELECT m.c_name,m.c_image FROM t_collect c left join t_member m on c.c_bizId = m.pk_id WHERE 1=1]]>
+		 <![CDATA[ SELECT m.c_name,m.c_image,m.pk_id FROM t_collect c left join t_member m on c.c_bizId = m.pk_id WHERE 1=1]]>
 		 <if test="null!=bizId and ''!=bizId">and c.c_bizId = #{bizId}</if>
 		 <if test="null!=type and ''!=type">and c.c_type = #{type}</if>
 		 <if test="null!=memberId and ''!=memberId">and c.c_memberId = #{memberId}</if>
@@ -125,7 +129,7 @@
 	
 	<!-- 查询分页列表(分页) -->
 	<select id="queryPageServes" resultMap="collectServeMapper" parameterType="java.util.Map">
-		 <![CDATA[ SELECT s.c_name,s.c_image FROM t_collect c left join t_serve s on c.c_bizId = s.pk_id WHERE 1=1]]>
+		 <![CDATA[ SELECT s.c_title,s.c_image,s.pk_id FROM t_collect c left join t_serve s on c.c_bizId = s.pk_id WHERE 1=1]]>
 		 <if test="null!=bizId and ''!=bizId">and c.c_bizId = #{bizId}</if>
 		 <if test="null!=type and ''!=type">and c.c_type = #{type}</if>
 		 <if test="null!=memberId and ''!=memberId">and c.c_memberId = #{memberId}</if>

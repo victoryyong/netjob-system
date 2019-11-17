@@ -47,17 +47,17 @@ public class NewsApp {
 	@SuppressWarnings("unchecked")
 	@ApiOperation(value = "头条列表", httpMethod = "POST")
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "city", value = "城市", dataType = "string", paramType = "query", required = true),
+			@ApiImplicitParam(name = "citycode", value = "城市", dataType = "string", paramType = "query", required = true),
 			@ApiImplicitParam(name = "currentPage", value = "当前页", dataType = "int", paramType = "query", defaultValue = "1"),
 			@ApiImplicitParam(name = "pageSize", value = "页大小", dataType = "int", paramType = "query", defaultValue = "10") })
 	@RequestMapping("app/visitor/news/list")
-	public NewsListResp list(@RequestParam String city,
+	public NewsListResp list(@RequestParam String citycode,
 			@RequestParam(required = false, defaultValue = "10") int pageSize,
 			@RequestParam(required = false, defaultValue = "1") int currentPage)
 			throws Exception {
 		Page page = new Page(currentPage, pageSize);
 		Map<String, Object> map = new HashMap<>();
-		map.put("city", city);
+		map.put("citycode", citycode);
 		map.put("page", page);
 		List<News> news = (List<News>) newsService.queryPageEntity(
 				INewsDao.class, map);

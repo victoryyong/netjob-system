@@ -363,6 +363,7 @@ public class MemberApp {
 		Integer rightingNums = orderService.queryCountEntity(IOrderDao.class, temp);
 		
 		temp.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_ACCEPTED);
+		temp.setBuyerStatus(null);
 		Integer serveingNums = orderService.queryCountEntity(IOrderDao.class, temp);
 		
 		return OrderInfoResp.builder().payingNums(payingNums).signingNums(signingNums).commentingNums(commentingNums).rightingNums(rightingNums).serveingNums(serveingNums).build();

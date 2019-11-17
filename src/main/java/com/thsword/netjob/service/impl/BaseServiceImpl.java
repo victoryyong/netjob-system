@@ -3,6 +3,8 @@ package com.thsword.netjob.service.impl;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
@@ -16,6 +18,7 @@ import com.thsword.netjob.web.exception.ServiceException;
  * @author yong
  */
 @Service(value = "baseService")
+@Log4j2
 public class BaseServiceImpl extends WebApplicationObjectSupport implements IBaseService {
 
     private static ApplicationContext context = null;
@@ -39,7 +42,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-            
+            log.info(e);
         	throw new ServiceException("addEntity exception");
         }
         return null;
@@ -65,7 +68,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
         	throw new ServiceException("deleteEntity exception");
         }
         return false;
@@ -91,7 +94,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
         	throw new ServiceException("deleteEntityById exception");
         }
         return false;
@@ -117,7 +120,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
         	throw new ServiceException("updateEntity exception");
         }
         return false;
@@ -142,7 +145,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
         	throw new ServiceException("queryEntityById exception");
         }
         return null;
@@ -165,7 +168,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
         	throw new ServiceException("queryAllEntity exception");
         }
         return null;
@@ -189,7 +192,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
         	throw new ServiceException("queryEntity exception");
         }
         return null;
@@ -212,7 +215,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
         	throw new ServiceException("queryCountEntity exception");
         }
         return null;
@@ -235,7 +238,7 @@ public class BaseServiceImpl extends WebApplicationObjectSupport implements IBas
                 }
             }
         } catch (Exception e) {
-        	 
+        	log.info(e);
             throw new ServiceException("queryPageEntity exception");
         }
         return null;

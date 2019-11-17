@@ -69,7 +69,7 @@ public class AddressApp {
 			temp.setMemberId(memberId);
 			temp.setIsDefault(isDefault);
 			temp = (Address) baseService
-					.queryEntity(IAddressDao.class, address);
+					.queryEntity(IAddressDao.class, temp);
 			if (null != temp) {
 				temp.setIsDefault(Global.SYS_MEMBER_ADDRESS_IS_DEFAULT_NO);
 				baseService.updateEntity(IAddressDao.class, temp);
@@ -88,6 +88,7 @@ public class AddressApp {
 		address.setMemberId(memberId);
 		address.setCreateBy(memberId);
 		address.setUpdateBy(memberId);
+		address.setIsDefault(isDefault);
 		baseService.addEntity(IAddressDao.class, address);
 		JsonResponseUtil.successCodeResponse(response, request);
 	}
