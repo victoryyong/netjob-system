@@ -7,7 +7,6 @@
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-3.2.xsd">
    <!-- 读取配置文件信息 -->
-   <!--  <context:property-placeholder ignore-unresolvable="true" location="classpath:context-mlearn.properties"/> -->
     
     <!-- jedis cluster config -->
     <bean id="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
