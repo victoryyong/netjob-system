@@ -96,6 +96,13 @@
 		 <if test="null!=type and ''!=type">and c_type =#{type}</if>
 		 <if test="null!=resource and ''!=resource">and c_resource =#{resource}</if>
 		  <if test="null!=citycode and ''!=citycode">and c_citycode =#{citycode}</if>
+		  <if test="null!=resources and resources.size()>0">
+		 	 and c_resource in
+			 <foreach collection="resources" open="(" close=")" separator=","
+	                 item="rs" index="i">
+	            #{rs}
+	        </foreach>
+		 </if>
 		 order by c_clicks,c_agrees,c_tips
 	</select>
 

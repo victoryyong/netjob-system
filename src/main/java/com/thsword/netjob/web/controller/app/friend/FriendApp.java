@@ -97,6 +97,7 @@ public class FriendApp {
 		}
 		Friend friend = new Friend();
 		friend.setMemberId(memberId);
+		friend.setFriendId(friendId);
 		Friend temp = (Friend) memberService.queryEntity(IFriendDao.class,
 				friend);
 		if (null != temp) {
@@ -105,10 +106,15 @@ public class FriendApp {
 		friend.setId(UUIDUtil.get32UUID());
 		memberService.addEntity(IFriendDao.class, friend);
 
-		friend.setId(UUIDUtil.get32UUID());
+		
 		friend.setMemberId(friend.getFriendId());
 		friend.setFriendId(memberId);
-		memberService.addEntity(IFriendDao.class, friend);
+		temp = (Friend) memberService.queryEntity(IFriendDao.class,
+				friend);
+		if (null == temp) {
+			friend.setId(UUIDUtil.get32UUID());
+			memberService.addEntity(IFriendDao.class, friend);
+		}
 		return BaseResponse.success();
 	}
 

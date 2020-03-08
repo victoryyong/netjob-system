@@ -359,14 +359,23 @@ public class MemberApp {
 		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_COMMENTING);
 		Integer commentingNums = orderService.queryCountEntity(IOrderDao.class, temp);
 		
+		//维权包括待评论、已评论、已关闭的订单
 		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_RIGHTING);
-		Integer rightingNums = orderService.queryCountEntity(IOrderDao.class, temp);
+		Integer righting1Nums = orderService.queryCountEntity(IOrderDao.class, temp);
+		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_COMMENTING);
+		Integer righting2Nums = orderService.queryCountEntity(IOrderDao.class, temp);
+		temp.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_CLOSED);
+		Integer righting3Nums = orderService.queryCountEntity(IOrderDao.class, temp);
 		
-		temp.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_ACCEPTED);
+		temp.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_ACCEPTING);
+		temp.setSellerId(memberId);
+		temp.setMemberId(null);
 		temp.setBuyerStatus(null);
-		Integer serveingNums = orderService.queryCountEntity(IOrderDao.class, temp);
+		Integer serveingNum1s = orderService.queryCountEntity(IOrderDao.class, temp);
+		temp.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_ACCEPTED);
+		Integer serveingNum2s = orderService.queryCountEntity(IOrderDao.class, temp);
 		
-		return OrderInfoResp.builder().payingNums(payingNums).signingNums(signingNums).commentingNums(commentingNums).rightingNums(rightingNums).serveingNums(serveingNums).build();
+		return OrderInfoResp.builder().payingNums(payingNums).signingNums(signingNums).commentingNums(commentingNums).rightingNums(righting1Nums+righting2Nums+righting3Nums).serveingNums(serveingNum1s+serveingNum2s).build();
 	}
 
 	/**

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,9 +73,13 @@ public class MediaApp {
 				memberService.updateEntity(IMemberDao.class, member);
 			};
 			Map<String, Object> map = new HashMap<>();
+			List<Integer> resources = new ArrayList();
+			resources.add(Global.SYS_MEMBER_ACTIVE_RESOURCE_1);
+			resources.add(Global.SYS_MEMBER_ACTIVE_RESOURCE_2);
 			String citycode = request.getParameter("citycode");
 			map.put("page", page);
 			map.put("citycode", citycode);
+			map.put("resources", resources);
 			map.put("type", Global.SYS_MEMBER_ACTIVE_FILE_TYPE_2);
 			List<Media> medias = (List<Media>) memberService.queryPageEntity(IMediaDao.class, map);
 			if(StringUtils.isEmpty(medias)){

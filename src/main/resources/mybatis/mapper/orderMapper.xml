@@ -158,6 +158,7 @@
 	<select id="queryEntity" resultMap="orderMapper" parameterType="order">
 		 <![CDATA[ SELECT * FROM t_order WHERE 1=1]]>
 		 <if test="null!=id">and pk_id = #{id}</if>
+		 <if test="null!=tradeNo"> and c_tradeNo = #{tradeNo}</if>
 	</select>
 	
 	<!--  条件查询查询所有 -->
@@ -176,8 +177,20 @@
 		 <if test="null!=citycode and ''!=citycode">and c_citycode = #{citycode}</if>
 		 <if test="null!=memberId and ''!=memberId">and c_memberId = #{memberId}</if>
 		 <if test="null!=sellerId and ''!=sellerId">and c_sellerId = #{sellerId}</if>
-		 <if test="null!=buyerStatus and ''!=buyerStatus">and c_buyerStatus = #{buyerStatus}</if>
-		 <if test="null!=sellerStatus and ''!=sellerStatus">and c_sellerStatus = #{sellerStatus}</if>
+		 <if test="null!=buyerStatus and buyerStatus.size()>0">
+		 	 and c_buyerStatus in
+			 <foreach collection="buyerStatus" open="(" close=")" separator=","
+	                 item="buy" index="i">
+	            #{buy}
+	        </foreach>
+		 </if>
+		 <if test="null!=sellerStatus and sellerStatus.size()>0">
+		 	 and c_sellerStatus in
+			 <foreach collection="sellerStatus" open="(" close=")" separator=","
+	                 item="seller" index="i">
+	            #{seller}
+	        </foreach>
+		 </if>
 	</select>
 
 	<!-- #######################CRUD end####################### -->

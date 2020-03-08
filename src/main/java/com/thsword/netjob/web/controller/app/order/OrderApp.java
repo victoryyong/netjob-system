@@ -157,7 +157,6 @@ public class OrderApp {
 		}
 		orderService.applyRefund(memberId, tradeNo, new BigDecimal(money),
 				reason, links);
-		JsonResponseUtil.successCodeResponse(response, request);
 		return BaseResponse.success();
 	}
 
@@ -206,7 +205,7 @@ public class OrderApp {
 	public OrderListResp bizOrderList(HttpServletRequest request,
 			HttpServletResponse response, Page page,
 			@RequestParam(required = false, value = "status") Integer status,
-			@RequestParam(required = false, value = "status") List<Integer> statusList)
+			@RequestParam(required = false, value = "statusList") List<Integer> statusList)
 			throws Exception {
 		String memberId = request.getAttribute("memberId") + "";
 		if(null!=status && 0!=status){
@@ -333,7 +332,7 @@ public class OrderApp {
 	 * @time:2018年5月8日 上午12:07:45
 	 */
 	@RequestMapping("app/member/order/orderList")
-	@ApiOperation(value = "订单详情", httpMethod = "POST")
+	@ApiOperation(value = "我的-订单列表", httpMethod = "POST")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "status", value = "状态", dataType = "String", paramType = "query", required = false),
 			@ApiImplicitParam(name = "statusList", value = "状态列表", dataType = "String", paramType = "query", required = false),

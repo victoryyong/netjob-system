@@ -20,7 +20,7 @@
 		<!-- defaultStatementTimeout 设置超时时间, 它决定驱动等待一个数 据库响应的时间。 -->
 		<setting name="defaultStatementTimeout" value="5000" />
         <!-- 打印查询语句 -->
-        <!-- <setting name="logImpl" value="STDOUT_LOGGING" /> -->
+        <!-- <setting name="logImpl" value="COMMONS_LOGGING" /> -->
 	</settings>
 	<typeAliases>
 		<typeAlias alias="user" type="com.thsword.netjob.pojo.User" />

@@ -240,10 +240,6 @@ public class AuthAdmin {
 			String name = request.getParameter("name");
 			String content = request.getParameter("content");
 			String status = request.getParameter("status");
-			if(StringUtils.isEmpty(name)){
-				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "审核名称不能为空",response,request);
-				return;
-			}
 			if(StringUtils.isEmpty(authIds)){
 				JsonResponseUtil.msgResponse(ErrorUtil.HTTP_FAIL, "审核ID不能为空",response,request);
 				return;

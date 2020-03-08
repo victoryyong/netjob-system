@@ -399,12 +399,29 @@ public class ServeApp {
 	 * @author: yong
 	 * @time:2018年5月8日 上午12:07:45
 	 */
-	@RequestMapping("app/visitor/serve/click")
+	@RequestMapping(value="app/visitor/serve/click")
+	@ApiOperation(value = "点击量", httpMethod = "POST")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "serveId", value = "需求/服务id", dataType = "string", paramType = "query", required = true), })
 	public BaseResponse click(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam String serveId)
 			throws Exception {
 		serveService.addClick(serveId);
+		return BaseResponse.success();
+	}
+	
+	/**
+	 * 
+	 * 点击量
+	 * 
+	 * @author: yong
+	 * @time:2018年5月8日 上午12:07:45
+	 */
+	@RequestMapping(value="app/visitor/serve/delete")
+	@ApiOperation(value = "删除服务", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "serveId", value = "需求/服务id", dataType = "string", paramType = "query", required = true), })
+	public BaseResponse delete(@RequestParam String serveId)
+			throws Exception {
+		serveService.deleteEntityById(IServeDao.class, serveId);
 		return BaseResponse.success();
 	}
 }

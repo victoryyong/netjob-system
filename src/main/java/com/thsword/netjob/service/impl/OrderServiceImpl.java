@@ -294,12 +294,13 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 		if(!memberId.equals(order.getMemberId())){
 			throw new ServiceException("订单用户与申请退款用户不一致");
 		}
-		//已接单-已付款-待签收-评论-已签收四种 状态时可申请退款
+		//已接单-已付款-待签收-评论-已签收-已关闭四种 状态时可申请退款
 		if(order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_ACCEPTED&&
 				order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_PAYED&&
 					order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_SIGNED&&
 						order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_SIGNING&&
-						order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_COMMENTING
+						order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_COMMENTING&&
+						order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_CLOSED
 				){
 			throw new ServiceException("订单状态异常,不能退款");
 		}
@@ -319,6 +320,7 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 		refundApproveDao.addEntity(refund);
 		//更新订单状态
 		order.setBuyerStatus(Global.SYS_ORDER_BUYER_STATUS_APPLYING);
+		order.setSellerStatus(Global.SYS_ORDER_SELLER_STATUS_APPROVING);
 		orderDao.updateEntity(order);
 		
 	}
@@ -515,6 +517,7 @@ public class OrderServiceImpl extends BaseServiceImpl implements OrderService{
 		}
 		//买方申请维权后才能进行举证
 		if(order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_RIGHTED&&
+				order.getBuyerStatus()!=Global.SYS_ORDER_BUYER_STATUS_APPLYING&&
 				order.getSellerStatus()!=Global.SYS_ORDER_SELLER_STATUS_APPROVING
 				){
 			throw new ServiceException("订单状态异常,不能维权");
